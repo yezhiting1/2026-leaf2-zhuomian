@@ -1,0 +1,474 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: theme-fuwari-NanNan-setting
+spec:
+  forms:
+    - group: base
+      label: 基础设置
+      formSchema:
+        - $formkit: group
+          name: themeColor
+          label: 主题颜色
+          value:
+            hue: 250
+            fixed: false
+          children:
+            - $formkit: number
+              name: hue
+              min: 0
+              max: 360
+              step: 5
+              label: 色调(Halo表单好像目前不支持 colorpicker)
+              value: 250
+              help: "主题颜色的默认色调，从0到360。红色：0，蓝绿色：200，青色：250，粉红色：345"
+            - $formkit: switch
+              name: fixed
+              label: 固定色调
+              value: false
+              help: "隐藏访问者的主题彩色选择器"
+        - $formkit: group
+          name: banner
+          label: Banner
+          value:
+            enable: true
+            src: "/themes/theme-fuwari-NanNan/assets/images/demo-banner.png"
+            position: "center"
+            credit:
+              enable: false
+              text: "© 2022 Fuwari"
+              url: ""
+          children:
+            - $formkit: switch
+              name: enable
+              label: 启用
+              value: true
+              help: "启用横幅"
+            - $formkit: attachment
+              name: src
+              label: 图片
+              value: "/themes/theme-fuwari-NanNan/assets/images/demo-banner.png"
+              help: "显示的图像"
+            - $formkit: select
+              name: position
+              label: 位置
+              value: "center"
+              options:
+                - value: center
+                  label: 居中
+                - value: top
+                  label: 顶部
+                - value: bottom
+                  label: 底部
+            - $formkit: switch
+              name: wave
+              label: 底部波浪效果
+              value: true
+              help: "在 Banner 底部显示波浪过渡效果"
+            - $formkit: group
+              name: credit
+              label: 版权信息
+              children:
+                - $formkit: switch
+                  name: enable
+                  label: 启用
+                  value: false
+                  help: "启用版权信息"
+                - $formkit: text
+                  name: text
+                  label: 文字
+                  value: "© 2022 Fuwari"
+                  help: "显示的文字"
+                - $formkit: url
+                  name: url
+                  label: 链接
+                  value:
+        - $formkit: menuRadio
+          id: menu
+          name: menu
+          label: 菜单
+          value: ""
+          help: "选择菜单"
+    - group: style
+      label: 样式
+      formSchema:
+        - $formkit: select
+          name: color_scheme
+          label: 默认配色
+          value: auto
+          options:
+            - label: 跟随系统
+              value: auto
+            - label: 深色
+              value: dark
+            - label: 浅色
+              value: light
+
+        - $formkit: switch
+          name: enable_change_color_scheme
+          label: 允许访客切换配色
+          value: true
+
+        - $formkit: switch
+          name: navbar_blur
+          label: 导航栏磨砂透明效果
+          value: false
+          help: "启用后导航栏变为半透明磨砂玻璃效果"
+    - group: sidebar
+      label: 侧边栏
+      formSchema:
+        - $formkit: array
+          name: widgets
+          label: 小部件
+          value:
+            - value: categories
+            - value: tag
+          children:
+            - $formkit: select
+              name: value
+              id: widgets_value
+              label: 部件
+              options:
+                - label: 热门文章（TODO）
+                  value: popular-posts
+                - label: 文章分类
+                  value: categories
+                - label: 文章标签
+                  value: tag
+                - label: 音乐播放器
+                  value: music
+                - label: 一言
+                  value: hitokoto
+                - label: 自定义HTML
+                  value: html
+            - $formkit: text
+              if: $value.value === music
+              name: title
+              label: 标题
+              value: 音乐
+            - $formkit: select
+              if: $value.value === music
+              name: server
+              label: 平台
+              value: netease
+              options:
+                - label: 网易云音乐
+                  value: netease
+                - label: QQ 音乐
+                  value: tencent
+                - label: 酷狗音乐
+                  value: kugou
+                - label: 虾米音乐
+                  value: xiami
+                - label: 百度音乐
+                  value: baidu
+            - $formkit: select
+              if: $value.value === music
+              name: type
+              label: 类型
+              value: playlist
+              options:
+                - label: 歌曲
+                  value: song
+                - label: 歌单
+                  value: playlist
+                - label: 专辑
+                  value: album
+                - label: 歌手
+                  value: artist
+                - label: 搜索
+                  value: search
+            - $formkit: text
+              if: $value.value === music
+              name: id
+              label: ID
+              validation: required
+              help: 歌曲 / 歌单 / 专辑 / 歌手 ID，搜索类型时填写关键词
+            - $formkit: select
+              if: $value.value === music
+              name: play_mode
+              label: 播放模式
+              value: list
+              options:
+                - label: 列表循环
+                  value: list
+                - label: 单曲循环
+                  value: one
+                - label: 随机
+                  value: random
+            - $formkit: number
+              if: $value.value === music
+              name: volume
+              label: 默认音量
+              min: 0
+              max: 1
+              step: 0.1
+              value: 0.7
+            - $formkit: url
+              if: $value.value === music
+              name: api
+              label: 自定义 Meting API
+              help: 留空时使用 MetingJS 默认 API，地址可包含 :server、:type、:id、:r 占位符
+            - $formkit: code
+              if: $value.value === html
+              name: html
+              label: HTML
+              value: "<p>自定义HTML</p>"
+              language: html
+
+    - group: profile
+      label: 个人设置
+      formSchema:
+        - $formkit: switch
+          name: enable_profile
+          value: true
+          label: 启用个人设置
+
+        - $formkit: attachment
+          name: avatar
+          value: /themes/theme-fuwari-NanNan/assets/images/demo-avatar.png
+          label: 头像
+
+        - $formkit: text
+          name: name
+          label: 昵称
+          value: Fuwari
+
+        - $formkit: text
+          name: bio
+          label: 简介
+          value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        - $formkit: url
+          name: url
+          label: 链接(点击跳转登录和后台可使用 /login )
+          value: /about
+
+        - $formkit: array
+          name: social_media
+          label: 社交媒体
+
+          children:
+            - $formkit: iconify
+              name: social_icon
+              label: 社交图标
+              format: svg # svg / dataurl / url / name
+            - $formkit: text
+              name: name
+              label: 名称
+            - $formkit: text
+              name: url
+              label: 链接
+              validation: "required"
+
+    - group: post
+      label: 文章
+      formSchema:
+        - $formkit: group
+          name: license
+          label: 版权声明
+          value:
+            enable: false
+            name: CC BY-NC-SA 4.0
+            url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+          children:
+            - $formkit: switch
+              name: enable
+              label: 启用
+              value: false
+              help: "启用版权声明"
+            - $formkit: text
+              name: name
+              label: 名称
+              value: CC BY-NC-SA 4.0
+            - $formkit: url
+              name: url
+              label: 链接
+              value: https://creativecommons.org/licenses/by-nc-sa/4.0/
+        - $formkit: select
+          name: content_size
+          label: 字体大小
+          value: prose-base
+          options:
+            - value: prose-base
+              label: prose-base
+            - value: prose-sm
+              label: prose-sm
+            - value: prose-lg
+              label: prose-lg
+            - value: prose-xl
+              label: prose-xl
+            - value: prose-2xl
+              label: prose-2xl
+        - $formkit: select
+          name: content_theme
+          label: 颜色主题
+          value: prose-gray
+          options:
+            - value: prose-gray
+              label: prose-gray
+            - value: prose-slate
+              label: prose-slate
+            - value: prose-zinc
+              label: prose-zinc
+            - value: prose-neutral
+              label: prose-neutral
+            - value: prose-stone
+              label: prose-stone
+        - $formkit: switch
+          name: enable_toc
+          label: 启用目录
+          value: true
+          help: "启用目录"
+        - $formkit: number
+          name: toc_depth
+          label: 目录最大深度
+          value: 2
+          help: "目录的最大深度"
+        - $formkit: switch
+          name: enable_like
+          label: 启用文章点赞
+          value: true
+          help: "在文章版权声明下方显示点赞互动按钮"
+    - group: beian
+      label: 备案设置
+      formSchema:
+        - $formkit: text
+          name: icp_text
+          label: ICP备案号
+        - $formkit: text
+          name: icp_link
+          label: ICP备案跳转链接
+          value: https://beian.miit.gov.cn/
+
+        - $formkit: text
+          name: gongan_text
+          label: 公安联网备案号
+        - $formkit: text
+          name: gongan_link
+          label: 公安联网备案跳转链接
+          value: https://beian.mps.gov.cn/#/query/webSearch
+
+    - group: footer
+      label: 页脚设置
+      formSchema:
+        - $formkit: switch
+          name: enable_privacy
+          value: false
+          label: 显示隐私政策
+          help: "在页脚显示隐私政策链接"
+        - $formkit: text
+          name: privacy_url
+          label: 隐私政策链接
+          value: /privacy
+          help: "隐私政策页面地址"
+        - $formkit: switch
+          name: enable_rss
+          value: true
+          label: 显示 RSS
+          help: "在页脚显示 RSS 链接（需安装 RSS 插件）"
+        - $formkit: switch
+          name: enable_sitemap
+          value: true
+          label: 显示 Sitemap
+          help: "在页脚显示 Sitemap 链接（需安装 Sitemap 插件）"
+        - $formkit: array
+          name: custom_links
+          label: 自定义链接
+          help: "在页脚添加自定义超链接"
+          children:
+            - $formkit: text
+              name: name
+              label: 名称
+            - $formkit: url
+              name: url
+              label: 链接
+    - group: links
+      label: 友链设置
+      formSchema:
+        - $formkit: switch
+          name: enable_comment
+          value: true
+          label: 显示评论
+          help: "在友链页面底部显示评论区"
+        - $formkit: switch
+          name: enable_apply_btn
+          value: true
+          label: 显示友链自助提交表单
+          help: "需要安装并启用「友链自助提交」插件"
+        - $formkit: switch
+          name: enable_owner_info
+          value: true
+          label: 显示个人博客信息
+        - $formkit: switch
+          name: expand_owner_info
+          value: true
+          label: 默认展开个人博客信息
+        - $formkit: text
+          name: owner_avatar
+          label: 博客头像
+          value: https://example.com/avatar.jpg
+          help: "博客头像图片地址"
+        - $formkit: text
+          name: owner_name
+          label: 博客名称
+          value: 博客名称
+          help: "博客名称"
+        - $formkit: textarea
+          name: owner_description
+          label: 博客描述
+          value: 这是一个基于 Halo 搭建的个人博客
+          help: "博客简短描述"
+        - $formkit: text
+          name: owner_url
+          label: 博客网址
+          value: https://example.com
+          help: "博客首页地址"
+        - $formkit: text
+          name: owner_rss
+          label: RSS 地址
+          value: https://example.com/rss.xml
+          help: "博客 RSS 订阅地址"
+        - $formkit: switch
+          name: enable_requirements
+          value: true
+          label: 显示友链须知
+        - $formkit: textarea
+          name: requirements
+          value: |
+            请点击下方的申请友链提交网站信息
+            网站能够正常访问，访问速度正常
+            将本站添加为贵站的友情链接
+            网站为个人类型，非采集站，站点符合国家相关法律法规，不涉及违法行为
+            提交友链信息后我会尽快审核贵站链接
+          label: 友链须知内容
+          help: "显示在折叠面板中的友链须知"
+        - $formkit: switch
+          name: enable_disclaimer
+          value: true
+          label: 显示免责申明
+        - $formkit: textarea
+          name: disclaimer
+          value: |
+            本博客严格遵守中华人民共和国法律法规，友情链接及其他外链，仅为了方便学习与交流而收集整理
+            本人能力有限，无法逐一甄别每篇文章的全部内容，也无法实时跟进并确认原作者后续是否对链接内容进行篡改，包括但不限于发布违法信息、植入恶意代码、诱导点击或破坏用户计算机等行为
+            部分友链网站可能未完成工信部备案或域名实名认证，因此其安全性、稳定性及内容合法性均无法保证
+            请您在点击访问前自行审慎判断，并承担相应风险，本博客不对因跳转第三方网站而产生的任何直接或间接损失承担责任
+            如您在实际访问中遇到不良内容或遭受损失，深表歉意，请及时通过本博客提供的联系方式与博主沟通处理，博主将立即移除相关链接
+          label: 免责申明内容
+          help: "显示在折叠面板中的免责声明"
+    - group: auth
+      label: 认证
+      formSchema:
+        - $formkit: select
+          name: loginPage
+          label: 登录界面
+          value: theme
+          options:
+            - label: 主题认证界面
+              value: theme
+            - label: Halo 默认
+              value: halo
+        - $formkit: attachment
+          name: loginBgImage
+          label: 登录页左侧背景图
+          help: "留空则使用主题色渐变"

@@ -1,0 +1,530 @@
+---
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "../styles/global.css";
+import "../styles/utilities.css";
+import "../styles/variables.css";
+import "../styles/comment-widget.css";
+import "../styles/base.css";
+import "../styles/components.css";
+import "../styles/markdown.css";
+import "../styles/music-player.css";
+import "../styles/transition.css";
+import "../styles/scrollbar.css";
+import "../styles/photoswipe.css";
+import ConfigCarrier from "../components/ConfigCarrier.astro";
+import {
+  AUTO_MODE,
+  BANNER_HEIGHT_EXTEND,
+  DARK_MODE,
+  DEFAULT_THEME,
+  LIGHT_MODE,
+  PAGE_WIDTH,
+} from "../constants/constants";
+
+interface Props {
+  title?: string;
+  description?: string;
+  setOGTypeArticle?: boolean;
+  isHomePage?: boolean;
+}
+
+const {
+  title = "${site.title}",
+  description = "",
+  setOGTypeArticle = false,
+  isHomePage = false,
+} = Astro.props;
+
+const i18nInlineScript = `<script th:inline="javascript">
+  window.i18nResources = {
+    "search.loading": \`[(#{search.loading})]\`,
+    "search.noResults": \`[(#{search.noResults})]\`,
+    "search.panel": \`[(#{search.panel})]\`,
+    "search.placeholder": \`[(#{search.placeholder})]\`,
+    "theme.color": \`[(#{theme.color})]\`,
+    "theme.dark": \`[(#{theme.dark})]\`,
+    "theme.light": \`[(#{theme.light})]\`,
+    "theme.resetDefault": \`[(#{theme.resetDefault})]\`,
+    "theme.system": \`[(#{theme.system})]\`,
+    "nav.lightDark": \`[(#{nav.lightDark})]\`,
+    "widget.music.noPlaying": \`[(#{widget.music.noPlaying})]\`,
+    "widget.music.lyrics": \`[(#{widget.music.lyrics})]\`,
+    "widget.music.volume": \`[(#{widget.music.volume})]\`,
+    "widget.music.playMode": \`[(#{widget.music.playMode})]\`,
+    "widget.music.prev": \`[(#{widget.music.prev})]\`,
+    "widget.music.next": \`[(#{widget.music.next})]\`,
+    "widget.music.playlist": \`[(#{widget.music.playlist})]\`,
+    "widget.music.noLyrics": \`[(#{widget.music.noLyrics})]\`,
+    "widget.music.loadingLyrics": \`[(#{widget.music.loadingLyrics})]\`,
+    "widget.music.failedLyrics": \`[(#{widget.music.failedLyrics})]\`,
+    "widget.music.noSongs": \`[(#{widget.music.noSongs})]\`,
+    "widget.music.error": \`[(#{widget.music.error})]\`,
+    "widget.music.play": \`[(#{widget.music.play})]\`,
+    "widget.music.pause": \`[(#{widget.music.pause})]\`,
+    "widget.music.progress": \`[(#{widget.music.progress})]\`,
+    "widget.music.noCover": \`[(#{widget.music.noCover})]\`,
+    "widget.music.cover": \`[(#{widget.music.cover})]\`,
+  };
+</script>`;
+
+const themeSettingScript = `<script type="application/json" id="theme-config" th:inline="javascript">
+       /*[[\${theme.config}]]*/
+    </script>`;
+---
+
+<!doctype html>
+<html
+  th:lang="${#locale.toLanguageTag}"
+  th:data-hue="${theme.config.base.themeColor.hue}"
+  th:data-hue-fixed="${theme.config.base.themeColor.fixed}"
+  class="bg-(--page-bg) text-[14px] transition md:text-[16px]"
+  data-overlayscrollbars-initialize
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="author" th:content="${theme.config.profile.name}" />
+    <meta name="description" content={description} />
+    <meta property="og:site_name" th:content="${site.title}" />
+    <meta property="og:title" th:content={title} />
+    <meta
+      property="og:type"
+      content={setOGTypeArticle ? "article" : "website"}
+    />
+    <meta property="og:url" th:content="${#httpServletRequest.requestURL}" />
+    <title th:text={title}></title>
+    <link rel="icon" th:href="${site.favicon}" />
+
+    <Fragment set:html={themeSettingScript} />
+    <Fragment set:html={i18nInlineScript} />
+    <script
+      is:inline
+      define:vars={{
+        DEFAULT_THEME,
+        LIGHT_MODE,
+        DARK_MODE,
+        AUTO_MODE,
+        BANNER_HEIGHT_EXTEND,
+        PAGE_WIDTH,
+      }}
+    >
+      (() => {
+        const configHue = document.documentElement.dataset.hue || "250";
+        const fixedHue = document.documentElement.dataset.hueFixed === "true";
+        const storedTheme = localStorage.getItem("theme") || DEFAULT_THEME;
+        const preferredDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+
+        if (
+          storedTheme === DARK_MODE ||
+          (storedTheme === AUTO_MODE && preferredDark)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+
+        const hue = fixedHue
+          ? configHue
+          : localStorage.getItem("hue") || configHue;
+        document.documentElement.style.setProperty("--hue", hue);
+        document.documentElement.style.setProperty(
+          "--page-width",
+          `${PAGE_WIDTH}rem`,
+        );
+
+        let offset = Math.floor(
+          window.innerHeight * (BANNER_HEIGHT_EXTEND / 100),
+        );
+        offset = offset - (offset % 4);
+        document.documentElement.style.setProperty(
+          "--banner-height-extend",
+          `${offset}px`,
+        );
+
+        window.__fuwariOriginalHistory ??= {
+          pushState: window.history.pushState,
+          replaceState: window.history.replaceState,
+        };
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body
+    class:list={["relative min-h-screen transition", { "lg:is-home": isHomePage }]}
+    th:classappend="${theme.config.base.banner.enable ? ' enable-banner' : ''}"
+    th:style="|--bannerOffset: ${theme.config.base.banner.position == 'top' ? '30vh' : (theme.config.base.banner.position == 'bottom' ? '0' : '15vh')};|"
+    data-overlayscrollbars-initialize
+  >
+    <ConfigCarrier />
+    <slot />
+    <!-- 波浪效果：放在 body 层级与背景融合，不受 overflow 裁剪 -->
+    <div
+      th:if="${theme.config.base.banner.enable && theme.config.base.banner.wave}"
+      id="wave-container"
+      class="pointer-events-none absolute z-20 hidden md:block left-0 right-0 h-20 md:h-28 lg:h-36 overflow-hidden"
+    >
+      <!-- 第1层：纯色背景波浪 -->
+      <svg id="wave-svg-1" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full">
+        <path d="M0,120 Q360,160 720,120 T1440,120 T2160,120 T2880,120 T3600,120 T4320,120 L4320,200 L0,200 Z" fill="var(--page-bg)"/>
+      </svg>
+      <!-- 第2层：半透明波浪 -->
+      <svg id="wave-svg-2" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full" style="opacity:0.75">
+        <defs>
+          <linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.75"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,80 Q240,120 480,80 T960,80 T1440,80 T1920,80 T2400,80 T2880,80 T3360,80 T3840,80 T4320,80 L4320,200 L0,200 Z" fill="url(#wg2)"/>
+      </svg>
+      <!-- 第3层：半透明波浪 -->
+      <svg id="wave-svg-3" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full" style="opacity:0.6">
+        <defs>
+          <linearGradient id="wg3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.65"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,60 Q180,95 360,60 T720,60 T1080,60 T1440,60 T1800,60 T2160,60 T2520,60 T2880,60 T3240,60 T3600,60 T3960,60 T4320,60 L4320,200 L0,200 Z" fill="url(#wg3)"/>
+      </svg>
+    </div>
+    <div id="page-height-extend" class="hidden h-[300vh]"></div>
+    <style is:global>
+      /* 移动端强制导航栏始终可见 */
+      @media (max-width: 767px) {
+        #navbar-wrapper {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          z-index: 50 !important;
+        }
+        #navbar-wrapper.navbar-hidden {
+          translate: none !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        /* 防止内容被固定导航栏遮挡 */
+        #top-row {
+          height: 4.5rem !important;
+        }
+      }
+    </style>
+  </body>
+</html>
+
+<script>
+  import "overlayscrollbars/overlayscrollbars.css";
+  import { OverlayScrollbars } from "overlayscrollbars";
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import "photoswipe/style.css";
+  import {
+    BANNER_HEIGHT,
+    BANNER_HEIGHT_EXTEND,
+    BANNER_HEIGHT_HOME,
+    MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
+  } from "../constants/constants";
+  import {
+    getHue,
+    getStoredTheme,
+    setHue,
+    setTheme,
+  } from "../utils/setting-utils";
+
+  const bannerEnabled = Boolean(document.getElementById("banner-wrapper"));
+
+  function setClickOutsideToClose(panel: string, ignores: string[]) {
+    document.addEventListener("click", (event) => {
+      const panelDom = document.getElementById(panel);
+      const target = event.target;
+      if (!panelDom || !(target instanceof Node)) return;
+      for (const ignored of ignores) {
+        const ignoredEl = document.getElementById(ignored);
+        if (ignoredEl === target || ignoredEl?.contains(target)) return;
+      }
+      panelDom.classList.add("float-panel-closed");
+    });
+  }
+
+  function initCustomScrollbar() {
+    const bodyElement = document.querySelector("body");
+    if (!bodyElement) return;
+    OverlayScrollbars(
+      {
+        target: bodyElement,
+        cancel: { nativeScrollbarsOverlaid: true },
+      },
+      {
+        scrollbars: {
+          theme: "scrollbar-base scrollbar-auto py-1",
+          autoHide: "move",
+          autoHideDelay: 500,
+          autoHideSuspend: false,
+        },
+      },
+    );
+  }
+
+  function showBanner() {
+    document
+      .getElementById("banner")
+      ?.classList.remove("opacity-0", "scale-105");
+  }
+
+  const basePath = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+  function getPathname(url: string) {
+    try {
+      return new URL(url, window.location.origin).pathname;
+    } catch {
+      return url.split("?")[0]?.split("#")[0] || "/";
+    }
+  }
+
+  function syncHomeClass(pathname = window.location.pathname) {
+    let normalizedPath = pathname.replace(/\/+$/, "") || "/";
+    if (basePath && normalizedPath.startsWith(basePath)) {
+      normalizedPath =
+        normalizedPath.slice(basePath.length).replace(/\/+$/, "") || "/";
+    }
+    if (normalizedPath.endsWith("/index.html")) {
+      normalizedPath = normalizedPath.slice(0, -"/index.html".length) || "/";
+    }
+    const isHome = normalizedPath === "/" || normalizedPath === "/index";
+    document.body.classList.toggle("lg:is-home", isHome);
+    const wave = document.getElementById("wave-container");
+    if (wave) {
+      const ext = getComputedStyle(document.documentElement).getPropertyValue("--banner-height-extend").trim();
+      // 仅在 lg+ 屏幕应用首页偏移（与 lg:is-home 的 banner 延伸对应）
+      const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches;
+      const offset = (isHome && isLargeScreen) ? ext : "0px";
+      // 直接设置 transform，不依赖 CSS 变量（Android WebView 兼容性更好）
+      const value = "translateY(calc(-100% + 1px + " + offset + "))";
+      wave.style.transform = value;
+      wave.style.webkitTransform = value;
+    }
+  }
+
+  function initPhotoSwipe() {
+    const pswp = import("photoswipe");
+    const lightbox = new PhotoSwipeLightbox({
+      gallery:
+        ".custom-md img, #post-cover img, .moment-media img, #photos-gallery img",
+      pswpModule: () => pswp,
+      padding: { top: 20, bottom: 20, left: 20, right: 20 },
+      wheelToZoom: true,
+      arrowPrev: false,
+      arrowNext: false,
+      imageClickAction: "close",
+      tapAction: "close",
+      doubleTapAction: "zoom",
+    });
+
+    lightbox.addFilter("domItemData", (itemData, element) => {
+      if (element instanceof HTMLImageElement) {
+        const src = element.dataset.pswpSrc || element.src;
+        itemData.src = src;
+        itemData.w = Number(element.naturalWidth || window.innerWidth);
+        itemData.h = Number(element.naturalHeight || window.innerHeight);
+        itemData.msrc = element.src;
+      }
+      return itemData;
+    });
+
+    lightbox.init();
+    return lightbox;
+  }
+
+  function initAdmonitions() {
+    const blockquotes = document.querySelectorAll(
+      ".custom-md blockquote:not(.admonition)",
+    );
+
+    blockquotes.forEach(function (blockquote) {
+      const paragraphs = blockquote.querySelectorAll("p");
+
+      if (paragraphs.length > 0) {
+        const firstP = paragraphs[0] as HTMLElement;
+        const firstText = firstP.textContent?.trim() || "";
+
+        let type = null;
+        let label = null;
+
+        if (firstText.startsWith("[!NOTE]")) {
+          type = "note";
+          label = "NOTE";
+        } else if (firstText.startsWith("[!TIP]")) {
+          type = "tip";
+          label = "TIP";
+        } else if (firstText.startsWith("[!IMPORTANT]")) {
+          type = "important";
+          label = "IMPORTANT";
+        } else if (firstText.startsWith("[!WARNING]")) {
+          type = "warning";
+          label = "WARNING";
+        } else if (firstText.startsWith("[!CAUTION]")) {
+          type = "caution";
+          label = "CAUTION";
+        }
+
+        if (type) {
+          blockquote.classList.add("admonition", `bdm-${type}`);
+
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "bdm-title";
+          titleSpan.textContent = label;
+
+          const remainingContent = firstText.replace(`[!${label}]`, "").trim();
+          if (remainingContent) {
+            firstP.textContent = remainingContent;
+            blockquote.insertBefore(titleSpan, firstP);
+          } else {
+            firstP.replaceWith(titleSpan);
+          }
+        }
+      }
+    });
+  }
+
+  function init() {
+    syncHomeClass();
+    setTheme(getStoredTheme());
+    setHue(getHue());
+    initCustomScrollbar();
+    showBanner();
+    initAdmonitions();
+  }
+
+  setClickOutsideToClose("display-setting", [
+    "display-setting",
+    "display-settings-switch",
+  ]);
+  setClickOutsideToClose("nav-menu-panel", [
+    "nav-menu-panel",
+    "nav-menu-switch",
+  ]);
+  setClickOutsideToClose("search-panel", [
+    "search-panel",
+    "search-bar",
+    "search-switch",
+  ]);
+  init();
+
+  let lightbox = initPhotoSwipe();
+
+  function restoreOriginalHistoryStateHandlers() {
+    const originalHistory = window.__fuwariOriginalHistory;
+    if (!originalHistory) return;
+
+    if (originalHistory.pushState) {
+      window.history.pushState = originalHistory.pushState;
+    }
+    if (originalHistory.replaceState) {
+      window.history.replaceState = originalHistory.replaceState;
+    }
+  }
+
+  const setupSwup = () => {
+    if (window.__fuwariSwupHandlersBound) return;
+    window.__fuwariSwupHandlersBound = true;
+
+    window.swup.hooks.on("link:click", () => {
+      document.documentElement.style.setProperty("--content-delay", "0ms");
+    });
+    window.swup.hooks.on("content:replace", initCustomScrollbar);
+    window.swup.hooks.on(
+      "content:replace",
+      () => {
+        lightbox?.destroy?.();
+      },
+      { before: true },
+    );
+    window.swup.hooks.on("page:view", () => {
+      syncHomeClass();
+      lightbox = initPhotoSwipe();
+      showBanner();
+      scrollFunction();
+      initAdmonitions();
+    });
+    window.swup.hooks.on("visit:start", (visit: { to?: { url?: string } }) => {
+      restoreOriginalHistoryStateHandlers();
+      if (visit.to?.url) {
+        syncHomeClass(getPathname(visit.to.url));
+      }
+      document.getElementById("page-height-extend")?.classList.remove("hidden");
+      document.getElementById("toc-wrapper")?.classList.add("toc-not-ready");
+    });
+    window.swup.hooks.on("visit:end", () => {
+      setTimeout(() => {
+        document.getElementById("page-height-extend")?.classList.add("hidden");
+        document
+          .getElementById("toc-wrapper")
+          ?.classList.remove("toc-not-ready");
+      }, 200);
+    });
+  };
+
+  if (window?.swup?.hooks) {
+    setupSwup();
+  } else {
+    document.addEventListener("swup:enable", setupSwup);
+  }
+
+  function scrollFunction() {
+    const backToTopBtn = document.getElementById("back-to-top-btn");
+    const toc = document.getElementById("toc-wrapper");
+    const navbar = document.getElementById("navbar-wrapper");
+    const currentBannerHeight =
+      document.body.classList.contains("lg:is-home") &&
+      window.innerWidth >= 1024
+        ? BANNER_HEIGHT_HOME
+        : BANNER_HEIGHT;
+    const bannerHeightPx = window.innerHeight * (currentBannerHeight / 100);
+    const tocRevealHeightPx = window.innerHeight * (BANNER_HEIGHT / 100);
+
+    if (backToTopBtn) {
+      backToTopBtn.classList.toggle(
+        "hide",
+        document.body.scrollTop <= bannerHeightPx &&
+          document.documentElement.scrollTop <= bannerHeightPx,
+      );
+    }
+
+    if (bannerEnabled && toc) {
+      toc.classList.toggle(
+        "toc-hide",
+        document.body.scrollTop <= tocRevealHeightPx &&
+          document.documentElement.scrollTop <= tocRevealHeightPx,
+      );
+    }
+
+    // 移动端：不隐藏导航栏
+    if (window.innerWidth < 768) return;
+
+    if (!bannerEnabled || !navbar) return;
+    const threshold =
+      bannerHeightPx - 72 - MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16 - 16;
+    navbar.classList.toggle(
+      "navbar-hidden",
+      document.body.scrollTop >= threshold ||
+        document.documentElement.scrollTop >= threshold,
+    );
+  }
+
+  window.addEventListener("scroll", scrollFunction);
+  window.addEventListener("resize", () => {
+    let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
+    offset = offset - (offset % 4);
+    document.documentElement.style.setProperty(
+      "--banner-height-extend",
+      `${offset}px`,
+    );
+    syncHomeClass();
+  });
+  scrollFunction();
+</script>

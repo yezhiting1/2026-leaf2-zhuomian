@@ -1,0 +1,21 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: theme-fuwari-NanNan
+spec:
+  displayName: theme-fuwari-NanNan
+  author:
+    name: Jiewenhuang&楠南NanNan
+    website: https://www.jiewen.run
+  description: A modern theme for Halo.
+  logo: /themes/theme-fuwari-NanNan/assets/images/favicon-light-192.png
+  homepage: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan#readme
+  repo: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan
+  issues: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/issues
+  settingName: "theme-fuwari-NanNan-setting"
+  configMapName: "theme-fuwari-NanNan-configMap"
+  version: "1.0.0"
+  requires: ">=2.24.0"
+  license:
+    - name: "MIT"
+      url: "https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/blob/main/LICENSE"
