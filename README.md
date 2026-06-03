@@ -1,15 +1,14 @@
-<h1 align="center"> Halo Theme Fuwari  </h1>
-
----
+<h1 align="center">Halo Theme Fuwari NanNan</h1>
 
 <div align="center">
 
-一款 [Halo2.0](https://github.com/halo-dev/halo) 的博客主题  
-移植于 Astro [fuwari](https://github.com/saicaca/fuwari)同名主题
+基于 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 二次修改的 [Halo 2.x](https://github.com/halo-dev/halo) 博客主题
+
+移植自 Astro 同名主题 [Fuwari](https://github.com/saicaca/fuwari)
 
 </div>
 
-<p class="badge-row" align="center">
+<p align="center">
   <a href="https://halo.run" target="_blank">
     <img src="https://img.shields.io/badge/dynamic/yaml?label=Halo&query=%24.spec.requires&url=https://raw.githubusercontent.com/AloneNanNan/halo-theme-fuwari-NanNan/main/theme.yaml&color=113,195,71" alt="Halo"/>
   </a>
@@ -17,139 +16,163 @@
     <img src="https://img.shields.io/github/v/release/AloneNanNan/halo-theme-fuwari-NanNan" alt="Release"/>
   </a>
   <a href="https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/blob/main/LICENSE" target="_blank">
-<img src="https://img.shields.io/github/license/AloneNanNan/halo-theme-fuwari-NanNan" alt="GPL-3.0 License">
-  </a>  </a>
+    <img src="https://img.shields.io/github/license/AloneNanNan/halo-theme-fuwari-NanNan" alt="MIT License"/>
+  </a>
 </p>
 
-### 预览：[楠枝小笺](https://www.nannax.top)
-![image](./screenshot/home2.png)
-![image](./screenshot/links.png)
+---
 
-本项目在原主题基础上新增以下功能：
-#### 1. 适配 Halo 子菜单选项
+## 预览
+
+**[楠枝小笺](https://www.nannax.top)**
+
+![首页预览](./screenshot/home.png)
+
+> 💡 **提示**：本主题可与原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 共存使用，配置互不冲突，可随时在后台切换体验。
+
+---
+
+## ✨ 二改新增功能
+
+基于原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 进行二次开发，新增以下功能：
+
+### 1. 适配 Halo 子菜单
+
 - 支持导航栏子菜单的展示
 - 可在后台设置中配置多级菜单
 
-#### 2. 适配自助提交友链
+### 2. 自助提交友链
+
 - 支持访客自助提交友链申请
-- 可配置申请按钮的显示/隐藏
-- 需安装[自助提交友链](https://www.halo.run/store/apps/app-glejqzwk)插件
+- 可配置显示/隐藏
+- 需安装 [自助提交友链](https://www.halo.run/store/apps/app-glejqzwk) 插件
 
-#### 3. 适配朋友圈插件
-- 可展示友情链接博客的文章，适配主题UI
-- 需安装[朋友圈](https://www.halo.run/store/apps/app-yISsV)插件
+### 3. 朋友圈插件适配
 
-#### 4. 适配装备管理插件
-- 可展示装备信息，适配主题UI
-- 需安装[装备管理](https://www.halo.run/store/apps/app-ytygyqml)插件
+- 展示友情链接博客的文章，适配主题 UI
+- 需安装 [朋友圈](https://www.halo.run/store/apps/app-yISsV) 插件
 
+### 4. 装备管理插件适配
 
-#### 5. 添加友链页面折叠面板
-- **个人博客信息**：展示博主的基本信息，支持一键复制
-  - 博客名称、描述、头像、网址、RSS
-  - 可配置默认展开/收起
-- **友链须知**：展示申请友链的要求说明
-  - 可自定义/隐藏卡片
-- **免责声明**：展示站点免责声明内容
-  - 可自定义/隐藏卡片
+- 展示装备信息，适配主题 UI
+- 需安装 [装备管理](https://www.halo.run/store/apps/app-ytygyqml) 插件
 
-#### 6. 添加一言小组件
-- 集成 Hitokoto API 随机一言
+### 5. 友链页面折叠面板
+
+- **个人博客信息**：展示博主基本信息，支持一键复制（博客名称、描述、头像、网址、RSS）
+- **友链须知**：展示申请友链的要求说明，可自定义/隐藏
+- **免责声明**：展示站点免责声明，可自定义/隐藏
+
+### 6. 一言小组件
+
+- 集成 [Hitokoto](https://hitokoto.cn/) API 随机一言
 - 支持点击刷新换一句
-- 支持深色模式
+- 适配深色模式
 
-#### 7. UI改进
-- 添加菜单栏模糊效果
-- 添加背景底部波浪效果
-----------------------
+### 7. 页脚增强
 
-原项目DEADME：
+- 隐私政策入口
+- 页脚超链接自定义
+- 页脚链接可配置显示/隐藏
 
-### 预览：[NanNan's Blog](https://www.jiewen.run/?preview-theme=theme-fuwari-NanNan)
+### 8. 登录认证界面适配
 
-![image](./screenshot/home.png)
+- 适配主题风格的登录认证页面
+- 与主题 UI 风格统一
 
-### 安裝
+### 9. UI 改进
 
-直接通过后台应用市场安装或者下载[releases](https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/releases)，通过 Halo Console 后台主题安装处上传即可。
+- 导航栏模糊效果
+- Banner 底部波浪效果
 
-### 插件支持
+---
 
-Fuwari 主题支持以下 Halo 插件：
+## 📦 安装
 
-- [x] 搜索插件：https://www.halo.run/store/apps/app-DlacW
-- [x] 评论插件：https://www.halo.run/store/apps/app-YXyaD
-- [x] 瞬间插件：https://www.halo.run/store/apps/app-SnwWD
-- [x] 图库插件：https://www.halo.run/store/apps/app-BmQJW
-- [x] 链接管理插件：https://www.halo.run/store/apps/app-hfbQg
+### 手动上传
 
-### 使用说明
+1. 前往 [Releases](https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/releases) 下载最新版本的主题包
+2. 进入 Halo 后台 → 主题 → 安装，上传主题包即可
 
-> 1、部分功能是使用插件进行支持
+---
+
+## 🔌 插件支持
+
+| 插件         | 链接                                                     | 说明             |
+| ------------ | -------------------------------------------------------- | ---------------- |
+| 搜索插件     | [应用市场](https://www.halo.run/store/apps/app-DlacW)    | 文章搜索功能     |
+| 评论插件     | [应用市场](https://www.halo.run/store/apps/app-YXyaD)    | 文章评论系统     |
+| 瞬间插件     | [应用市场](https://www.halo.run/store/apps/app-SnwWD)    | 瞬间/说说功能    |
+| 图库插件     | [应用市场](https://www.halo.run/store/apps/app-BmQJW)    | 图库展示         |
+| 链接管理插件 | [应用市场](https://www.halo.run/store/apps/app-hfbQg)    | 友情链接管理     |
+| 自助提交友链 | [应用市场](https://www.halo.run/store/apps/app-glejqzwk) | 访客自助提交友链 |
+| 朋友圈       | [应用市场](https://www.halo.run/store/apps/app-yISsV)    | 友链博客文章聚合 |
+| 装备管理     | [应用市场](https://www.halo.run/store/apps/app-ytygyqml) | 装备展示         |
+
+---
+
+## 🎨 功能特性
 
 - [x] 卡片化设计
-- [x] 响应式主题
+- [x] 响应式布局
 - [x] 深色模式
 - [x] 文章目录
-- [x] [代码高亮/语言/复制](https://github.com/halo-sigs/plugin-shiki)（插件）
-- [x] [文章搜索](https://github.com/halo-sigs/plugin-search-widget)（插件）
-- [x] [评论系统](https://github.com/halo-sigs/plugin-comment-widget)（插件）
-- [x] [友情链接](https://github.com/halo-sigs/plugin-links)
-- [x] 图库（/photos）：https://halo.run/store/apps/app-BmQJW
-- [x] 瞬间（/moments）：https://halo.run/store/apps/app-SnwWD
-- [x] 文章目录
-- [x] i18n国际化
-- [x] 其他功能
+- [x] 代码高亮 / 语言显示 / 复制（插件）
+- [x] 文章搜索（插件）
+- [x] 评论系统（插件）
+- [x] 友情链接
+- [x] 图库展示
+- [x] 瞬间/说说
+- [x] i18n 国际化
+- [x] 自定义主题色
+- [x] 页面过渡动画 (Swup)
+- [x] 子菜单支持
+- [x] 一言组件
+- [x] 友链折叠面板
+- [x] 导航栏模糊效果
+- [x] Banner 波浪效果
+- [x] 页脚隐私政策入口
+- [x] 页脚自定义链接
+- [x] 登录认证界面适配
 
-### 开发
+---
+
+## 🛠️ 开发
+
+> 需要 Node.js >= 22.12.0 和 pnpm
 
 ```bash
-cd ~/halo2-dev/themes/theme-fuwari-NanNan
-```
+# 克隆项目
+git clone https://github.com/AloneNanNan/halo-theme-fuwari-NanNan.git
+cd halo-theme-fuwari-NanNan
 
-```bash
+# 安装依赖
 pnpm install
-```
 
-```bash
+# 开发模式（监听文件变更自动重建）
 pnpm dev
+
+# 构建主题
+pnpm build
+
+# 构建并打包为主题安装包
+pnpm build:pkg
+
+# 代码格式化
+pnpm format
 ```
 
-### 🏭 贡献
+---
 
-> 我一个人的时间有限，只是业余有时间写写，如果你想帮助完善 `fuwari` 主题，请：
+## 🙏 致谢
 
-- 点 `star`
-- 提 `issue`
-- 修 `bugs`
-- 推 `pr`
+- [Halo](https://halo.run) — 优秀的 Java 博客系统
+- [Fuwari](https://github.com/saicaca/fuwari) — 原始 Astro 主题
+- [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) — 原版 Halo 移植主题
+- [Halo Sig](https://github.com/halo-sigs) — Halo 社区插件
 
-<br>
+---
 
-### 🙆‍♂️ 感谢
+## 📄 许可证
 
-在此感谢以下项目提供的支持：
-
-- [Halo](https://halo.run)
-- [Fuwari](https://github.com/saicaca/fuwari)
-
-- [plugin-links](https://github.com/halo-sigs/plugin-links)
-- [plugin-comment-widget](https://github.com/halo-sigs/plugin-comment-widget)
-- [plugin-search-widget](https://github.com/halo-sigs/plugin-search-widget)
--
-- ......
-
-<br>
-
-### QQ交流群
-
-QQ群号（929708466）欢迎大家前来交流分享
-
-![QQ群](./screenshot/qqGroup.jpg)
-
-### TinyTale Halo2 配套小程序
-
-[TinyTale](https://www.jiewen.run/archives/TinyTale-formal-edition)
-基于Halo2.0的小程序，支持文章列表、文章详情、分类列表、图库展示、瞬间展示、评论展示、发布图库、发布瞬间、支持随机图、配套插件等功能。
-
-![TinyTale](./screenshot/tinytale.png)
+[MIT License](./LICENSE)
