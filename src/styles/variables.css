@@ -49,7 +49,13 @@
   --scrollbar-bg-active: var(--scrollbar-bg-active-light);
   --color-selection-bar: linear-gradient(
     to right,
-    #d9cfcf, #f7947a, #ffd43b, #69db7c, #4dabf7, #9775fa, #d9cfcf
+    #d9cfcf,
+    #f7947a,
+    #ffd43b,
+    #69db7c,
+    #4dabf7,
+    #9775fa,
+    #d9cfcf
   );
   --toc-badge-bg: #d9d0f6;
   --toc-btn-hover: #e4e0f4;
@@ -140,7 +146,13 @@
   --scrollbar-bg-active: var(--scrollbar-bg-active-dark);
   --color-selection-bar: linear-gradient(
     to right,
-    #bab0b0, #e8807a, #f0d050, #5cbf70, #5a9fd8, #8a6ed0, #bab0b0
+    #bab0b0,
+    #e8807a,
+    #f0d050,
+    #5cbf70,
+    #5a9fd8,
+    #8a6ed0,
+    #bab0b0
   );
   --toc-badge-bg: var(--btn-regular-bg);
   --toc-btn-hover: #2d2d48;
@@ -167,7 +179,7 @@
     --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
     --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
     --btn-card-bg-active: oklch(0.35 0.035 var(--hue));
-    --deep-text: oklch(0.25 0.02 var(--hue));
+    --deep-text: oklch(0.85 0.02 var(--hue));
     --selection-bg: oklch(0.4 0.08 var(--hue));
     --link-underline: oklch(0.4 0.08 var(--hue));
     --link-hover: oklch(0.4 0.08 var(--hue));

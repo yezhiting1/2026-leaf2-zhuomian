@@ -16,7 +16,9 @@ const className = Astro.props.class;
 >
   <style>
     .hitokoto-card {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
       line-height: 1.6;
       max-width: 100%;
       box-sizing: border-box;
@@ -32,7 +34,7 @@ const className = Astro.props.class;
       flex: 1;
       min-width: 0;
       font-size: 14px;
-      color: var(--text-90, #333);
+      color: var(--deep-text);
       word-break: break-word;
       margin: 0;
       transition: opacity 0.3s ease;
@@ -49,15 +51,19 @@ const className = Astro.props.class;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #bbb;
-      transition: color 0.2s, background 0.2s;
+      color: var(--deep-text);
+      opacity: 0.4;
+      transition:
+        color 0.2s,
+        background 0.2s,
+        opacity 0.2s;
       padding: 0;
       margin-top: 1px;
     }
 
     .hitokoto-refresh:hover {
-      color: var(--text-30, #666);
-      background: rgba(0, 0, 0, 0.04);
+      opacity: 0.7;
+      background: rgba(128, 128, 128, 0.1);
     }
 
     .hitokoto-refresh:active {
@@ -80,7 +86,8 @@ const className = Astro.props.class;
 
     .hitokoto-author {
       font-size: 12px;
-      color: var(--text-50, #999);
+      color: var(--deep-text);
+      opacity: 0.5;
       display: block;
       text-align: right;
     }
@@ -98,7 +105,14 @@ const className = Astro.props.class;
     <div class="hitokoto-main-row">
       <p class="hitokoto-text" id="hitokotoText">加载中...</p>
       <button class="hitokoto-refresh" id="hitokotoRefresh" title="换一句">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <polyline points="23 4 23 10 17 10"></polyline>
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
         </svg>
@@ -111,73 +125,73 @@ const className = Astro.props.class;
 </WidgetLayout>
 
 <script is:inline>
-  (function() {
+  (function () {
     var hitokotoInitialized = false;
 
     function initHitokoto() {
       if (hitokotoInitialized) return;
-      var card = document.getElementById('hitokotoCard');
+      var card = document.getElementById("hitokotoCard");
       if (!card) return;
       hitokotoInitialized = true;
 
-      var textEl = document.getElementById('hitokotoText');
-      var authorEl = document.getElementById('hitokotoAuthor');
-      var refreshBtn = document.getElementById('hitokotoRefresh');
+      var textEl = document.getElementById("hitokotoText");
+      var authorEl = document.getElementById("hitokotoAuthor");
+      var refreshBtn = document.getElementById("hitokotoRefresh");
 
-      var API = 'https://v1.hitokoto.cn/';
+      var API = "https://v1.hitokoto.cn/";
 
       function fetchHitokoto() {
         return fetch(API, { signal: AbortSignal.timeout(5000) })
-          .then(function(resp) {
+          .then(function (resp) {
             if (resp.ok) return resp.json();
-            throw new Error('Network response was not ok.');
+            throw new Error("Network response was not ok.");
           })
-          .then(function(data) {
+          .then(function (data) {
             return {
-              content: data.hitokoto || data.content || '',
-              author: data.from || data.author || data.source || ''
+              content: data.hitokoto || data.content || "",
+              author: data.from || data.author || data.source || "",
             };
           })
-          .catch(function(e) {
-            console.warn('一言获取失败，使用默认句子', e.message);
+          .catch(function (e) {
+            console.warn("一言获取失败，使用默认句子", e.message);
             return {
-              content: '世界很大，开心第一。',
-              author: '楠南NanNan'
+              content: "世界很大，开心第一。",
+              author: "楠南NanNan",
             };
           });
       }
 
       function updateCard(data) {
         textEl.textContent = data.content;
-        authorEl.textContent = data.author || '';
-        card.classList.remove('hitokoto-loading');
+        authorEl.textContent = data.author || "";
+        card.classList.remove("hitokoto-loading");
       }
 
       function refresh() {
-        card.classList.add('hitokoto-loading');
-        refreshBtn.classList.add('spinning');
-        fetchHitokoto().then(function(data) {
+        card.classList.add("hitokoto-loading");
+        refreshBtn.classList.add("spinning");
+        fetchHitokoto().then(function (data) {
           updateCard(data);
-          setTimeout(function() {
-            refreshBtn.classList.remove('spinning');
+          setTimeout(function () {
+            refreshBtn.classList.remove("spinning");
           }, 400);
         });
       }
 
-      refreshBtn.addEventListener('click', refresh);
+      refreshBtn.addEventListener("click", refresh);
       refresh();
     }
 
     // 初始化
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initHitokoto);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initHitokoto);
     } else {
       initHitokoto();
     }
 
     // Swup 页面切换后重新初始化
-    if (typeof window.swup !== 'undefined') {
-      window.swup.on('contentReplaced', function() {
+    if (typeof window.swup !== "undefined") {
+      window.swup.on("contentReplaced", function () {
         hitokotoInitialized = false;
         setTimeout(initHitokoto, 100);
       });
