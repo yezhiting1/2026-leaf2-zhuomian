@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://halo.run" target="_blank">
-    <img src="https://img.shields.io/badge/dynamic/yaml?label=Halo&query=%24.spec.requires&url=https://raw.githubusercontent.com/AloneNanNan/halo-theme-fuwari-NanNan/main/theme.yaml&color=113,195,71" alt="Halo"/>
+    <img src="https://img.shields.io/badge/dynamic/yaml?label=Halo&query=%24.spec.requires&url=https://raw.githubusercontent.com/AloneNanNan/halo-theme-fuwari-NanNan/master/theme.yaml&color=113,195,71" alt="Halo"/>
   </a>
   <a href="https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/releases" target="_blank">
     <img src="https://img.shields.io/github/v/release/AloneNanNan/halo-theme-fuwari-NanNan" alt="Release"/>
