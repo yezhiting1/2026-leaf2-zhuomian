@@ -456,6 +456,36 @@ spec:
             如您在实际访问中遇到不良内容或遭受损失，深表歉意，请及时通过本博客提供的联系方式与博主沟通处理，博主将立即移除相关链接
           label: 免责申明内容
           help: "显示在折叠面板中的免责声明"
+    - group: external_link
+      label: 外链跳转
+      formSchema:
+        - $formkit: switch
+          name: enable_redirect
+          label: 启用外链跳转提示
+          value: true
+          help: "开启后点击外部链接时显示跳转提示页面"
+        - $formkit: number
+          name: redirect_delay
+          label: 自动跳转时间（秒）
+          min: 0
+          max: 30
+          step: 1
+          value: 5
+          help: "设置为 0 则禁用自动跳转"
+        - $formkit: textarea
+          name: whitelist
+          label: 域名白名单
+          value: ""
+          help: "白名单内的域名不显示跳转提示，直接跳转。每行一个域名，支持通配符如 *.example.com"
+        - $formkit: switch
+          name: open_new_window
+          label: 新窗口打开
+          value: false
+          help: "开启后将在新标签页打开外部链接"
+        - $formkit: attachment
+          name: avatar
+          label: 提示页头像
+          help: "留空则使用默认图标"
     - group: auth
       label: 认证
       formSchema:

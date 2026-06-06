@@ -155,7 +155,10 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
     <slot name="head" />
   </head>
   <body
-    class:list={["relative min-h-screen transition", { "lg:is-home": isHomePage }]}
+    class:list={[
+      "relative min-h-screen transition",
+      { "lg:is-home": isHomePage },
+    ]}
     th:classappend="${theme.config.base.banner.enable ? ' enable-banner' : ''}"
     th:style="|--bannerOffset: ${theme.config.base.banner.position == 'top' ? '30vh' : (theme.config.base.banner.position == 'bottom' ? '0' : '15vh')};|"
     data-overlayscrollbars-initialize
@@ -169,28 +172,55 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       class="pointer-events-none absolute z-20 hidden md:block left-0 right-0 h-20 md:h-28 lg:h-36 overflow-hidden"
     >
       <!-- 第1层：纯色背景波浪 -->
-      <svg id="wave-svg-1" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full">
-        <path d="M0,120 Q360,160 720,120 T1440,120 T2160,120 T2880,120 T3600,120 T4320,120 L4320,200 L0,200 Z" fill="var(--page-bg)"/>
+      <svg
+        id="wave-svg-1"
+        viewBox="0 0 1440 200"
+        preserveAspectRatio="none"
+        class="absolute bottom-0 left-0 h-full w-full"
+      >
+        <path
+          d="M0,120 Q360,160 720,120 T1440,120 T2160,120 T2880,120 T3600,120 T4320,120 L4320,200 L0,200 Z"
+          fill="var(--page-bg)"></path>
       </svg>
       <!-- 第2层：半透明波浪 -->
-      <svg id="wave-svg-2" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full" style="opacity:0.75">
+      <svg
+        id="wave-svg-2"
+        viewBox="0 0 1440 200"
+        preserveAspectRatio="none"
+        class="absolute bottom-0 left-0 h-full w-full"
+        style="opacity:0.75"
+      >
         <defs>
           <linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.75"/>
+            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.15"
+            ></stop>
+            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.75"
+            ></stop>
           </linearGradient>
         </defs>
-        <path d="M0,80 Q240,120 480,80 T960,80 T1440,80 T1920,80 T2400,80 T2880,80 T3360,80 T3840,80 T4320,80 L4320,200 L0,200 Z" fill="url(#wg2)"/>
+        <path
+          d="M0,80 Q240,120 480,80 T960,80 T1440,80 T1920,80 T2400,80 T2880,80 T3360,80 T3840,80 T4320,80 L4320,200 L0,200 Z"
+          fill="url(#wg2)"></path>
       </svg>
       <!-- 第3层：半透明波浪 -->
-      <svg id="wave-svg-3" viewBox="0 0 1440 200" preserveAspectRatio="none" class="absolute bottom-0 left-0 h-full w-full" style="opacity:0.6">
+      <svg
+        id="wave-svg-3"
+        viewBox="0 0 1440 200"
+        preserveAspectRatio="none"
+        class="absolute bottom-0 left-0 h-full w-full"
+        style="opacity:0.6"
+      >
         <defs>
           <linearGradient id="wg3" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.12"/>
-            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.65"/>
+            <stop offset="0%" stop-color="var(--page-bg)" stop-opacity="0.12"
+            ></stop>
+            <stop offset="100%" stop-color="var(--page-bg)" stop-opacity="0.65"
+            ></stop>
           </linearGradient>
         </defs>
-        <path d="M0,60 Q180,95 360,60 T720,60 T1080,60 T1440,60 T1800,60 T2160,60 T2520,60 T2880,60 T3240,60 T3600,60 T3960,60 T4320,60 L4320,200 L0,200 Z" fill="url(#wg3)"/>
+        <path
+          d="M0,60 Q180,95 360,60 T720,60 T1080,60 T1440,60 T1800,60 T2160,60 T2520,60 T2880,60 T3240,60 T3600,60 T3960,60 T4320,60 L4320,200 L0,200 Z"
+          fill="url(#wg3)"></path>
       </svg>
     </div>
     <div id="page-height-extend" class="hidden h-[300vh]"></div>
@@ -299,10 +329,12 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
     document.body.classList.toggle("lg:is-home", isHome);
     const wave = document.getElementById("wave-container");
     if (wave) {
-      const ext = getComputedStyle(document.documentElement).getPropertyValue("--banner-height-extend").trim();
+      const ext = getComputedStyle(document.documentElement)
+        .getPropertyValue("--banner-height-extend")
+        .trim();
       // 仅在 lg+ 屏幕应用首页偏移（与 lg:is-home 的 banner 延伸对应）
       const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches;
-      const offset = (isHome && isLargeScreen) ? ext : "0px";
+      const offset = isHome && isLargeScreen ? ext : "0px";
       // 直接设置 transform，不依赖 CSS 变量（Android WebView 兼容性更好）
       const value = "translateY(calc(-100% + 1px + " + offset + "))";
       wave.style.transform = value;
@@ -450,6 +482,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       showBanner();
       scrollFunction();
       initAdmonitions();
+      initExternalLinkRedirect();
     });
     window.swup.hooks.on("visit:start", (visit: { to?: { url?: string } }) => {
       restoreOriginalHistoryStateHandlers();
@@ -527,4 +560,263 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
     syncHomeClass();
   });
   scrollFunction();
+
+  // ===== 外链跳转提示（模态框方案） =====
+  let extLinkInited = false;
+  function initExternalLinkRedirect() {
+    if (extLinkInited) return;
+    extLinkInited = true;
+
+    function getConfig() {
+      try {
+        const el = document.getElementById("theme-config");
+        if (!el?.textContent) return null;
+        return JSON.parse(el.textContent).external_link || null;
+      } catch {
+        return null;
+      }
+    }
+
+    function isWhitelisted(hostname, list) {
+      if (!list || !hostname) return false;
+      return list.split("\n").some((line) => {
+        const p = line.trim();
+        if (!p) return false;
+        if (p === hostname) return true;
+        if (p.startsWith("*.")) {
+          const d = p.slice(2);
+          return hostname === d || hostname.endsWith("." + d);
+        }
+        return false;
+      });
+    }
+
+    function createModal(targetUrl) {
+      const existing = document.getElementById("ext-link-modal");
+      if (existing) existing.remove();
+
+      const config = getConfig();
+      const delay = config?.redirect_delay ?? 5;
+      const openNew = config?.open_new_window ?? false;
+      const avatarUrl = config?.avatar || "";
+      const displayUrl =
+        targetUrl.length > 70 ? targetUrl.slice(0, 70) + "..." : targetUrl;
+
+      const style = document.createElement("style");
+      style.textContent = `
+        #ext-link-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
+        #ext-link-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:ext-fade-in .25s ease}
+        #ext-link-card{position:relative;background:var(--card-bg,#fff);border-radius:1rem;padding:2rem 1.5rem 1.5rem;max-width:26rem;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);color:var(--deep-text,#333);animation:ext-slide-up .3s ease}
+        #ext-link-card .ext-avatar{width:56px;height:56px;margin:0 auto .75rem;border-radius:50%;overflow:hidden;background:var(--btn-regular-bg,#eceafb);display:flex;align-items:center;justify-content:center}
+        #ext-link-card .ext-avatar img{width:100%;height:100%;object-fit:cover}
+        #ext-link-card .ext-avatar svg{width:28px;height:28px;color:var(--btn-content,#6d5ae6)}
+        #ext-link-card .ext-title{font-size:1.125rem;font-weight:700;margin-bottom:.3rem}
+        #ext-link-card .ext-desc{font-size:.8125rem;margin-bottom:.875rem;opacity:.75}
+        #ext-link-card .ext-url-box{display:flex;align-items:center;gap:.5rem;background:var(--btn-regular-bg,#eceafb);border-radius:.75rem;padding:.625rem .75rem;margin-bottom:1.25rem;word-break:break-all}
+        #ext-link-card .ext-url-text{flex:1;min-width:0;font-size:.75rem;line-height:1.4;opacity:.9;text-align:left}
+        #ext-link-card .ext-copy{flex-shrink:0;width:30px;height:30px;border:none;background:transparent;cursor:pointer;border-radius:.5rem;display:inline-flex;align-items:center;justify-content:center;color:var(--text-50,#999);transition:all .2s;padding:0}
+        #ext-link-card .ext-copy:hover{color:var(--primary);background:rgba(128,128,128,.08)}
+        #ext-link-card .ext-copy.copied{color:#22c55e;pointer-events:none}
+        #ext-link-card .ext-btns{display:flex;gap:.625rem}
+        #ext-link-card .ext-btn-back{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:.7rem 1rem;border-radius:.75rem;border:none;font-size:.8125rem;font-weight:500;cursor:pointer;background:var(--btn-regular-bg,#eceafb);color:var(--btn-content,#6d5ae6);transition:background .2s;line-height:1}
+        #ext-link-card .ext-btn-back:hover{background:var(--btn-regular-bg-hover,#ddd8fa)}
+        #ext-link-card .ext-btn-go{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:.7rem 1rem;border-radius:.75rem;border:none;font-size:.8125rem;font-weight:500;cursor:pointer;background:var(--primary,#8b5cf6);color:#fff;transition:filter .2s;line-height:1}
+        #ext-link-card .ext-btn-go:hover{filter:brightness(1.1)}
+        #ext-link-card .ext-countdown{font-size:.7rem;margin-top:.75rem;opacity:.5}
+        @keyframes ext-fade-in{from{opacity:0}to{opacity:1}}
+        @keyframes ext-slide-up{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+      `;
+      document.head.appendChild(style);
+
+      const avatarHTML = avatarUrl
+        ? `<img src="${avatarUrl}" alt="" />`
+        : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+
+      const modal = document.createElement("div");
+      modal.id = "ext-link-modal";
+      modal.innerHTML = `
+        <div id="ext-link-backdrop"></div>
+        <div id="ext-link-card">
+          <div class="ext-avatar">${avatarHTML}</div>
+          <div class="ext-title">即将离开本站</div>
+          <div class="ext-desc">您即将访问外部链接，请注意保护个人隐私和信息安全。</div>
+          <div class="ext-url-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span class="ext-url-text">${displayUrl}</span>
+            <button class="ext-copy" id="ext-copy-btn" title="复制" data-copy-text="${targetUrl}">
+              <span class="icon-[material-symbols--content-copy-rounded] text-base"></span>
+            </button>
+          </div>
+          <div class="ext-btns">
+            <button class="ext-btn-back" id="ext-btn-back">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>返回
+            </button>
+            <button class="ext-btn-go" id="ext-btn-go">
+              继续访问<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+          <div class="ext-countdown" id="ext-countdown" style="display:none">5 秒后自动跳转</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      let dismissed = false;
+
+      function goToTarget() {
+        if (dismissed) return;
+        dismissed = true;
+        clearTimer();
+        if (openNew) {
+          window.open(targetUrl, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.href = targetUrl;
+        }
+        // Remove modal immediately when navigating away
+        modal.remove();
+        style.remove();
+        document.body.style.overflow = "";
+      }
+
+      function closeModal() {
+        if (dismissed) return;
+        dismissed = true;
+        clearTimer();
+        document.body.style.overflow = "";
+        const card = document.getElementById("ext-link-card");
+        const backdrop = document.getElementById("ext-link-backdrop");
+        if (card) {
+          card.style.transition = "opacity .15s ease, transform .15s ease";
+          card.style.opacity = "0";
+          card.style.transform = "translateY(8px) scale(.98)";
+        }
+        if (backdrop) {
+          backdrop.style.transition = "opacity .15s ease";
+          backdrop.style.opacity = "0";
+        }
+        setTimeout(() => {
+          modal.remove();
+          style.remove();
+        }, 150);
+      }
+
+      // Copy button (same pattern as links.astro)
+      document
+        .getElementById("ext-copy-btn")
+        ?.addEventListener("click", function () {
+          const text = this.getAttribute("data-copy-text");
+          if (!text) return;
+          const originalHTML = this.innerHTML;
+          this.innerHTML =
+            '<span style="font-size:.75rem;font-weight:500;white-space:nowrap">已复制</span>';
+          this.classList.add("copied");
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              setTimeout(() => {
+                this.innerHTML = originalHTML;
+                this.classList.remove("copied");
+              }, 3000);
+            })
+            .catch(() => {
+              const ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.cssText = "position:fixed;opacity:0";
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand("copy");
+              document.body.removeChild(ta);
+              setTimeout(() => {
+                this.innerHTML = originalHTML;
+                this.classList.remove("copied");
+              }, 3000);
+            });
+        });
+
+      // Back button
+      document
+        .getElementById("ext-btn-back")
+        ?.addEventListener("click", closeModal);
+
+      // Continue button
+      document.getElementById("ext-btn-go")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        goToTarget();
+      });
+
+      // Backdrop click
+      document
+        .getElementById("ext-link-backdrop")
+        ?.addEventListener("click", closeModal);
+
+      document.body.style.overflow = "hidden";
+
+      // Countdown
+      let timer;
+      function clearTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      if (delay > 0) {
+        let remaining = delay;
+        const countdownEl = document.getElementById("ext-countdown");
+        countdownEl.style.display = "block";
+        countdownEl.textContent = remaining + " 秒后自动跳转";
+        timer = setInterval(() => {
+          remaining--;
+          if (remaining <= 0) {
+            goToTarget();
+          } else {
+            countdownEl.textContent = remaining + " 秒后自动跳转";
+          }
+        }, 1000);
+      }
+    }
+
+    document.addEventListener(
+      "click",
+      (e) => {
+        const config = getConfig();
+        if (!config?.enable_redirect) return;
+
+        let t = e.target;
+        while (t && t.nodeType === 1) {
+          if (t.tagName === "A") break;
+          t = t.parentElement;
+        }
+        if (!t || t.tagName !== "A") return;
+
+        const href = t.getAttribute("href");
+        if (!href) return;
+        const s = href.substring(0, 11).toLowerCase();
+        if (
+          s === "javascript:" ||
+          s === "mailto:" ||
+          href.charAt(0) === "#" ||
+          s === "tel:"
+        )
+          return;
+
+        let hostname;
+        try {
+          const a = document.createElement("a");
+          a.href = href;
+          hostname = a.hostname;
+        } catch {
+          return;
+        }
+        if (!hostname || hostname === window.location.hostname) return;
+        if (isWhitelisted(hostname, config.whitelist)) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        createModal(href);
+      },
+      true,
+    );
+  }
+
+  initExternalLinkRedirect();
 </script>
