@@ -28,7 +28,7 @@
 
 ![首页预览](./screenshot/home.png)
 
-> 💡 **提示**：本主题可与原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 共存使用，配置互不冲突，可随时在后台切换体验。
+> 本主题基于原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 二次修改，在此感谢原作者开源。可与原版共存使用，配置互不冲突，可随时在后台切换体验。
 
 ---
 
@@ -72,13 +72,14 @@
 ### 7. 页脚增强
 
 - 隐私政策入口
-- 页脚超链接自定义
+- 页脚超链接可自定义
 - 页脚链接可配置显示/隐藏
 
 ### 8. 登录认证界面适配
 
 - 适配主题风格的登录认证页面
 - 与主题 UI 风格统一
+- 可自定义选择原生样式或适配样式
 
 ### 9. 文章点赞
 
