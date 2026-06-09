@@ -26,13 +26,19 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         transform: rotate(180deg);
       }
 
+      /* 折叠面板展开/收起动画 - overflow 和 max-height 由 JS 动态控制 */
+
       /* 表单输入框边框 - color-mix 混合主题色 */
       #link-submit-form-actual input,
       #link-submit-form-actual textarea,
       #link-submit-form-actual select,
       #link-captcha-canvas,
       #link-captcha-input {
-        border-color: color-mix(in oklab, var(--primary) 22%, transparent) !important;
+        border-color: color-mix(
+          in oklab,
+          var(--primary) 22%,
+          transparent
+        ) !important;
       }
       #link-submit-form-actual input:focus,
       #link-submit-form-actual textarea:focus,
@@ -43,7 +49,11 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
       /* 单选按钮 - 未选中用极淡主题色背景+彩色边框 */
       .link-type-label:not(:has(input:checked)) {
-        background-color: color-mix(in oklab, var(--primary) 6%, transparent) !important;
+        background-color: color-mix(
+          in oklab,
+          var(--primary) 6%,
+          transparent
+        ) !important;
         color: var(--btn-content) !important;
         font-weight: normal;
         border: 2px solid color-mix(in oklab, var(--primary) 22%, transparent) !important;
@@ -166,7 +176,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       <!-- 博客信息 -->
       <div
         th:if="${theme.config.links.enable_owner_info}"
-        class="collapse-item rounded-xl bg-(--btn-regular-bg) overflow-hidden"
+        class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
           type="button"
@@ -174,91 +184,138 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           data-collapse-target="owner-info"
         >
           <div class="flex items-center gap-2">
-            <span class="icon-[material-symbols--person-outline-rounded] text-xl text-(--primary)"></span>
-            <span class="font-medium text-90">个人博客信息</span>
+            <span
+              class="icon-[material-symbols--person-outline-rounded] text-xl text-(--primary)"
+            ></span>
+            <span class="font-medium text-90">我的博客信息</span>
           </div>
-          <span class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200" th:classappend="${theme.config.links.expand_owner_info} ? 'is-expanded'" data-expanded-class="is-expanded"></span>
+          <span
+            class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"
+            th:classappend="${theme.config.links.expand_owner_info} ? 'is-expanded'"
+            data-expanded-class="is-expanded"></span>
         </button>
         <div
           id="owner-info"
-          class="collapse-content" th:classappend="${!theme.config.links.expand_owner_info} ? 'hidden'"
+          class="collapse-content"
+          th:classappend="${theme.config.links.expand_owner_info} ? 'open'"
         >
-          <div class="px-4 pb-4 -mt-2">
+          <div class="collapse-inner px-4 pb-4">
             <!-- 信息列表 -->
             <div class="space-y-0 text-sm">
               <!-- 名称 -->
-              <div class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5">
+              <div
+                class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5"
+              >
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">名称：</span>
-                  <span class="text-50 truncate" th:text="${theme.config.links.owner_name}">博客名称</span>
+                  <span
+                    class="text-50 truncate"
+                    th:text="${theme.config.links.owner_name}">博客名称</span
+                  >
                 </div>
                 <button
                   type="button"
-                  class="copy-btn rounded-md p-0.5 text-30 transition hover:text-(--primary)"
+                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
                   th:attr="data-copy-text=${theme.config.links.owner_name}"
                   title="复制"
                 >
-                  <span class="icon-[material-symbols--content-copy-rounded] text-sm"></span>
+                  <span
+                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
+                  ></span>&#10; <span>复制</span>
                 </button>
               </div>
               <!-- 描述 -->
-              <div class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5">
+              <div
+                class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5"
+              >
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">描述：</span>
-                  <span class="truncate text-50" th:text="${theme.config.links.owner_description}">博客描述</span>
+                  <span
+                    class="truncate text-50"
+                    th:text="${theme.config.links.owner_description}"
+                    >博客描述</span
+                  >
                 </div>
                 <button
                   type="button"
-                  class="copy-btn rounded-md p-0.5 text-30 transition hover:text-(--primary)"
+                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
                   th:attr="data-copy-text=${theme.config.links.owner_description}"
                   title="复制"
                 >
-                  <span class="icon-[material-symbols--content-copy-rounded] text-sm"></span>
-                </button>
-              </div>
-              <!-- 头像链接 -->
-              <div class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5">
-                <div class="flex items-center gap-2 min-w-0 flex-1">
-                  <span class="text-90">头像：</span>
-                  <a th:href="${theme.config.links.owner_avatar}" class="truncate text-(--primary) hover:underline" th:text="${theme.config.links.owner_avatar}">https://example.com/avatar.jpg</a>
-                </div>
-                <button
-                  type="button"
-                  class="copy-btn rounded-md p-0.5 text-30 transition hover:text-(--primary)"
-                  th:attr="data-copy-text=${theme.config.links.owner_avatar}"
-                  title="复制"
-                >
-                  <span class="icon-[material-symbols--content-copy-rounded] text-sm"></span>
+                  <span
+                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
+                  ></span>&#10; <span>复制</span>
                 </button>
               </div>
               <!-- 网址 -->
-              <div class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5">
+              <div
+                class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5"
+              >
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">网址：</span>
-                  <a th:href="${theme.config.links.owner_url}" class="truncate text-(--primary) hover:underline" th:text="${theme.config.links.owner_url}">https://example.com</a>
+                  <a
+                    th:href="${theme.config.links.owner_url}"
+                    class="truncate text-(--primary) hover:underline"
+                    th:text="${theme.config.links.owner_url}"
+                    >https://example.com</a
+                  >
                 </div>
                 <button
                   type="button"
-                  class="copy-btn rounded-md p-0.5 text-30 transition hover:text-(--primary)"
+                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
                   th:attr="data-copy-text=${theme.config.links.owner_url}"
                   title="复制"
                 >
-                  <span class="icon-[material-symbols--content-copy-rounded] text-sm"></span>
+                  <span
+                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
+                  ></span>&#10; <span>复制</span>
                 </button>
               </div>
-              <!-- RSS -->
-              <div class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5">
+              <!-- 头像链接 -->
+              <div
+                class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5"
+              >
                 <div class="flex items-center gap-2 min-w-0 flex-1">
-                  <span class="text-90">RSS：</span>
-                  <a th:href="${theme.config.links.owner_rss}" class="truncate text-(--primary) hover:underline" th:text="${theme.config.links.owner_rss}">/rss.xml</a>
+                  <span class="text-90">头像：</span>
+                  <a
+                    th:href="${theme.config.links.owner_avatar}"
+                    class="truncate text-(--primary) hover:underline"
+                    th:text="${theme.config.links.owner_avatar}"
+                    >https://example.com/avatar.jpg</a
+                  >
                 </div>
                 <button
                   type="button"
-                  class="copy-btn rounded-md p-0.5 text-30 transition hover:text-(--primary)"
+                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
+                  th:attr="data-copy-text=${theme.config.links.owner_avatar}"
+                  title="复制"
+                >
+                  <span
+                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
+                  ></span>&#10; <span>复制</span>
+                </button>
+              </div>
+              <!-- RSS -->
+              <div
+                class="info-item flex items-center justify-between gap-2 rounded-lg bg-(--bg-secondary) py-1.5 px-2 pl-5"
+              >
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <span class="text-90">RSS：</span>
+                  <a
+                    th:href="${theme.config.links.owner_rss}"
+                    class="truncate text-(--primary) hover:underline"
+                    th:text="${theme.config.links.owner_rss}">/rss.xml</a
+                  >
+                </div>
+                <button
+                  type="button"
+                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
                   th:attr="data-copy-text=${theme.config.links.owner_rss}"
                   title="复制"
                 >
-                  <span class="icon-[material-symbols--content-copy-rounded] text-sm"></span>
+                  <span
+                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
+                  ></span>&#10; <span>复制</span>
                 </button>
               </div>
             </div>
@@ -269,7 +326,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       <!-- 友链须知 -->
       <div
         th:if="${theme.config.links.enable_requirements && not #strings.isEmpty(theme.config.links.requirements)}"
-        class="collapse-item rounded-xl bg-(--btn-regular-bg) overflow-hidden"
+        class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
           type="button"
@@ -277,21 +334,23 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           data-collapse-target="requirements"
         >
           <div class="flex items-center gap-2">
-            <span class="icon-[material-symbols--checklist-rounded] text-xl text-(--primary)"></span>
+            <span
+              class="icon-[material-symbols--checklist-rounded] text-xl text-(--primary)"
+            ></span>
             <span class="font-medium text-90">友链须知</span>
           </div>
-          <span class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"></span>
+          <span
+            class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"
+          ></span>
         </button>
-        <div
-          id="requirements"
-          class="collapse-content hidden"
-        >
-          <div class="px-4 pb-4 -mt-2">
+        <div id="requirements" class="collapse-content">
+          <div class="collapse-inner px-4 pb-4">
             <ul
               th:if="${not #strings.isEmpty(theme.config.links.requirements)}"
               class="requirements-list list-outside list-disc space-y-1 text-sm text-50 pl-5"
               th:data-text="${theme.config.links.requirements}"
-            ></ul>
+            >
+            </ul>
           </div>
         </div>
       </div>
@@ -299,7 +358,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       <!-- 免责申明 -->
       <div
         th:if="${theme.config.links.enable_disclaimer && not #strings.isEmpty(theme.config.links.disclaimer)}"
-        class="collapse-item rounded-xl bg-(--btn-regular-bg) overflow-hidden"
+        class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
           type="button"
@@ -307,26 +366,31 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           data-collapse-target="disclaimer"
         >
           <div class="flex items-center gap-2">
-            <span class="icon-[material-symbols--warning-outline-rounded] text-xl text-(--primary)"></span>
+            <span
+              class="icon-[material-symbols--warning-outline-rounded] text-xl text-(--primary)"
+            ></span>
             <span class="font-medium text-90">免责申明</span>
           </div>
-          <span class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"></span>
+          <span
+            class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"
+          ></span>
         </button>
-        <div
-          id="disclaimer"
-          class="collapse-content hidden"
-        >
-          <div class="px-4 pb-4 -mt-2">
+        <div id="disclaimer" class="collapse-content">
+          <div class="collapse-inner px-4 pb-4">
             <ul
               class="disclaimer-list list-outside list-disc space-y-1 text-sm text-50 pl-5"
               th:data-text="${theme.config.links.disclaimer}"
-            ></ul>
+            >
+            </ul>
           </div>
         </div>
       </div>
 
       <!-- 友链提交表单 - 折叠面板形式 -->
-      <div th:if="${pluginFinder.available('link-submit') && theme.config.links.enable_apply_btn}" class="collapse-item rounded-xl bg-(--btn-regular-bg) overflow-hidden">
+      <div
+        th:if="${pluginFinder.available('link-submit') && theme.config.links.enable_apply_btn}"
+        class="collapse-item rounded-xl bg-(--btn-regular-bg)"
+      >
         <!-- 折叠头部 - 申请友链按钮 -->
         <button
           type="button"
@@ -334,39 +398,68 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           data-collapse-target="link-submit-form"
         >
           <div class="flex items-center gap-2">
-            <span class="icon-[material-symbols--add-circle-outline-rounded] text-xl text-(--primary)"></span>
+            <span
+              class="icon-[material-symbols--add-circle-outline-rounded] text-xl text-(--primary)"
+            ></span>
             <span class="font-medium text-90">申请友链</span>
           </div>
-          <span class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"></span>
+          <span
+            class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"
+          ></span>
         </button>
-        
+
         <!-- 折叠内容 - 表单 -->
-        <div
-          id="link-submit-form"
-          class="collapse-content hidden"
-        >
-          <div class="px-4 pb-4 -mt-2">
+        <div id="link-submit-form" class="collapse-content">
+          <div class="collapse-inner px-4 pb-4">
             <!-- 成功提示 -->
-            <div id="link-submit-success" class="hidden text-center py-6 mb-4 bg-(--bg-secondary) rounded-lg">
-              <span class="icon-[material-symbols--check-circle-rounded] text-5xl text-green-500 mb-3 block mx-auto"></span>
+            <div
+              id="link-submit-success"
+              class="hidden text-center py-6 mb-4 bg-(--bg-secondary) rounded-lg"
+            >
+              <span
+                class="icon-[material-symbols--check-circle-rounded] text-5xl text-green-500 mb-3 block mx-auto"
+              ></span>
               <h3 class="text-base font-bold text-90 mb-1">提交成功！</h3>
-              <p class="text-sm text-50">您的友链申请已提交，管理员审核通过后即可显示。</p>
+              <p class="text-sm text-50">
+                您的友链申请已提交，管理员审核通过后即可显示。
+              </p>
             </div>
 
             <!-- 表单 -->
             <form id="link-submit-form-actual" class="space-y-3">
               <!-- 类型选择 -->
               <div>
-                <label class="mb-1.5 block text-sm font-medium text-90">申请类型</label>
+                <label class="mb-1.5 block text-sm font-medium text-90"
+                  >申请类型</label
+                >
                 <div class="flex gap-2">
-                  <label class="link-type-label flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-(--primary) px-3 py-2 text-xs font-bold text-white transition hover:opacity-90">
-                    <input type="radio" name="type" value="add" checked class="sr-only" />
-                    <span class="link-type-icon icon-[material-symbols--add-circle-outline-rounded]"></span>
+                  <label
+                    class="link-type-label flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-(--primary) px-3 py-2 text-xs font-bold text-white transition hover:opacity-90"
+                  >
+                    <input
+                      type="radio"
+                      name="type"
+                      value="add"
+                      checked
+                      class="sr-only"
+                    />
+                    <span
+                      class="link-type-icon icon-[material-symbols--add-circle-outline-rounded]"
+                    ></span>
                     <span class="link-type-text">新增友链</span>
                   </label>
-                  <label class="link-type-label flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-(--btn-regular-bg) px-3 py-2 text-xs font-medium text-(--btn-content) transition">
-                    <input type="radio" name="type" value="update" class="sr-only" />
-                    <span class="link-type-icon icon-[material-symbols--edit-rounded]"></span>
+                  <label
+                    class="link-type-label flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-(--btn-regular-bg) px-3 py-2 text-xs font-medium text-(--btn-content) transition"
+                  >
+                    <input
+                      type="radio"
+                      name="type"
+                      value="update"
+                      class="sr-only"
+                    />
+                    <span
+                      class="link-type-icon icon-[material-symbols--edit-rounded]"
+                    ></span>
                     <span class="link-type-text">更新友链</span>
                   </label>
                 </div>
@@ -375,7 +468,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               <!-- 网站名称 + 网站地址 -->
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label for="displayName" class="mb-1 block text-sm font-medium text-90">
+                  <label
+                    for="displayName"
+                    class="mb-1 block text-sm font-medium text-90"
+                  >
                     网站名称 <span class="text-red-500">*</span>
                   </label>
                   <input
@@ -388,7 +484,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   />
                 </div>
                 <div>
-                  <label for="url" class="mb-1 block text-sm font-medium text-90">
+                  <label
+                    for="url"
+                    class="mb-1 block text-sm font-medium text-90"
+                  >
                     网站地址 <span class="text-red-500">*</span>
                   </label>
                   <input
@@ -405,7 +504,11 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               <!-- 网站Logo + 邮箱 -->
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label for="logo" class="mb-1 block text-sm font-medium text-90">网站Logo</label>
+                  <label
+                    for="logo"
+                    class="mb-1 block text-sm font-medium text-90"
+                    >网站Logo</label
+                  >
                   <input
                     type="url"
                     id="logo"
@@ -415,7 +518,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   />
                 </div>
                 <div>
-                  <label for="email" class="mb-1 block text-sm font-medium text-90">邮箱</label>
+                  <label
+                    for="email"
+                    class="mb-1 block text-sm font-medium text-90">邮箱</label
+                  >
                   <input
                     type="email"
                     id="email"
@@ -429,7 +535,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               <!-- 分组 + 网站描述 -->
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label for="groupName" class="mb-1 block text-sm font-medium text-90">分组</label>
+                  <label
+                    for="groupName"
+                    class="mb-1 block text-sm font-medium text-90">分组</label
+                  >
                   <select
                     id="groupName"
                     name="groupName"
@@ -439,7 +548,11 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   </select>
                 </div>
                 <div>
-                  <label for="description" class="mb-1 block text-sm font-medium text-90">网站描述</label>
+                  <label
+                    for="description"
+                    class="mb-1 block text-sm font-medium text-90"
+                    >网站描述</label
+                  >
                   <textarea
                     id="description"
                     name="description"
@@ -453,7 +566,11 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               <!-- RSS订阅 + 验证码 -->
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label for="rssUrl" class="mb-1 block text-sm font-medium text-90">RSS订阅</label>
+                  <label
+                    for="rssUrl"
+                    class="mb-1 block text-sm font-medium text-90"
+                    >RSS订阅</label
+                  >
                   <input
                     type="url"
                     id="rssUrl"
@@ -463,9 +580,16 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   />
                 </div>
                 <div>
-                  <label class="mb-1 block text-sm font-medium text-90">验证码</label>
+                  <label class="mb-1 block text-sm font-medium text-90"
+                    >验证码</label
+                  >
                   <div class="flex gap-2">
-                    <canvas id="link-captcha-canvas" width="100" height="36" class="h-9 w-20 flex-shrink-0 cursor-pointer rounded-md border-2" title="点击刷新验证码"></canvas>
+                    <canvas
+                      id="link-captcha-canvas"
+                      width="100"
+                      height="36"
+                      class="h-9 w-20 flex-shrink-0 cursor-pointer rounded-md border-2"
+                      title="点击刷新验证码"></canvas>
                     <input
                       type="text"
                       id="link-captcha-input"
@@ -480,7 +604,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
               <!-- 更新描述 -->
               <div id="update-description-wrapper" class="hidden">
-                <label for="updateDescription" class="mb-1 block text-sm font-medium text-90">更新说明</label>
+                <label
+                  for="updateDescription"
+                  class="mb-1 block text-sm font-medium text-90">更新说明</label
+                >
                 <textarea
                   id="updateDescription"
                   name="updateDescription"
@@ -498,10 +625,28 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   class="inline-flex items-center justify-center rounded-lg bg-(--primary) px-8 py-2.5 text-sm font-bold text-white active:scale-[0.98] transition hover:opacity-90"
                 >
                   <span id="submit-btn-text">提交申请</span>
-                  <span id="submit-btn-loading" class="hidden items-center justify-center">
-                    <svg class="animate-spin mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <span
+                    id="submit-btn-loading"
+                    class="hidden items-center justify-center"
+                  >
+                    <svg
+                      class="animate-spin mr-2 h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     提交中...
                   </span>
@@ -514,22 +659,28 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     </div>
     <!-- 友链提交表单脚本 -->
     <script is:inline>
-      (function() {
+      (function () {
         // ====== 验证码 ======
-        var captchaCode = '';
+        var captchaCode = "";
         function drawCaptcha() {
-          var canvas = document.getElementById('link-captcha-canvas');
+          var canvas = document.getElementById("link-captcha-canvas");
           if (!canvas) return;
-          var ctx = canvas.getContext('2d');
-          var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-          captchaCode = '';
-          for (var i = 0; i < 4; i++) captchaCode += chars[Math.floor(Math.random() * chars.length)];
+          var ctx = canvas.getContext("2d");
+          var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+          captchaCode = "";
+          for (var i = 0; i < 4; i++)
+            captchaCode += chars[Math.floor(Math.random() * chars.length)];
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#fff';
+          ctx.fillStyle =
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--card-bg")
+              .trim() || "#fff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < 4; i++) {
             ctx.font = 'bold 20px "Courier New", monospace';
-            ctx.fillStyle = '#' + Math.floor(Math.random()*0x888888+0x444444).toString(16);
+            ctx.fillStyle =
+              "#" +
+              Math.floor(Math.random() * 0x888888 + 0x444444).toString(16);
             ctx.save();
             ctx.translate(18 + i * 20, 24);
             ctx.rotate((Math.random() - 0.5) * 0.4);
@@ -538,27 +689,29 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           }
           // 干扰线
           for (var i = 0; i < 3; i++) {
-            ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+            ctx.strokeStyle = "rgba(0,0,0,0.1)";
             ctx.beginPath();
             ctx.moveTo(Math.random() * 100, Math.random() * 36);
             ctx.lineTo(Math.random() * 100, Math.random() * 36);
             ctx.stroke();
           }
         }
-        var captchaCanvas = document.getElementById('link-captcha-canvas');
+        var captchaCanvas = document.getElementById("link-captcha-canvas");
         if (captchaCanvas) {
           drawCaptcha();
-          captchaCanvas.addEventListener('click', drawCaptcha);
+          captchaCanvas.addEventListener("click", drawCaptcha);
         }
 
         // 获取分组列表
         async function fetchGroups() {
           try {
-            const response = await fetch('/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linkgroups');
+            const response = await fetch(
+              "/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linkgroups",
+            );
             if (response.ok) {
               const data = await response.json();
-              const select = document.getElementById('groupName');
-              
+              const select = document.getElementById("groupName");
+
               // 处理不同的返回格式
               let groups = [];
               if (Array.isArray(data)) {
@@ -568,16 +721,21 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               } else if (data.spec) {
                 groups = [data];
               }
-              
+
               if (select && groups.length > 0) {
                 // 移除默认选项
                 var defaultOption = select.querySelector('option[value=""]');
                 if (defaultOption) defaultOption.remove();
-                
-                groups.forEach(function(item) {
-                  var option = document.createElement('option');
-                  var name = item.groupName || item.metadata?.name || item.name || '';
-                  var label = item.displayName || item.spec?.displayName || item.name || '';
+
+                groups.forEach(function (item) {
+                  var option = document.createElement("option");
+                  var name =
+                    item.groupName || item.metadata?.name || item.name || "";
+                  var label =
+                    item.displayName ||
+                    item.spec?.displayName ||
+                    item.name ||
+                    "";
                   option.value = name;
                   option.textContent = label;
                   if (option.value) {
@@ -593,37 +751,44 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
         // 绑定事件
         function initLinkSubmit() {
-          var form = document.getElementById('link-submit-form-actual');
+          var form = document.getElementById("link-submit-form-actual");
           var typeRadios = document.querySelectorAll('input[name="type"]');
-          var updateWrapper = document.getElementById('update-description-wrapper');
+          var updateWrapper = document.getElementById(
+            "update-description-wrapper",
+          );
 
           // 更新类型选择按钮样式 - CSS :has() 处理颜色，JS 用来清除 inline style
           function updateTypeStyles() {
-            var typeLabels = form.querySelectorAll('.link-type-label');
-            var primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-            typeLabels.forEach(function(label) {
-              var input = label.querySelector('input');
+            var typeLabels = form.querySelectorAll(".link-type-label");
+            var primaryColor = getComputedStyle(document.documentElement)
+              .getPropertyValue("--primary")
+              .trim();
+            typeLabels.forEach(function (label) {
+              var input = label.querySelector("input");
               if (input && input.checked) {
                 // 选中状态
                 label.style.backgroundColor = primaryColor;
-                label.style.color = '#ffffff';
-                label.style.fontWeight = 'bold';
+                label.style.color = "#ffffff";
+                label.style.fontWeight = "bold";
                 label.style.borderColor = primaryColor;
               } else {
                 // 未选中状态 - 清除 inline style，让 CSS :not(:has(input:checked)) 规则生效
-                label.style.backgroundColor = '';
-                label.style.color = '';
-                label.style.fontWeight = '';
-                label.style.borderColor = '';
+                label.style.backgroundColor = "";
+                label.style.color = "";
+                label.style.fontWeight = "";
+                label.style.borderColor = "";
               }
             });
           }
 
           // 类型切换
-          typeRadios.forEach(function(radio) {
-            radio.addEventListener('change', function() {
+          typeRadios.forEach(function (radio) {
+            radio.addEventListener("change", function () {
               if (updateWrapper) {
-                updateWrapper.classList.toggle('hidden', this.value !== 'update');
+                updateWrapper.classList.toggle(
+                  "hidden",
+                  this.value !== "update",
+                );
               }
               updateTypeStyles();
             });
@@ -634,76 +799,90 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
           // 表单提交
           if (form) {
-            form.addEventListener('submit', async function(e) {
+            form.addEventListener("submit", async function (e) {
               e.preventDefault();
 
               // 验证码校验
-              var captchaInput = document.getElementById('link-captcha-input');
-              if (captchaInput && captchaInput.value.toUpperCase() !== captchaCode) {
-                alert('验证码错误，请重新输入');
-                captchaInput.value = '';
+              var captchaInput = document.getElementById("link-captcha-input");
+              if (
+                captchaInput &&
+                captchaInput.value.toUpperCase() !== captchaCode
+              ) {
+                alert("验证码错误，请重新输入");
+                captchaInput.value = "";
                 drawCaptcha();
                 return;
               }
-              
-              var submitBtn = document.getElementById('submit-link-btn');
-              var btnText = document.getElementById('submit-btn-text');
-              var btnLoading = document.getElementById('submit-btn-loading');
-              var successDiv = document.getElementById('link-submit-success');
-              
+
+              var submitBtn = document.getElementById("submit-link-btn");
+              var btnText = document.getElementById("submit-btn-text");
+              var btnLoading = document.getElementById("submit-btn-loading");
+              var successDiv = document.getElementById("link-submit-success");
+
               // 显示加载状态
               submitBtn.disabled = true;
-              btnText.classList.add('hidden');
-              btnLoading.classList.remove('hidden');
+              btnText.classList.add("hidden");
+              btnLoading.classList.remove("hidden");
 
               var formData = new FormData(form);
               var data = {
-                type: formData.get('type'),
-                displayName: formData.get('displayName'),
-                url: formData.get('url')
+                type: formData.get("type"),
+                displayName: formData.get("displayName"),
+                url: formData.get("url"),
               };
 
               // 添加可选字段
-              if (formData.get('logo')) data.logo = formData.get('logo');
-              if (formData.get('email')) data.email = formData.get('email');
-              if (formData.get('description')) data.description = formData.get('description');
-              if (formData.get('groupName')) data.groupName = formData.get('groupName');
-              if (formData.get('rssUrl')) data.rssUrl = formData.get('rssUrl');
-              if (formData.get('updateDescription')) data.updateDescription = formData.get('updateDescription');
+              if (formData.get("logo")) data.logo = formData.get("logo");
+              if (formData.get("email")) data.email = formData.get("email");
+              if (formData.get("description"))
+                data.description = formData.get("description");
+              if (formData.get("groupName"))
+                data.groupName = formData.get("groupName");
+              if (formData.get("rssUrl")) data.rssUrl = formData.get("rssUrl");
+              if (formData.get("updateDescription"))
+                data.updateDescription = formData.get("updateDescription");
 
               try {
-                var response = await fetch('/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linksubmits/-/submit', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
+                var response = await fetch(
+                  "/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linksubmits/-/submit",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
                   },
-                  body: JSON.stringify(data)
-                });
+                );
 
                 if (response.ok) {
                   // 成功 - 显示成功提示，隐藏表单
-                  form.classList.add('hidden');
+                  form.classList.add("hidden");
                   if (successDiv) {
-                    successDiv.classList.remove('hidden');
+                    successDiv.classList.remove("hidden");
                   }
                 } else {
-                  var errorData = await response.json().catch(function() { return {}; });
-                  alert('提交失败：' + (errorData.message || '请检查输入信息是否正确'));
+                  var errorData = await response.json().catch(function () {
+                    return {};
+                  });
+                  alert(
+                    "提交失败：" +
+                      (errorData.message || "请检查输入信息是否正确"),
+                  );
                 }
               } catch (err) {
-                alert('提交失败：网络错误，请稍后重试');
+                alert("提交失败：网络错误，请稍后重试");
               } finally {
                 submitBtn.disabled = false;
-                btnText.classList.remove('hidden');
-                btnLoading.classList.add('hidden');
+                btnText.classList.remove("hidden");
+                btnLoading.classList.add("hidden");
               }
             });
           }
         }
 
         // 初始化
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', function() {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", function () {
             initLinkSubmit();
             fetchGroups();
           });
@@ -713,14 +892,14 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         }
 
         // Swup 页面切换后重新初始化
-        document.addEventListener('swup:contentReplaced', function() {
-          setTimeout(function() {
+        document.addEventListener("swup:contentReplaced", function () {
+          setTimeout(function () {
             initLinkSubmit();
             fetchGroups();
             // 重新生成验证码
             drawCaptcha();
-            var c = document.getElementById('link-captcha-canvas');
-            if (c) c.addEventListener('click', drawCaptcha);
+            var c = document.getElementById("link-captcha-canvas");
+            if (c) c.addEventListener("click", drawCaptcha);
           }, 100);
         });
       })();
@@ -743,5 +922,4 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       set:html={'<halo:comment group="plugin.halo.run" kind="Plugin" th:attr="name=${pluginName}" />'}
     />
   </div>
-
 </MainGridLayout>

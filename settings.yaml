@@ -398,11 +398,11 @@ spec:
         - $formkit: switch
           name: enable_owner_info
           value: true
-          label: 显示个人博客信息
+          label: 显示我的博客信息
         - $formkit: switch
           name: expand_owner_info
           value: true
-          label: 默认展开个人博客信息
+          label: 默认展开我的博客信息
         - $formkit: text
           name: owner_avatar
           label: 博客头像

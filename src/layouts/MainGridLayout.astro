@@ -159,55 +159,103 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
 
   <!-- 折叠面板和复制功能脚本 - 放在 Layout 外确保 Swup 切换后仍可执行 -->
   <script is:inline>
-    (function() {
-      // 折叠面板交互
+    (function () {
+      // 折叠面板交互（平滑展开/收起动画）
       function initCollapse() {
-        var headers = document.querySelectorAll('[data-collapse-target]');
-        headers.forEach(function(header) {
-          if (header.dataset.collapseBound) return;
-          header.dataset.collapseBound = 'true';
-          
-          header.addEventListener('click', function() {
-            var targetId = header.getAttribute('data-collapse-target');
-            var content = document.getElementById(targetId);
-            var icon = header.querySelector('.collapse-icon');
-
-            if (content) {
-              var isHidden = content.classList.contains('hidden');
-
-              // 关闭所有面板
-              document.querySelectorAll('.collapse-content').forEach(function(c) {
-                c.classList.add('hidden');
-              });
-              document.querySelectorAll('.collapse-icon').forEach(function(i) {
-                i.classList.remove('is-expanded');
-              });
-
-              // 切换当前项（如果是折叠的则展开）
-              if (isHidden) {
-                content.classList.remove('hidden');
-                if (icon) {
-                  icon.classList.add('is-expanded');
-                }
+        // 绑定动画结束事件，展开后允许内容溢出
+        document.querySelectorAll(".collapse-content").forEach(function (c) {
+          if (c.dataset.transitionBound) return;
+          c.dataset.transitionBound = "true";
+          c.style.transition = "max-height 0.35s ease";
+          c.addEventListener("transitionend", function (e) {
+            if (e.propertyName === "max-height") {
+              if (c.classList.contains("open")) {
+                c.style.overflow = "visible";
+                c.style.maxHeight = "";
               }
             }
           });
         });
+
+        var headers = document.querySelectorAll("[data-collapse-target]");
+        headers.forEach(function (header) {
+          if (header.dataset.collapseBound) return;
+          header.dataset.collapseBound = "true";
+
+          header.addEventListener("click", function () {
+            var targetId = header.getAttribute("data-collapse-target");
+            var content = document.getElementById(targetId);
+            var icon = header.querySelector(".collapse-icon");
+            if (!content) return;
+
+            var isOpen = content.classList.contains("open");
+
+            // 关闭其他面板
+            document
+              .querySelectorAll(".collapse-content.open")
+              .forEach(function (c) {
+                if (c !== content) {
+                  closePanel(c);
+                  var otherIcon = (
+                    c.parentElement || c.closest(".collapse-item")
+                  ).querySelector(".collapse-icon");
+                  if (otherIcon) otherIcon.classList.remove("is-expanded");
+                }
+              });
+
+            if (!isOpen) {
+              openPanel(content, icon);
+            } else {
+              closePanel(content, icon);
+            }
+          });
+        });
+
+        function openPanel(content, icon) {
+          content.style.overflow = "hidden";
+          content.classList.add("open");
+          content.style.maxHeight = content.scrollHeight + "px";
+          if (icon) icon.classList.add("is-expanded");
+        }
+
+        function closePanel(content, icon) {
+          content.style.overflow = "hidden";
+          content.style.maxHeight = content.scrollHeight + "px";
+          content.offsetHeight; // 强制回流
+          content.style.maxHeight = "0px";
+          content.classList.remove("open");
+          if (icon) icon.classList.remove("is-expanded");
+        }
+
+        // 初始化：服务端已展开的面板
+        document
+          .querySelectorAll(".collapse-content.open")
+          .forEach(function (c) {
+            c.style.maxHeight = c.scrollHeight + "px";
+            c.style.overflow = "visible";
+          });
+        // 初始化：收起状态的面板
+        document
+          .querySelectorAll(".collapse-content:not(.open)")
+          .forEach(function (c) {
+            c.style.maxHeight = "0px";
+            c.style.overflow = "hidden";
+          });
       }
 
       // 复制功能
       function initCopy() {
-        var buttons = document.querySelectorAll('.copy-btn');
-        buttons.forEach(function(btn) {
+        var buttons = document.querySelectorAll(".copy-btn");
+        buttons.forEach(function (btn) {
           if (btn.dataset.copyBound) return;
-          btn.dataset.copyBound = 'true';
-          
-          btn.addEventListener('click', function() {
-            var text = btn.getAttribute('data-copy-text');
+          btn.dataset.copyBound = "true";
+
+          btn.addEventListener("click", function () {
+            var text = btn.getAttribute("data-copy-text");
             if (!text) {
-              var container = btn.closest('.flex');
+              var container = btn.closest(".flex");
               if (container) {
-                var link = container.querySelector('a');
+                var link = container.querySelector("a");
                 if (link) {
                   text = link.href || link.textContent;
                 }
@@ -216,31 +264,46 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
 
             if (text) {
               text = text.trim();
-              var originalContent = btn.innerHTML;
-              btn.innerHTML = '<span class="text-sm font-medium">已复制</span>';
-              btn.disabled = true;
-              btn.classList.add('text-green-500');
+              var textSpan = btn.querySelector("span:last-child");
+              var iconSpan = btn.querySelector(
+                ".icon-\\[material-symbols--content-copy-outline-rounded\\]",
+              );
+              var originalText = textSpan ? textSpan.textContent : "";
+              var originalClasses = iconSpan ? iconSpan.className : "";
 
-              navigator.clipboard.writeText(text).then(function() {
-                setTimeout(function() {
-                  btn.innerHTML = originalContent;
-                  btn.disabled = false;
-                  btn.classList.remove('text-green-500');
-                }, 3000);
-              }).catch(function() {
-                var textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.cssText = 'position:fixed;opacity:0';
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                setTimeout(function() {
-                  btn.innerHTML = originalContent;
-                  btn.disabled = false;
-                  btn.classList.remove('text-green-500');
-                }, 3000);
-              });
+              // 切换到成功状态
+              if (textSpan) textSpan.textContent = "已复制";
+              if (iconSpan)
+                iconSpan.className =
+                  "icon-[material-symbols--check-outline-rounded] text-sm";
+              btn.disabled = true;
+              btn.classList.add("text-(--primary)");
+
+              navigator.clipboard
+                .writeText(text)
+                .then(function () {
+                  setTimeout(function () {
+                    if (textSpan) textSpan.textContent = originalText;
+                    if (iconSpan) iconSpan.className = originalClasses;
+                    btn.disabled = false;
+                    btn.classList.remove("text-(--primary)");
+                  }, 2000);
+                })
+                .catch(function () {
+                  var textarea = document.createElement("textarea");
+                  textarea.value = text;
+                  textarea.style.cssText = "position:fixed;opacity:0";
+                  document.body.appendChild(textarea);
+                  textarea.select();
+                  document.execCommand("copy");
+                  document.body.removeChild(textarea);
+                  setTimeout(function () {
+                    if (textSpan) textSpan.textContent = originalText;
+                    if (iconSpan) iconSpan.className = originalClasses;
+                    btn.disabled = false;
+                    btn.classList.remove("text-(--primary)");
+                  }, 2000);
+                });
             }
           });
         });
@@ -248,16 +311,18 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
 
       // 渲染友链须知和免责申明列表
       function renderRequirementsList() {
-        var lists = document.querySelectorAll('.requirements-list, .disclaimer-list');
-        lists.forEach(function(list) {
+        var lists = document.querySelectorAll(
+          ".requirements-list, .disclaimer-list",
+        );
+        lists.forEach(function (list) {
           if (list.dataset.rendered) return;
-          list.dataset.rendered = 'true';
-          var text = list.getAttribute('data-text');
+          list.dataset.rendered = "true";
+          var text = list.getAttribute("data-text");
           if (text) {
-            var lines = text.split('\n');
-            lines.forEach(function(line) {
+            var lines = text.split("\n");
+            lines.forEach(function (line) {
               if (line.trim()) {
-                var li = document.createElement('li');
+                var li = document.createElement("li");
                 li.textContent = line.trim();
                 list.appendChild(li);
               }
@@ -274,20 +339,22 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
       }
 
       // 初始化
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAll);
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initAll);
       } else {
         initAll();
       }
 
       // Swup 页面切换后重新初始化
-      document.addEventListener('swup:contentReplaced', function() {
+      document.addEventListener("swup:contentReplaced", function () {
         // 重置绑定标记，让功能可以重新初始化
-        document.querySelectorAll('[data-collapse-bound]').forEach(function(el) {
-          el.dataset.collapseBound = '';
-        });
-        document.querySelectorAll('[data-copy-bound]').forEach(function(el) {
-          el.dataset.copyBound = '';
+        document
+          .querySelectorAll("[data-collapse-bound]")
+          .forEach(function (el) {
+            el.dataset.collapseBound = "";
+          });
+        document.querySelectorAll("[data-copy-bound]").forEach(function (el) {
+          el.dataset.copyBound = "";
         });
         initAll();
       });
@@ -298,15 +365,21 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
       function setWaveViewBox() {
         var t = performance.now() / 1000;
         for (var i = 1; i <= 3; i++) {
-          var svg = document.getElementById('wave-svg-' + i);
+          var svg = document.getElementById("wave-svg-" + i);
           if (!svg) continue;
-          svg.setAttribute('viewBox', ((t / speeds[i-1]) % 1) * 2880 + ' 0 1440 200');
+          svg.setAttribute(
+            "viewBox",
+            ((t / speeds[i - 1]) % 1) * 2880 + " 0 1440 200",
+          );
         }
       }
-      function step() { setWaveViewBox(); requestAnimationFrame(step); }
+      function step() {
+        setWaveViewBox();
+        requestAnimationFrame(step);
+      }
       requestAnimationFrame(step);
       // Swup切换后同步viewBox，避免过渡期默认viewBox露缝
-      document.addEventListener('swup:contentReplaced', setWaveViewBox);
+      document.addEventListener("swup:contentReplaced", setWaveViewBox);
     })();
   </script>
 </Layout>
