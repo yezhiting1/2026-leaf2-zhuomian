@@ -80,6 +80,19 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
             <span>Friends links</span>
           </div>
         </div>
+        <button
+          th:if="${theme.config.links.enable_random_visit && not #lists.isEmpty(groups)}"
+          type="button"
+          id="random-visit-btn"
+          th:attr="data-random-groups=${theme.config.links.random_visit_groups}"
+          class="random-visit-btn inline-flex items-center justify-center gap-2 rounded-lg bg-(--primary) px-5 py-2 text-sm font-bold text-white active:scale-[0.98] transition hover:opacity-90"
+          title="随机访问一个友链"
+        >
+          <span
+            class="icon-[material-symbols--shuffle-outline-rounded] text-base"
+          ></span>
+          <span>随机访问</span>
+        </button>
       </div>
     </div>
 
@@ -106,6 +119,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
             th:each="link, linkStat : ${group.links}"
             th:href="${link.spec.url}"
             th:title="${link.spec.displayName}"
+            th:attr="data-link-group=${group.spec.displayName}"
             th:style="|animation-delay: calc(var(--content-delay) + ${(groupStat.index * 4 + linkStat.index) * 35}ms)|"
             target="_blank"
             rel="noopener noreferrer"

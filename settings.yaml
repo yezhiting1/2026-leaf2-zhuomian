@@ -396,6 +396,16 @@ spec:
           label: 显示友链自助提交表单
           help: "需要安装并启用「友链自助提交」插件"
         - $formkit: switch
+          name: enable_random_visit
+          value: true
+          label: 显示随机访问按钮
+          help: "在友链页面标题右侧显示随机访问按钮，点击随机跳转到一个友链"
+        - $formkit: textarea
+          name: random_visit_groups
+          label: 随机访问分组
+          value: ""
+          help: "限制随机访问的友链分组，每行输入一个分组名称。留空则表示所有分组都参与随机访问"
+        - $formkit: switch
           name: enable_owner_info
           value: true
           label: 显示我的博客信息

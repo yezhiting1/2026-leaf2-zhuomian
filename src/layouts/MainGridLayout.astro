@@ -309,6 +309,63 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
         });
       }
 
+      // 随机访问友链
+      function initRandomVisit() {
+        var btn = document.getElementById("random-visit-btn");
+        if (!btn || btn.dataset.randomBound) return;
+        btn.dataset.randomBound = "true";
+
+        btn.addEventListener("click", function () {
+          var allowedGroups = btn.getAttribute("data-random-groups") || "";
+          var groupFilter = allowedGroups
+            ? allowedGroups
+                .split(/[\n,]/)
+                .map(function (g) {
+                  return g.trim();
+                })
+                .filter(Boolean)
+            : [];
+
+          // 收集页面上的友链卡片
+          var links = [];
+          document
+            .querySelectorAll(".btn-card[data-link-group]")
+            .forEach(function (card) {
+              var groupName = card.getAttribute("data-link-group") || "";
+              // 如果设置了分组筛选，则跳过不在允许列表中的链接
+              if (
+                groupFilter.length > 0 &&
+                groupFilter.indexOf(groupName) === -1
+              ) {
+                return;
+              }
+              var url = card.getAttribute("href");
+              if (url) {
+                links.push(url);
+              }
+            });
+
+          if (links.length === 0) {
+            alert("暂无可随机访问的友链");
+            return;
+          }
+
+          // 随机选取一个链接
+          var randomIndex = Math.floor(Math.random() * links.length);
+          var randomUrl = links[randomIndex];
+
+          // 通过创建临时 <a> 元素并点击，触发外链跳转模态框
+          var a = document.createElement("a");
+          a.href = randomUrl;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.style.display = "none";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      }
+
       // 渲染友链须知和免责申明列表
       function renderRequirementsList() {
         var lists = document.querySelectorAll(
@@ -335,6 +392,7 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
       function initAll() {
         initCollapse();
         initCopy();
+        initRandomVisit();
         renderRequirementsList();
       }
 
@@ -356,6 +414,8 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
         document.querySelectorAll("[data-copy-bound]").forEach(function (el) {
           el.dataset.copyBound = "";
         });
+        var randomBtn = document.getElementById("random-visit-btn");
+        if (randomBtn) randomBtn.dataset.randomBound = "";
         initAll();
       });
     })();
