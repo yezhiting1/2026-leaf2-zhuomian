@@ -21,7 +21,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     <div
       id="content"
       class="custom-md markdown-content onload-animation prose prose-base max-w-none! dark:prose-invert!"
-      th:classappend="| ${theme.config.post.content_size} ${theme.config.post.content_theme}|"
+      th:classappend="| ${theme.config.post.contentDisplay.content_size} ${theme.config.post.contentDisplay.content_theme}|"
       th:utext="${singlePage.content.content}"
     >
     </div>

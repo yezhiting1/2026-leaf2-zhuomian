@@ -596,9 +596,9 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       if (existing) existing.remove();
 
       const config = getConfig();
-      const delay = config?.redirect_delay ?? 5;
+      const delay = config?.redirectConfig?.redirect_delay ?? 5;
       const openNew = config?.open_new_window ?? false;
-      const avatarUrl = config?.avatar || "";
+      const avatarUrl = config?.redirectConfig?.avatar || "";
       const displayUrl =
         targetUrl.length > 70 ? targetUrl.slice(0, 70) + "..." : targetUrl;
 
@@ -712,8 +712,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
           if (!text) return;
           const icon = this.querySelector("span:first-child");
           const label = this.querySelector("span:last-child");
-          if (icon)
-            icon.className = "icon-[material-symbols--check-outline-rounded]";
+          if (icon) icon.className = "icon-[material-symbols--check-rounded]";
           if (label) {
             label.style.cssText = "";
             label.textContent = "已复制";
@@ -806,7 +805,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       "click",
       (e) => {
         const config = getConfig();
-        if (!config?.enable_redirect) return;
+        if (!config?.redirectConfig?.enable_redirect) return;
 
         let t = e.target;
         while (t && t.nodeType === 1) {

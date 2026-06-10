@@ -8,7 +8,7 @@ const className = Astro.props.class;
 
 <table-of-contents
   class:list={[className, "group relative block"]}
-  th:attr="data-max-depth=${theme.config.post != null and theme.config.post.toc_depth != null ? theme.config.post.toc_depth : 2}"
+  th:attr="data-max-depth=${theme.config.post != null and theme.config.post.toc.toc_depth != null ? theme.config.post.toc.toc_depth : 2}"
 >
   <div
     id="active-indicator"

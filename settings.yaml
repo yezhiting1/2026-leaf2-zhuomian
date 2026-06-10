@@ -92,23 +92,28 @@ spec:
     - group: style
       label: 样式
       formSchema:
-        - $formkit: select
-          name: color_scheme
-          label: 默认配色
-          value: auto
-          options:
-            - label: 跟随系统
+        - $formkit: group
+          name: colorScheme
+          label: 配色方案
+          value:
+            color_scheme: auto
+            enable_change_color_scheme: true
+          children:
+            - $formkit: select
+              name: color_scheme
+              label: 默认配色
               value: auto
-            - label: 深色
-              value: dark
-            - label: 浅色
-              value: light
-
-        - $formkit: switch
-          name: enable_change_color_scheme
-          label: 允许访客切换配色
-          value: true
-
+              options:
+                - label: 跟随系统
+                  value: auto
+                - label: 深色
+                  value: dark
+                - label: 浅色
+                  value: light
+            - $formkit: switch
+              name: enable_change_color_scheme
+              label: 允许访客切换配色
+              value: true
         - $formkit: switch
           name: navbar_blur
           label: 导航栏磨砂透明效果
@@ -215,7 +220,6 @@ spec:
               label: HTML
               value: "<p>自定义HTML</p>"
               language: html
-
     - group: profile
       label: 个人设置
       formSchema:
@@ -223,17 +227,14 @@ spec:
           name: enable_profile
           value: true
           label: 启用个人设置
-
         - $formkit: attachment
           name: avatar
           value: /themes/theme-fuwari-NanNan/assets/images/demo-avatar.png
           label: 头像
-
         - $formkit: text
           name: name
           label: 昵称
           value: Fuwari
-
         - $formkit: text
           name: bio
           label: 简介
@@ -242,16 +243,14 @@ spec:
           name: url
           label: 链接(点击跳转登录和后台可使用 /login )
           value: /about
-
         - $formkit: array
           name: social_media
           label: 社交媒体
-
           children:
             - $formkit: iconify
               name: social_icon
               label: 社交图标
-              format: svg # svg / dataurl / url / name
+              format: svg
             - $formkit: text
               name: name
               label: 名称
@@ -259,7 +258,6 @@ spec:
               name: url
               label: 链接
               validation: "required"
-
     - group: post
       label: 文章
       formSchema:
@@ -284,93 +282,120 @@ spec:
               name: url
               label: 链接
               value: https://creativecommons.org/licenses/by-nc-sa/4.0/
-        - $formkit: select
-          name: content_size
-          label: 字体大小
-          value: prose-base
-          options:
-            - value: prose-base
-              label: prose-base
-            - value: prose-sm
-              label: prose-sm
-            - value: prose-lg
-              label: prose-lg
-            - value: prose-xl
-              label: prose-xl
-            - value: prose-2xl
-              label: prose-2xl
-        - $formkit: select
-          name: content_theme
-          label: 颜色主题
-          value: prose-gray
-          options:
-            - value: prose-gray
-              label: prose-gray
-            - value: prose-slate
-              label: prose-slate
-            - value: prose-zinc
-              label: prose-zinc
-            - value: prose-neutral
-              label: prose-neutral
-            - value: prose-stone
-              label: prose-stone
-        - $formkit: switch
-          name: enable_toc
-          label: 启用目录
-          value: true
-          help: "启用目录"
-        - $formkit: number
-          name: toc_depth
-          label: 目录最大深度
-          value: 2
-          help: "目录的最大深度"
+        - $formkit: group
+          name: contentDisplay
+          label: 内容显示
+          value:
+            content_size: prose-base
+            content_theme: prose-gray
+          children:
+            - $formkit: select
+              name: content_size
+              label: 字体大小
+              value: prose-base
+              options:
+                - value: prose-base
+                  label: prose-base
+                - value: prose-sm
+                  label: prose-sm
+                - value: prose-lg
+                  label: prose-lg
+                - value: prose-xl
+                  label: prose-xl
+                - value: prose-2xl
+                  label: prose-2xl
+            - $formkit: select
+              name: content_theme
+              label: 颜色主题
+              value: prose-gray
+              options:
+                - value: prose-gray
+                  label: prose-gray
+                - value: prose-slate
+                  label: prose-slate
+                - value: prose-zinc
+                  label: prose-zinc
+                - value: prose-neutral
+                  label: prose-neutral
+                - value: prose-stone
+                  label: prose-stone
+        - $formkit: group
+          name: toc
+          label: 目录
+          value:
+            enable_toc: true
+            toc_depth: 2
+          children:
+            - $formkit: switch
+              name: enable_toc
+              label: 启用目录
+              value: true
+              help: "启用目录"
+            - $formkit: number
+              name: toc_depth
+              label: 目录最大深度
+              value: 2
+              help: "目录的最大深度"
         - $formkit: switch
           name: enable_like
           label: 启用文章点赞
           value: true
           help: "在文章版权声明下方显示点赞互动按钮"
-    - group: beian
-      label: 备案设置
-      formSchema:
-        - $formkit: text
-          name: icp_text
-          label: ICP备案号
-        - $formkit: text
-          name: icp_link
-          label: ICP备案跳转链接
-          value: https://beian.miit.gov.cn/
-
-        - $formkit: text
-          name: gongan_text
-          label: 公安联网备案号
-        - $formkit: text
-          name: gongan_link
-          label: 公安联网备案跳转链接
-          value: https://beian.mps.gov.cn/#/query/webSearch
-
     - group: footer
       label: 页脚设置
       formSchema:
-        - $formkit: switch
-          name: enable_privacy
-          value: false
-          label: 显示隐私政策
-          help: "在页脚显示隐私政策链接"
-        - $formkit: text
-          name: privacy_url
-          label: 隐私政策链接
-          value: /privacy
-          help: "隐私政策页面地址"
-        - $formkit: switch
-          name: enable_rss
-          value: true
-          label: 显示 RSS
-          help: "在页脚显示 RSS 链接（需安装 RSS 插件）"
-        - $formkit: switch
-          name: enable_sitemap
-          value: true
-          label: 显示 Sitemap
-          help: "在页脚显示 Sitemap 链接（需安装 Sitemap 插件）"
+        - $formkit: group
+          name: beian
+          label: 备案信息
+          value:
+            icp_text: ""
+            icp_link: "https://beian.miit.gov.cn/"
+            gongan_text: ""
+            gongan_link: "https://beian.mps.gov.cn/#/query/webSearch"
+          children:
+            - $formkit: text
+              name: icp_text
+              label: ICP备案号
+            - $formkit: text
+              name: icp_link
+              label: ICP备案跳转链接
+              value: https://beian.miit.gov.cn/
+            - $formkit: text
+              name: gongan_text
+              label: 公安联网备案号
+            - $formkit: text
+              name: gongan_link
+              label: 公安联网备案跳转链接
+              value: https://beian.mps.gov.cn/#/query/webSearch
+        - $formkit: group
+          name: displayLinks
+          label: 显示链接
+          value:
+            enable_privacy: false
+            privacy_url: "/privacy"
+            enable_rss: true
+            enable_sitemap: true
+          children:
+            - $formkit: switch
+              name: enable_privacy
+              value: false
+              label: 显示隐私政策
+              help: "在页脚显示隐私政策链接"
+            - $formkit: text
+              name: privacy_url
+              label: 隐私政策链接
+              value: /privacy
+              help: "隐私政策页面地址"
+            - $formkit: switch
+              name: enable_rss
+              value: true
+              label: 显示 RSS
+              help: "在页脚显示 RSS 链接（需安装 RSS 插件）"
+            - $formkit: switch
+              name: enable_sitemap
+              value: true
+              label: 显示 Sitemap
+              help: "在页脚显示 Sitemap 链接（需安装 Sitemap 插件）"
         - $formkit: array
           name: custom_links
           label: 自定义链接
@@ -385,103 +410,150 @@ spec:
     - group: links
       label: 友链设置
       formSchema:
-        - $formkit: switch
-          name: enable_comment
-          value: true
-          label: 显示评论
-          help: "在友链页面底部显示评论区"
-        - $formkit: switch
-          name: enable_apply_btn
-          value: true
-          label: 显示友链自助提交表单
-          help: "需要安装并启用「友链自助提交」插件"
-        - $formkit: switch
-          name: enable_random_visit
-          value: true
-          label: 显示随机访问按钮
-          help: "在友链页面标题右侧显示随机访问按钮，点击随机跳转到一个友链"
-        - $formkit: textarea
-          name: random_visit_groups
-          label: 随机访问分组
-          value: ""
-          help: "限制随机访问的友链分组，每行输入一个分组名称。留空则表示所有分组都参与随机访问"
-        - $formkit: switch
-          name: enable_owner_info
-          value: true
-          label: 显示我的博客信息
-        - $formkit: switch
-          name: expand_owner_info
-          value: true
-          label: 默认展开我的博客信息
-        - $formkit: text
-          name: owner_avatar
-          label: 博客头像
-          value: https://example.com/avatar.jpg
-          help: "博客头像图片地址"
-        - $formkit: text
-          name: owner_name
-          label: 博客名称
-          value: 博客名称
-          help: "博客名称"
-        - $formkit: textarea
-          name: owner_description
-          label: 博客描述
-          value: 这是一个基于 Halo 搭建的个人博客
-          help: "博客简短描述"
-        - $formkit: text
-          name: owner_url
-          label: 博客网址
-          value: https://example.com
-          help: "博客首页地址"
-        - $formkit: text
-          name: owner_rss
-          label: RSS 地址
-          value: https://example.com/rss.xml
-          help: "博客 RSS 订阅地址"
-        - $formkit: switch
-          name: enable_requirements
-          value: true
-          label: 显示友链须知
-        - $formkit: textarea
-          name: requirements
-          value: |
-            请点击下方的申请友链提交网站信息
-            网站能够正常访问，访问速度正常
-            将本站添加为贵站的友情链接
-            网站为个人类型，非采集站，站点符合国家相关法律法规，不涉及违法行为
-            提交友链信息后我会尽快审核贵站链接
-          label: 友链须知内容
-          help: "显示在折叠面板中的友链须知"
-        - $formkit: switch
-          name: enable_disclaimer
-          value: true
-          label: 显示免责申明
-        - $formkit: textarea
-          name: disclaimer
-          value: |
-            本博客严格遵守中华人民共和国法律法规，友情链接及其他外链，仅为了方便学习与交流而收集整理
-            本人能力有限，无法逐一甄别每篇文章的全部内容，也无法实时跟进并确认原作者后续是否对链接内容进行篡改，包括但不限于发布违法信息、植入恶意代码、诱导点击或破坏用户计算机等行为
-            部分友链网站可能未完成工信部备案或域名实名认证，因此其安全性、稳定性及内容合法性均无法保证
-            请您在点击访问前自行审慎判断，并承担相应风险，本博客不对因跳转第三方网站而产生的任何直接或间接损失承担责任
-            如您在实际访问中遇到不良内容或遭受损失，深表歉意，请及时通过本博客提供的联系方式与博主沟通处理，博主将立即移除相关链接
-          label: 免责申明内容
-          help: "显示在折叠面板中的免责声明"
+        - $formkit: group
+          name: features
+          label: 功能开关
+          value:
+            enable_comment: true
+            enable_apply_btn: true
+            enable_random_visit: true
+            random_visit_groups: ""
+          children:
+            - $formkit: switch
+              name: enable_comment
+              value: true
+              label: 显示评论
+              help: "在友链页面底部显示评论区"
+            - $formkit: switch
+              name: enable_apply_btn
+              value: true
+              label: 显示友链自助提交表单
+              help: "需要安装并启用「友链自助提交」插件"
+            - $formkit: switch
+              name: enable_random_visit
+              value: true
+              label: 显示随机访问按钮
+              help: "在友链页面标题右侧显示随机访问按钮，点击随机跳转到一个友链"
+            - $formkit: textarea
+              name: random_visit_groups
+              label: 随机访问分组
+              value: ""
+              help: "限制随机访问的友链分组，每行输入一个分组名称。留空则表示所有分组都参与随机访问"
+        - $formkit: group
+          name: ownerInfo
+          label: 我的博客信息
+          value:
+            enable_owner_info: true
+            expand_owner_info: true
+            owner_avatar: "https://example.com/avatar.jpg"
+            owner_name: "博客名称"
+            owner_description: "这是一个基于 Halo 搭建的个人博客"
+            owner_url: "https://example.com"
+            owner_rss: "https://example.com/rss.xml"
+          children:
+            - $formkit: switch
+              name: enable_owner_info
+              value: true
+              label: 显示我的博客信息
+            - $formkit: switch
+              name: expand_owner_info
+              value: true
+              label: 默认展开我的博客信息
+            - $formkit: text
+              name: owner_avatar
+              label: 博客头像
+              value: https://example.com/avatar.jpg
+              help: "博客头像图片地址"
+            - $formkit: text
+              name: owner_name
+              label: 博客名称
+              value: 博客名称
+              help: "博客名称"
+            - $formkit: textarea
+              name: owner_description
+              label: 博客描述
+              value: 这是一个基于 Halo 搭建的个人博客
+              help: "博客简短描述"
+            - $formkit: text
+              name: owner_url
+              label: 博客网址
+              value: https://example.com
+              help: "博客首页地址"
+            - $formkit: text
+              name: owner_rss
+              label: RSS 地址
+              value: https://example.com/rss.xml
+              help: "博客 RSS 订阅地址"
+        - $formkit: group
+          name: req
+          label: 友链须知
+          value:
+            enable_requirements: true
+            requirements: ""
+          children:
+            - $formkit: switch
+              name: enable_requirements
+              value: true
+              label: 显示友链须知
+            - $formkit: textarea
+              name: requirements
+              value: |
+                请点击下方的申请友链提交网站信息
+                网站能够正常访问，访问速度正常
+                将本站添加为贵站的友情链接
+                网站为个人类型，非采集站，站点符合国家相关法律法规，不涉及违法行为
+                提交友链信息后我会尽快审核贵站链接
+              label: 友链须知内容
+              help: "显示在折叠面板中的友链须知"
+        - $formkit: group
+          name: dcl
+          label: 免责申明
+          value:
+            enable_disclaimer: true
+            disclaimer: ""
+          children:
+            - $formkit: switch
+              name: enable_disclaimer
+              value: true
+              label: 显示免责申明
+            - $formkit: textarea
+              name: disclaimer
+              value: |
+                本博客严格遵守中华人民共和国法律法规，友情链接及其他外链，仅为了方便学习与交流而收集整理
+                本人能力有限，无法逐一甄别每篇文章的全部内容，也无法实时跟进并确认原作者后续是否对链接内容进行篡改，包括但不限于发布违法信息、植入恶意代码、诱导点击或破坏用户计算机等行为
+                部分友链网站可能未完成工信部备案或域名实名认证，因此其安全性、稳定性及内容合法性均无法保证
+                请您在点击访问前自行审慎判断，并承担相应风险，本博客不对因跳转第三方网站而产生的任何直接或间接损失承担责任
+                如您在实际访问中遇到不良内容或遭受损失，深表歉意，请及时通过本博客提供的联系方式与博主沟通处理，博主将立即移除相关链接
+              label: 免责申明内容
+              help: "显示在折叠面板中的免责声明"
     - group: external_link
       label: 外链跳转
       formSchema:
-        - $formkit: switch
-          name: enable_redirect
-          label: 启用外链跳转提示
-          value: true
-          help: "开启后点击外部链接时显示跳转提示页面"
-        - $formkit: number
-          name: redirect_delay
-          label: 自动跳转时间（秒）
-          min: 0
-          max: 30
-          step: 1
-          value: 5
-          help: "设置为 0 则禁用自动跳转"
+        - $formkit: group
+          name: redirectConfig
+          label: 跳转设置
+          value:
+            enable_redirect: true
+            redirect_delay: 5
+            avatar: ""
+          children:
+            - $formkit: switch
+              name: enable_redirect
+              label: 启用外链跳转提示
+              value: true
+              help: "开启后点击外部链接时显示跳转提示页面"
+            - $formkit: number
+              name: redirect_delay
+              label: 自动跳转时间（秒）
+              min: 0
+              max: 30
+              step: 1
+              value: 5
+              help: "设置为 0 则禁用自动跳转"
+            - $formkit: attachment
+              name: avatar
+              label: 提示页头像
+              help: "留空则使用默认图标"
         - $formkit: textarea
           name: whitelist
           label: 域名白名单
@@ -492,10 +564,6 @@ spec:
           label: 新窗口打开
           value: false
           help: "开启后将在新标签页打开外部链接"
-        - $formkit: attachment
-          name: avatar
-          label: 提示页头像
-          help: "留空则使用默认图标"
     - group: auth
       label: 认证
       formSchema:

@@ -81,10 +81,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           </div>
         </div>
         <button
-          th:if="${theme.config.links.enable_random_visit && not #lists.isEmpty(groups)}"
+          th:if="${theme.config.links.features.enable_random_visit && not #lists.isEmpty(groups)}"
           type="button"
           id="random-visit-btn"
-          th:attr="data-random-groups=${theme.config.links.random_visit_groups}"
+          th:attr="data-random-groups=${theme.config.links.features.random_visit_groups}"
           class="random-visit-btn inline-flex items-center justify-center gap-2 rounded-lg bg-(--primary) px-5 py-2 text-sm font-bold text-white active:scale-[0.98] transition hover:opacity-90"
           title="随机访问一个友链"
         >
@@ -178,7 +178,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
   <!-- 折叠信息区域 -->
   <section
-    th:if="${theme.config.links.enable_owner_info || theme.config.links.enable_requirements || theme.config.links.enable_disclaimer}"
+    th:if="${theme.config.links.ownerInfo.enable_owner_info || theme.config.links.req.enable_requirements || theme.config.links.dcl.enable_disclaimer}"
     class="card-base onload-animation mb-4 px-6 py-6 md:px-9"
   >
     <h2 class="mb-4 text-xl font-bold text-90">
@@ -189,7 +189,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     <div class="space-y-2" id="links-accordion">
       <!-- 博客信息 -->
       <div
-        th:if="${theme.config.links.enable_owner_info}"
+        th:if="${theme.config.links.ownerInfo.enable_owner_info}"
         class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
@@ -205,13 +205,13 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           </div>
           <span
             class="collapse-icon icon-[material-symbols--expand-more-rounded] text-xl text-50 transition-transform duration-200"
-            th:classappend="${theme.config.links.expand_owner_info} ? 'is-expanded'"
+            th:classappend="${theme.config.links.ownerInfo.expand_owner_info} ? 'is-expanded'"
             data-expanded-class="is-expanded"></span>
         </button>
         <div
           id="owner-info"
           class="collapse-content"
-          th:classappend="${theme.config.links.expand_owner_info} ? 'open'"
+          th:classappend="${theme.config.links.ownerInfo.expand_owner_info} ? 'open'"
         >
           <div class="collapse-inner px-4 pb-4">
             <!-- 信息列表 -->
@@ -224,13 +224,14 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   <span class="text-90">名称：</span>
                   <span
                     class="text-50 truncate"
-                    th:text="${theme.config.links.owner_name}">博客名称</span
+                    th:text="${theme.config.links.ownerInfo.owner_name}"
+                    >博客名称</span
                   >
                 </div>
                 <button
                   type="button"
                   class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.owner_name}"
+                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_name}"
                   title="复制"
                 >
                   <span
@@ -246,14 +247,14 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   <span class="text-90">描述：</span>
                   <span
                     class="truncate text-50"
-                    th:text="${theme.config.links.owner_description}"
+                    th:text="${theme.config.links.ownerInfo.owner_description}"
                     >博客描述</span
                   >
                 </div>
                 <button
                   type="button"
                   class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.owner_description}"
+                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_description}"
                   title="复制"
                 >
                   <span
@@ -268,16 +269,16 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">网址：</span>
                   <a
-                    th:href="${theme.config.links.owner_url}"
+                    th:href="${theme.config.links.ownerInfo.owner_url}"
                     class="truncate text-(--primary) hover:underline"
-                    th:text="${theme.config.links.owner_url}"
+                    th:text="${theme.config.links.ownerInfo.owner_url}"
                     >https://example.com</a
                   >
                 </div>
                 <button
                   type="button"
                   class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.owner_url}"
+                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_url}"
                   title="复制"
                 >
                   <span
@@ -292,16 +293,16 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">头像：</span>
                   <a
-                    th:href="${theme.config.links.owner_avatar}"
+                    th:href="${theme.config.links.ownerInfo.owner_avatar}"
                     class="truncate text-(--primary) hover:underline"
-                    th:text="${theme.config.links.owner_avatar}"
+                    th:text="${theme.config.links.ownerInfo.owner_avatar}"
                     >https://example.com/avatar.jpg</a
                   >
                 </div>
                 <button
                   type="button"
                   class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.owner_avatar}"
+                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_avatar}"
                   title="复制"
                 >
                   <span
@@ -316,15 +317,16 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 <div class="flex items-center gap-2 min-w-0 flex-1">
                   <span class="text-90">RSS：</span>
                   <a
-                    th:href="${theme.config.links.owner_rss}"
+                    th:href="${theme.config.links.ownerInfo.owner_rss}"
                     class="truncate text-(--primary) hover:underline"
-                    th:text="${theme.config.links.owner_rss}">/rss.xml</a
+                    th:text="${theme.config.links.ownerInfo.owner_rss}"
+                    >/rss.xml</a
                   >
                 </div>
                 <button
                   type="button"
                   class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.owner_rss}"
+                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_rss}"
                   title="复制"
                 >
                   <span
@@ -339,7 +341,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
       <!-- 友链须知 -->
       <div
-        th:if="${theme.config.links.enable_requirements && not #strings.isEmpty(theme.config.links.requirements)}"
+        th:if="${theme.config.links.req.enable_requirements && not #strings.isEmpty(theme.config.links.req.requirements)}"
         class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
@@ -360,9 +362,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         <div id="requirements" class="collapse-content">
           <div class="collapse-inner px-4 pb-4">
             <ul
-              th:if="${not #strings.isEmpty(theme.config.links.requirements)}"
+              th:if="${not #strings.isEmpty(theme.config.links.req.requirements)}"
               class="requirements-list list-outside list-disc space-y-1 text-sm text-50 pl-5"
-              th:data-text="${theme.config.links.requirements}"
+              th:data-text="${theme.config.links.req.requirements}"
             >
             </ul>
           </div>
@@ -371,7 +373,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
       <!-- 免责申明 -->
       <div
-        th:if="${theme.config.links.enable_disclaimer && not #strings.isEmpty(theme.config.links.disclaimer)}"
+        th:if="${theme.config.links.dcl.enable_disclaimer && not #strings.isEmpty(theme.config.links.dcl.disclaimer)}"
         class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <button
@@ -393,7 +395,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           <div class="collapse-inner px-4 pb-4">
             <ul
               class="disclaimer-list list-outside list-disc space-y-1 text-sm text-50 pl-5"
-              th:data-text="${theme.config.links.disclaimer}"
+              th:data-text="${theme.config.links.dcl.disclaimer}"
             >
             </ul>
           </div>
@@ -402,7 +404,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
       <!-- 友链提交表单 - 折叠面板形式 -->
       <div
-        th:if="${pluginFinder.available('link-submit') && theme.config.links.enable_apply_btn}"
+        th:if="${pluginFinder.available('link-submit') && theme.config.links.features.enable_apply_btn}"
         class="collapse-item rounded-xl bg-(--btn-regular-bg)"
       >
         <!-- 折叠头部 - 申请友链按钮 -->
@@ -923,7 +925,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
   <!-- 评论区 -->
   <div
     id="comment"
-    th:if="${haloCommentEnabled && (theme.config.links.enable_comment == null || theme.config.links.enable_comment)}"
+    th:if="${haloCommentEnabled && (theme.config.links.features.enable_comment == null || theme.config.links.features.enable_comment)}"
     class="card-base relative z-10 w-full px-6 pb-4 pt-6 md:px-9"
   >
     <h2

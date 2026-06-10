@@ -128,7 +128,7 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
         <div class="absolute z-0 hidden w-full xl:block">
           <div
             class="relative mx-auto max-w-(--page-width)"
-            th:with="tocEnabled=${theme.config.post == null or theme.config.post.enable_toc == null or theme.config.post.enable_toc}"
+            th:with="tocEnabled=${theme.config.post == null or theme.config.post.toc.enable_toc == null or theme.config.post.toc.enable_toc}"
           >
             <div
               id="toc-wrapper"
