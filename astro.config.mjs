@@ -3,7 +3,6 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import swup from "@swup/astro";
 
-import vue from "@astrojs/vue";
 import Icons from "unplugin-icons/vite";
 import svelte from "@astrojs/svelte";
 import icon from "astro-icon";
@@ -13,9 +12,6 @@ export default defineConfig({
   build: {
     assets: "assets",
     format: "file",
-  },
-  experimental: {
-    rustCompiler: true,
   },
   outDir: "./templates",
   integrations: [
@@ -27,25 +23,26 @@ export default defineConfig({
       containers: ["#swup-container", "#toc-container"],
       smoothScrolling: true,
       cache: false, // 禁用缓存，避免友链页面内容不完整
-      preload: false, // 禁用预加载
+      preload: true, // 启用预加载，加快页面切换速度
       accessibility: true,
       updateHead: true,
       updateBodyClass: false,
       globalInstance: true,
-      ignoreVisit: function(url) {
+      ignoreVisit: function (url) {
         // 禁用 Swup 对友链页面的处理
         return url.pathname === "/links" || url.pathname === "/links.html";
       },
     }),
     icon({
       include: {
-        "preprocess: vitePreprocess(),": ["*"],
         "fa6-brands": ["*"],
         "fa6-regular": ["*"],
         "fa6-solid": ["*"],
+        mdi: ["*"],
+        "material-symbols": ["*"],
+        tabler: ["*"],
       },
     }),
-    vue(),
     svelte(),
   ],
   vite: {
@@ -53,9 +50,7 @@ export default defineConfig({
       tailwindcss({
         safelist: ["navbar-blur"],
       }),
-      Icons({
-        compiler: "vue3",
-      }),
+      Icons(),
     ],
   },
 });
