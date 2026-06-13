@@ -59,6 +59,7 @@ const className = Astro.props.class;
         opacity 0.2s;
       padding: 0;
       margin-top: 1px;
+      font-size: 15px;
     }
 
     .hitokoto-refresh:hover {
@@ -70,13 +71,11 @@ const className = Astro.props.class;
       transform: scale(0.9);
     }
 
-    .hitokoto-refresh svg {
-      width: 15px;
-      height: 15px;
+    .hitokoto-refresh .iconify-spin {
       transition: transform 0.4s ease;
     }
 
-    .hitokoto-refresh.spinning svg {
+    .hitokoto-refresh.spinning .iconify-spin {
       transform: rotate(360deg);
     }
 
@@ -105,17 +104,8 @@ const className = Astro.props.class;
     <div class="hitokoto-main-row">
       <p class="hitokoto-text" id="hitokotoText">加载中...</p>
       <button class="hitokoto-refresh" id="hitokotoRefresh" title="换一句">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polyline points="23 4 23 10 17 10"></polyline>
-          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-        </svg>
+        <span class="icon-[material-symbols--refresh-rounded] iconify-spin"
+        ></span>
       </button>
     </div>
     <div class="hitokoto-author-row">
@@ -126,13 +116,26 @@ const className = Astro.props.class;
 
 <script is:inline>
   (function () {
-    var hitokotoInitialized = false;
+    var hitokotoBound = false;
+    var CACHE_KEY = "hitokoto_cache";
+
+    function getCachedData() {
+      try {
+        var raw = sessionStorage.getItem(CACHE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return null;
+    }
+
+    function setCachedData(data) {
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
 
     function initHitokoto() {
-      if (hitokotoInitialized) return;
       var card = document.getElementById("hitokotoCard");
       if (!card) return;
-      hitokotoInitialized = true;
 
       var textEl = document.getElementById("hitokotoText");
       var authorEl = document.getElementById("hitokotoAuthor");
@@ -171,6 +174,7 @@ const className = Astro.props.class;
         card.classList.add("hitokoto-loading");
         refreshBtn.classList.add("spinning");
         fetchHitokoto().then(function (data) {
+          setCachedData(data);
           updateCard(data);
           setTimeout(function () {
             refreshBtn.classList.remove("spinning");
@@ -178,8 +182,19 @@ const className = Astro.props.class;
         });
       }
 
-      refreshBtn.addEventListener("click", refresh);
-      refresh();
+      // 只绑定一次 click 事件
+      if (!hitokotoBound) {
+        hitokotoBound = true;
+        refreshBtn.addEventListener("click", refresh);
+      }
+
+      // 优先使用缓存数据，无缓存时才请求
+      var cached = getCachedData();
+      if (cached) {
+        updateCard(cached);
+      } else {
+        refresh();
+      }
     }
 
     // 初始化
@@ -189,9 +204,8 @@ const className = Astro.props.class;
       initHitokoto();
     }
 
-    // Swup 页面切换后重新初始化（使用 DOM 事件，兼容 swup 4.x）
+    // Swup 页面切换后仅重新绑定 DOM，不重新请求
     document.addEventListener("swup:contentReplaced", function () {
-      hitokotoInitialized = false;
       setTimeout(initHitokoto, 100);
     });
   })();

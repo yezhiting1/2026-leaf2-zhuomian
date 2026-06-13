@@ -247,3 +247,5 @@
 .layout-three-column [data-toc-entry].visible .toc-title {
   color: var(--primary) !important;
 }
+
+/* 三栏布局下友情链接一行2个 - 通过 th:classappend 在 friends.astro 中控制 */

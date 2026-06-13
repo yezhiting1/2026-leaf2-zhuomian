@@ -114,7 +114,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           >
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div
+          class="grid gap-4 sm:grid-cols-2"
+          th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? 'xl:grid-cols-3' : ''}"
+        >
           <a
             th:each="link, linkStat : ${group.links}"
             th:href="${link.spec.url}"
