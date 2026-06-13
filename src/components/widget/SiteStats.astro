@@ -267,53 +267,65 @@ const style = Astro.props.style;
         var activityEl = document.getElementById("site-stats-last-activity");
         if (activityEl) activityEl.textContent = formattedActivity;
 
-        // 逐个获取文章渲染页面计算总字数
+        // 并发抓取文章页面计算总字数（每批 5 篇）
         var totalWords = 0;
+        var completed = 0;
+        var total = posts.length;
 
-        function fetchNext(idx) {
-          if (idx >= posts.length) {
-            // 缓存结果到 window 上
-            window.__siteStatsCache = {
-              totalWords: totalWords,
-              lastActivity: formattedActivity,
-            };
-            var wordsEl = document.getElementById("site-stats-total-words");
-            if (wordsEl) wordsEl.textContent = formatNumber(totalWords);
-            return;
-          }
-          var post = posts[idx];
+        function onDone() {
+          window.__siteStatsCache = {
+            totalWords: totalWords,
+            lastActivity: formattedActivity,
+          };
+          var wordsEl = document.getElementById("site-stats-total-words");
+          if (wordsEl) wordsEl.textContent = formatNumber(totalWords);
+        }
+
+        function fetchPostWords(post) {
           var permalink = (post.status && post.status.permalink) || "";
           var slug = (post.spec && post.spec.slug) || "";
           var postUrl = permalink || (slug ? "/archives/" + slug : null);
-          if (!postUrl) {
-            fetchNext(idx + 1);
-            return;
-          }
-          fetch(postUrl)
+          if (!postUrl) return Promise.resolve();
+          return fetch(postUrl)
             .then(function (res) {
-              if (!res.ok) return null;
-              return res.text();
+              return res.ok ? res.text() : null;
             })
             .then(function (html) {
-              if (html) {
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(html, "text/html");
-                var article =
-                  doc.querySelector("#post-content") ||
-                  doc.querySelector(".markdown-content") ||
-                  doc.querySelector("#content");
-                if (article) {
-                  totalWords += countWords(article.textContent || "");
-                }
+              if (!html) return;
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(html, "text/html");
+              var article =
+                doc.querySelector("#post-content") ||
+                doc.querySelector(".markdown-content") ||
+                doc.querySelector("#content");
+              if (article) {
+                totalWords += countWords(article.textContent || "");
               }
-              fetchNext(idx + 1);
             })
-            .catch(function () {
-              fetchNext(idx + 1);
-            });
+            .catch(function () {});
         }
 
-        fetchNext(0);
+        // 每批并发 5 个
+        var BATCH = 5;
+        var idx = 0;
+
+        function fetchBatch() {
+          if (idx >= posts.length) return;
+          var batchEnd = Math.min(idx + BATCH, posts.length);
+          var batch = posts.slice(idx, batchEnd);
+          idx = batchEnd;
+
+          Promise.all(batch.map(fetchPostWords)).then(function () {
+            completed += batch.length;
+            if (completed >= total) {
+              onDone();
+            } else {
+              fetchBatch();
+            }
+          });
+        }
+
+        fetchBatch();
       }
 
       fetchPage();

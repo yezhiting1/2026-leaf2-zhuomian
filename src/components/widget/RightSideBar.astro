@@ -3,6 +3,7 @@ import Categories from "./Categories.astro";
 import Hitokoto from "./Hitokoto.astro";
 import SiteStats from "./SiteStats.astro";
 import Tags from "./Tags.astro";
+import Weather from "./Weather.astro";
 import TOC from "./TOC.astro";
 
 interface Props {
@@ -41,6 +42,9 @@ const thClassappend = Astro.props["th:classappend"] || "";
             </div>
             <div class="contents" th:case="'site-stats'">
               <SiteStats />
+            </div>
+            <div class="contents" th:case="'weather'">
+              <Weather />
             </div>
             <div
               th:case="'html'"
@@ -92,6 +96,9 @@ const thClassappend = Astro.props["th:classappend"] || "";
             </div>
             <div class="contents" th:case="'site-stats'">
               <SiteStats />
+            </div>
+            <div class="contents" th:case="'weather'">
+              <Weather />
             </div>
             <div
               th:case="'html'"

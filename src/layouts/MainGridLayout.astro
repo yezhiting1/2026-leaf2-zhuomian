@@ -80,7 +80,7 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
     >
       <div
         id="main-grid"
-        class="left-0 right-0 mx-auto grid w-full grid-cols-[1fr] grid-rows-[auto_1fr_auto] gap-4 px-0 transition duration-700 md:grid-cols-[17.5rem_1fr] md:px-4"
+        class="left-0 right-0 mx-auto grid w-full grid-cols-[1fr] grid-rows-[auto] gap-4 px-0 transition duration-700 md:grid-cols-[17.5rem_1fr] md:grid-rows-[auto_1fr_auto] md:px-4"
         th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? '' : 'xl:grid-cols-[17.5rem_1fr_17.5rem]'}"
         th:style="${theme.config.base.banner.enable ? 'min-height: calc(100vh - (35vh - 3.5rem))' : 'min-height: calc(100vh - 5.5rem)'}"
       >
@@ -104,16 +104,10 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
           ></span>
         </a>
 
-        <!-- 左侧边栏 -->
-        <SideBar
-          class="onload-animation col-span-2 row-start-2 row-end-3 mb-4 lg:col-span-1 lg:row-start-1 lg:row-end-2 lg:max-w-70"
-          th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? '' : 'xl:row-span-2'}"
-        />
-
-        <!-- 主内容区 -->
+        <!-- 主内容区 - 移动端第一项 -->
         <main
           id="swup-container"
-          class="transition-swup-fade col-span-2 overflow-hidden lg:col-span-1"
+          class="transition-swup-fade col-span-2 overflow-hidden md:col-span-1 md:row-start-1 md:col-start-2"
         >
           <div id="content-wrapper" class="onload-animation">
             <slot />
@@ -123,9 +117,15 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
           </div>
         </main>
 
-        <!-- 右侧边栏 - 三栏布局时显示 -->
+        <!-- 左侧栏 - 移动端第二项，平板端用 grid 放到左侧 -->
+        <SideBar
+          class="onload-animation col-span-2 mb-4 md:col-span-1 md:row-start-1 md:col-start-1 lg:max-w-70"
+          th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? '' : 'xl:row-span-2'}"
+        />
+
+        <!-- 右侧栏 - 移动端第三项，平板隐藏，三栏显示 -->
         <RightSideBar
-          class="hidden xl:flex xl:flex-col xl:gap-4 xl:row-span-2"
+          class="col-span-2 md:hidden xl:col-span-1 xl:col-start-3 xl:row-start-1 xl:flex xl:flex-col xl:gap-4 xl:row-span-2"
           th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? 'xl:!hidden' : ''}"
           showToc={showToc}
         />

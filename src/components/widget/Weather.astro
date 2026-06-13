@@ -1,0 +1,292 @@
+---
+import WidgetLayout from "./WidgetLayout.astro";
+
+interface Props {
+  class?: string;
+}
+
+const className = Astro.props.class;
+---
+
+<WidgetLayout
+  name="天气"
+  nameKey="widget.weather.title"
+  id="weather"
+  class={className}
+>
+  {/* 隐藏的图标元素，供 Tailwind 构建时检测生成 CSS */}
+  <div class="hidden">
+    <span class="icon-[mdi--loading]"></span>
+    <span class="icon-[mdi--weather-sunny]"></span>
+    <span class="icon-[mdi--weather-cloudy]"></span>
+    <span class="icon-[mdi--weather-cloudy-alert]"></span>
+    <span class="icon-[mdi--weather-rainy]"></span>
+    <span class="icon-[mdi--weather-pouring]"></span>
+    <span class="icon-[mdi--weather-lightning-rainy]"></span>
+    <span class="icon-[mdi--weather-snowy]"></span>
+    <span class="icon-[mdi--weather-snowy-heavy]"></span>
+    <span class="icon-[mdi--weather-snowy-rainy]"></span>
+    <span class="icon-[mdi--weather-fog]"></span>
+    <span class="icon-[mdi--weather-dust]"></span>
+    <span class="icon-[mdi--weather-night]"></span>
+    <span class="icon-[mdi--weather-night-partly-cloudy]"></span>
+    <span class="icon-[mdi--map-marker]"></span>
+    <span class="icon-[mdi--cloud-off-outline]"></span>
+    <span class="icon-[mdi--key-variant]"></span>
+  </div>
+
+  <div id="weather-content" class="px-2 py-1">
+    <div
+      class="flex items-center justify-center gap-2 text-neutral-400 text-sm"
+    >
+      <span class="icon-[mdi--loading] animate-spin text-base"></span>
+      <span data-i18n="widget.weather.loading">加载中...</span>
+    </div>
+  </div>
+</WidgetLayout>
+
+<script is:inline>
+  (function () {
+    const CACHE_KEY = "weather_cache";
+    const CACHE_TTL = 30 * 60 * 1000;
+    const API_BASE = "https://restapi.amap.com/v3";
+
+    const weatherIconMap = {
+      晴: "mdi--weather-sunny",
+      少云: "mdi--weather-cloudy",
+      晴间多云: "mdi--weather-cloudy",
+      多云: "mdi--weather-cloudy",
+      阴: "mdi--weather-cloudy-alert",
+      小雨: "mdi--weather-rainy",
+      中雨: "mdi--weather-rainy",
+      大雨: "mdi--weather-pouring",
+      暴雨: "mdi--weather-pouring",
+      大暴雨: "mdi--weather-pouring",
+      特大暴雨: "mdi--weather-pouring",
+      阵雨: "mdi--weather-rainy",
+      雷阵雨: "mdi--weather-lightning-rainy",
+      雷阵雨并伴有冰雹: "mdi--weather-lightning-rainy",
+      小雪: "mdi--weather-snowy",
+      中雪: "mdi--weather-snowy",
+      大雪: "mdi--weather-snowy-heavy",
+      暴雪: "mdi--weather-snowy-heavy",
+      阵雪: "mdi--weather-snowy",
+      雨夹雪: "mdi--weather-snowy-rainy",
+      冻雨: "mdi--weather-snowy-rainy",
+      雾: "mdi--weather-fog",
+      霾: "mdi--weather-fog",
+      沙尘暴: "mdi--weather-dust",
+      浮尘: "mdi--weather-dust",
+      扬沙: "mdi--weather-dust",
+      强沙尘暴: "mdi--weather-dust",
+    };
+
+    const nightIconMap = {
+      晴: "mdi--weather-night",
+      少云: "mdi--weather-night-partly-cloudy",
+      晴间多云: "mdi--weather-night-partly-cloudy",
+      多云: "mdi--weather-night-partly-cloudy",
+    };
+
+    function getWeatherIcon(weather) {
+      var isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
+      if (isNight && weather in nightIconMap) return nightIconMap[weather];
+      return weatherIconMap[weather] || "mdi--weather-cloudy";
+    }
+
+    function getConfig() {
+      try {
+        var el = document.getElementById("theme-config");
+        if (!el || !el.textContent) return null;
+        return JSON.parse(el.textContent);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function getCachedWeather() {
+      try {
+        var cached = sessionStorage.getItem(CACHE_KEY);
+        if (!cached) return null;
+        var data = JSON.parse(cached);
+        if (Date.now() - data.timestamp > CACHE_TTL) {
+          sessionStorage.removeItem(CACHE_KEY);
+          return null;
+        }
+        return data;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setCachedWeather(data) {
+      try {
+        sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ data: data, timestamp: Date.now() }),
+        );
+      } catch (e) {}
+    }
+
+    function renderWeather(data) {
+      var container = document.getElementById("weather-content");
+      if (!container || !data || !data.lives || !data.lives[0]) {
+        renderError();
+        return;
+      }
+      var live = data.lives[0];
+      var icon = getWeatherIcon(live.weather);
+      container.innerHTML =
+        '<div class="flex flex-col gap-3 px-1">' +
+        '<div class="flex items-center justify-between">' +
+        '<div class="flex items-center gap-1.5">' +
+        '<span class="icon-[mdi--map-marker] text-sm text-(--primary)"></span>' +
+        '<span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">' +
+        live.city +
+        "</span>" +
+        "</div>" +
+        '<span class="text-xs text-neutral-400">' +
+        live.weather +
+        "</span>" +
+        "</div>" +
+        '<div class="flex items-center justify-between">' +
+        '<div class="flex items-center gap-3">' +
+        '<span class="icon-[' +
+        icon +
+        '] text-4xl text-(--primary)"></span>' +
+        '<span class="text-3xl font-bold text-neutral-900 dark:text-neutral-100 leading-none">' +
+        live.temperature +
+        '<span class="text-lg font-normal">°C</span>' +
+        "</span>" +
+        "</div>" +
+        '<div class="flex flex-col items-end gap-0.5 text-xs text-neutral-500 dark:text-neutral-400">' +
+        "<span>" +
+        live.winddirection +
+        "风 " +
+        live.windpower +
+        "级</span>" +
+        "<span>湿度 " +
+        live.humidity +
+        "%</span>" +
+        "</div>" +
+        "</div>" +
+        "</div>";
+    }
+
+    function renderError(msg) {
+      var container = document.getElementById("weather-content");
+      if (!container) return;
+      var detail = msg
+        ? '<span class="text-xs mt-1 block text-center">' + msg + "</span>"
+        : "";
+      container.innerHTML =
+        '<div class="flex flex-col items-center justify-center gap-1 text-neutral-400 text-sm px-2 py-1">' +
+        '<div class="flex items-center gap-2">' +
+        '<span class="icon-[mdi--cloud-off-outline] text-base"></span>' +
+        '<span data-i18n="widget.weather.error">天气加载失败</span>' +
+        "</div>" +
+        detail +
+        "</div>";
+    }
+
+    async function loadWeather() {
+      var cached = getCachedWeather();
+      if (cached) {
+        renderWeather(cached.data);
+        return;
+      }
+
+      var config = getConfig();
+      var widgets =
+        (config &&
+          config.sidebar &&
+          (config.sidebar.rightWidgets || config.sidebar.widgets)) ||
+        [];
+      var wc = null;
+      for (var i = 0; i < widgets.length; i++) {
+        if (widgets[i].value === "weather") {
+          wc = widgets[i];
+          break;
+        }
+      }
+      var key = wc && wc.amap_key;
+      var defaultCity = (wc && wc.default_city) || "110000";
+
+      if (!key) {
+        var container = document.getElementById("weather-content");
+        if (container)
+          container.innerHTML =
+            '<div class="flex items-center justify-center gap-2 text-neutral-400 text-sm px-2 py-1">' +
+            '<span class="icon-[mdi--key-variant] text-base"></span>' +
+            '<span data-i18n="widget.weather.noKey">请配置 API Key</span>' +
+            "</div>";
+        return;
+      }
+
+      try {
+        var city = defaultCity;
+        try {
+          var ipResp = await fetch(API_BASE + "/ip?key=" + key);
+          var ipData = await ipResp.json();
+          if (
+            ipData.status === "1" &&
+            typeof ipData.adcode === "string" &&
+            ipData.adcode
+          ) {
+            city = ipData.adcode;
+          }
+        } catch (e) {}
+
+        var wxResp = await fetch(
+          API_BASE +
+            "/weather/weatherInfo?key=" +
+            key +
+            "&city=" +
+            city +
+            "&extensions=base",
+        );
+        var wxData = await wxResp.json();
+
+        if (wxData.status === "1" && wxData.lives && wxData.lives[0]) {
+          setCachedWeather(wxData);
+          renderWeather(wxData);
+        } else {
+          if (city !== defaultCity) {
+            var retry = await fetch(
+              API_BASE +
+                "/weather/weatherInfo?key=" +
+                key +
+                "&city=" +
+                defaultCity +
+                "&extensions=base",
+            );
+            var retryData = await retry.json();
+            if (
+              retryData.status === "1" &&
+              retryData.lives &&
+              retryData.lives[0]
+            ) {
+              setCachedWeather(retryData);
+              renderWeather(retryData);
+              return;
+            }
+          }
+          var hint =
+            wxData.info === "INVALID_USER_KEY"
+              ? "Key 无效，请检查设置"
+              : wxData.info === "INVALID_PARAMS"
+                ? "请使用 Web服务 类型 Key"
+                : wxData.info || "天气查询失败";
+          renderError(hint);
+        }
+      } catch (e) {
+        renderError("网络请求失败");
+      }
+    }
+
+    loadWeather();
+    document.addEventListener("swup:contentReplaced", function () {
+      loadWeather();
+    });
+  })();
+</script>

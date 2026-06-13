@@ -156,6 +156,8 @@ spec:
                   value: hitokoto
                 - label: 站点统计
                   value: site-stats
+                - label: 天气
+                  value: weather
                 - label: 自定义HTML
                   value: html
             - $formkit: text
@@ -164,6 +166,18 @@ spec:
               label: 网站上线日期
               value: ""
               help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
+            - $formkit: text
+              if: $value.value === weather
+              name: amap_key
+              label: 高德 Web 服务 Key
+              value: ""
+              help: "Web服务API类型，免费注册：https://console.amap.com/dev/key/app"
+            - $formkit: text
+              if: $value.value === weather
+              name: default_city
+              label: 默认城市
+              value: "110000"
+              help: "IP定位失败时的回退城市，填写城市编码如 110000（北京）或 310000（上海）"
             - $formkit: text
               if: $value.value === music
               name: title
@@ -258,6 +272,8 @@ spec:
                   value: hitokoto
                 - label: 站点统计
                   value: site-stats
+                - label: 天气
+                  value: weather
                 - label: 自定义HTML
                   value: html
             - $formkit: text
@@ -266,6 +282,18 @@ spec:
               label: 网站上线日期
               value: ""
               help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
+            - $formkit: text
+              if: $value.value === weather
+              name: amap_key
+              label: 高德 Web 服务 Key
+              value: ""
+              help: "Web服务API类型，免费注册：https://console.amap.com/dev/key/app"
+            - $formkit: text
+              if: $value.value === weather
+              name: default_city
+              label: 默认城市
+              value: "110000"
+              help: "IP定位失败时的回退城市，填写城市编码如 110000（北京）或 310000（上海）"
             - $formkit: code
               if: $value.value === html
               name: html

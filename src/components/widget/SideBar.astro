@@ -5,6 +5,7 @@ import MusicPlayer from "./MusicPlayer.astro";
 import Profile from "./Profile.astro";
 import SiteStats from "./SiteStats.astro";
 import Tags from "./Tags.astro";
+import Weather from "./Weather.astro";
 
 interface Props {
   class?: string;
@@ -45,6 +46,12 @@ const thClassappend = Astro.props["th:classappend"] || "";
         </div>
         <div class="contents" th:case="'site-stats'">
           <SiteStats class="onload-animation" />
+        </div>
+        <div class="contents" th:case="'weather'">
+          <Weather
+            class="onload-animation"
+            th:style="|animation-delay: calc(var(--content-delay) + ${widgetStat.index * 50}ms)|"
+          />
         </div>
         <div
           th:case="'html'"
