@@ -168,16 +168,16 @@ spec:
               help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
             - $formkit: text
               if: $value.value === weather
-              name: amap_key
-              label: 高德 Web 服务 Key
+              name: tencent_key
+              label: 腾讯位置服务 Key
               value: ""
-              help: "Web服务API类型，免费注册：https://console.amap.com/dev/key/app"
+              help: "WebService API 类型，免费注册：https://lbs.qq.com/dev/console/application/mine"
             - $formkit: text
               if: $value.value === weather
               name: default_city
-              label: 默认城市
+              label: 默认城市编码
               value: "110000"
-              help: "IP定位失败时的回退城市，填写城市编码如 110000（北京）或 310000（上海）"
+              help: "IP定位失败时的回退城市，填写行政区划编码如 110000（北京）或 310000（上海）"
             - $formkit: text
               if: $value.value === music
               name: title
@@ -284,16 +284,16 @@ spec:
               help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
             - $formkit: text
               if: $value.value === weather
-              name: amap_key
-              label: 高德 Web 服务 Key
+              name: tencent_key
+              label: 腾讯位置服务 Key
               value: ""
-              help: "Web服务API类型，免费注册：https://console.amap.com/dev/key/app"
+              help: "WebService API 类型，免费注册：https://lbs.qq.com/dev/console/application/mine"
             - $formkit: text
               if: $value.value === weather
               name: default_city
-              label: 默认城市
+              label: 默认城市编码
               value: "110000"
-              help: "IP定位失败时的回退城市，填写城市编码如 110000（北京）或 310000（上海）"
+              help: "IP定位失败时的回退城市，填写行政区划编码如 110000（北京）或 310000（上海）"
             - $formkit: code
               if: $value.value === html
               name: html
