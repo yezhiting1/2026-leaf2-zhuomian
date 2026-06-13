@@ -49,7 +49,7 @@ pnpm format           # Format with Prettier (includes .astro files)
 ### External Dependencies
 
 - `@halo-dev/api-client` - Halo API client
-- `@swup/astro` - Page transitions (containers: `main`, `#toc-container`)
+- `@swup/astro` - Page transitions (containers: `#swup-container`, `#toc-container`, `#right-sidebar`)
 - `astro-icon` + `unplugin-icons` - Icon system (Iconify)
 - `sharp` - Image processing (requires native build)
 

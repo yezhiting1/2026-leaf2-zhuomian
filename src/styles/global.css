@@ -19,4 +19,8 @@
   &.enable-banner #sidebar-sticky {
     @apply top-[calc(1rem-var(--banner-height-extend))];
   }
+
+  &.enable-banner #right-sidebar-sticky {
+    @apply top-[calc(1rem-var(--banner-height-extend))];
+  }
 }

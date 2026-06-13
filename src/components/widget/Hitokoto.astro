@@ -189,12 +189,10 @@ const className = Astro.props.class;
       initHitokoto();
     }
 
-    // Swup 页面切换后重新初始化
-    if (typeof window.swup !== "undefined") {
-      window.swup.on("contentReplaced", function () {
-        hitokotoInitialized = false;
-        setTimeout(initHitokoto, 100);
-      });
-    }
+    // Swup 页面切换后重新初始化（使用 DOM 事件，兼容 swup 4.x）
+    document.addEventListener("swup:contentReplaced", function () {
+      hitokotoInitialized = false;
+      setTimeout(initHitokoto, 100);
+    });
   })();
 </script>

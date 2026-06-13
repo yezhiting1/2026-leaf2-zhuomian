@@ -122,9 +122,19 @@ spec:
     - group: sidebar
       label: 侧边栏
       formSchema:
+        - $formkit: select
+          name: layoutMode
+          label: 页面布局
+          value: three-column
+          help: "选择页面的布局模式：两栏（仅左侧边栏）或三栏（左侧 + 右侧边栏）"
+          options:
+            - label: 两栏布局
+              value: two-column
+            - label: 三栏布局
+              value: three-column
         - $formkit: array
           name: widgets
-          label: 小部件
+          label: 左侧边栏小部件
           value:
             - value: categories
             - value: tag
@@ -144,8 +154,16 @@ spec:
                   value: music
                 - label: 一言
                   value: hitokoto
+                - label: 站点统计
+                  value: site-stats
                 - label: 自定义HTML
                   value: html
+            - $formkit: text
+              if: "$value.value === 'site-stats'"
+              name: site_start_date
+              label: 网站上线日期
+              value: ""
+              help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
             - $formkit: text
               if: $value.value === music
               name: title
@@ -214,6 +232,40 @@ spec:
               name: api
               label: 自定义 Meting API
               help: 留空时使用 MetingJS 默认 API，地址可包含 :server、:type、:id、:r 占位符
+            - $formkit: code
+              if: $value.value === html
+              name: html
+              label: HTML
+              value: "<p>自定义HTML</p>"
+              language: html
+        - $formkit: array
+          name: rightWidgets
+          label: 右侧边栏小部件
+          value:
+            - value: hitokoto
+            - value: site-stats
+          children:
+            - $formkit: select
+              name: value
+              id: right_widgets_value
+              label: 部件
+              options:
+                - label: 文章分类
+                  value: categories
+                - label: 文章标签
+                  value: tag
+                - label: 一言
+                  value: hitokoto
+                - label: 站点统计
+                  value: site-stats
+                - label: 自定义HTML
+                  value: html
+            - $formkit: text
+              if: "$value.value === 'site-stats'"
+              name: site_start_date
+              label: 网站上线日期
+              value: ""
+              help: "用于计算运行天数，格式：YYYY-MM-DD，留空则不显示运行天数"
             - $formkit: code
               if: $value.value === html
               name: html

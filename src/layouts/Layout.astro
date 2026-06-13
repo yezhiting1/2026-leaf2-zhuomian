@@ -476,6 +476,15 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       },
       { before: true },
     );
+    // 右侧边栏 TOC 手动刷新（确保 swup 替换后 TOC 重新初始化高亮追踪）
+    window.swup.hooks.on("content:replace", () => {
+      const rightToc = document.querySelector(
+        "#right-sidebar table-of-contents",
+      ) as (HTMLElement & { refresh?: () => void }) | null;
+      if (rightToc?.refresh) {
+        rightToc.refresh();
+      }
+    });
     window.swup.hooks.on("page:view", () => {
       syncHomeClass();
       lightbox = initPhotoSwipe();

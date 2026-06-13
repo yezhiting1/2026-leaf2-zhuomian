@@ -3,6 +3,7 @@ import BackToTop from "../components/control/BackToTop.astro";
 import Footer from "../components/Footer.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import Navbar from "../components/Navbar.astro";
+import RightSideBar from "../components/widget/RightSideBar.astro";
 import SideBar from "../components/widget/SideBar.astro";
 import TOC from "../components/widget/TOC.astro";
 import {
@@ -40,7 +41,8 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
 
   <div
     id="top-row"
-    class="pointer-events-none relative z-50 mx-auto max-w-(--page-width) px-0 transition-all duration-700 md:px-4"
+    class="pointer-events-none relative z-50 mx-auto w-full xl:w-[92vw] max-w-(--page-width) px-0 transition-all duration-700 md:px-4"
+    th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? 'layout-two-column' : 'layout-three-column'}"
   >
     <div
       id="navbar-wrapper"
@@ -72,10 +74,15 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
     style={`top: ${mainPanelTop}`}
     th:style="${theme.config.base.banner.enable ? 'top: calc(35vh - 3.5rem)' : 'top: 5.5rem'}"
   >
-    <div class="pointer-events-auto relative mx-auto max-w-(--page-width)">
+    <div
+      class="pointer-events-auto relative mx-auto w-full xl:w-[92vw] max-w-(--page-width)"
+      th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? 'layout-two-column' : 'layout-three-column'}"
+    >
       <div
         id="main-grid"
-        class="left-0 right-0 mx-auto grid w-full grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] gap-4 px-0 transition duration-700 md:px-4 lg:grid-rows-[auto]"
+        class="left-0 right-0 mx-auto grid w-full grid-cols-[1fr] grid-rows-[auto_1fr_auto] gap-4 px-0 transition duration-700 md:grid-cols-[17.5rem_1fr] md:px-4"
+        th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? '' : 'xl:grid-cols-[17.5rem_1fr_17.5rem]'}"
+        th:style="${theme.config.base.banner.enable ? 'min-height: calc(100vh - (35vh - 3.5rem))' : 'min-height: calc(100vh - 5.5rem)'}"
       >
         <a
           id="banner-credit"
@@ -97,10 +104,13 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
           ></span>
         </a>
 
+        <!-- 左侧边栏 -->
         <SideBar
           class="onload-animation col-span-2 row-start-2 row-end-3 mb-4 lg:col-span-1 lg:row-start-1 lg:row-end-2 lg:max-w-70"
+          th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? '' : 'xl:row-span-2'}"
         />
 
+        <!-- 主内容区 -->
         <main
           id="swup-container"
           class="transition-swup-fade col-span-2 overflow-hidden lg:col-span-1"
@@ -113,6 +123,14 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
           </div>
         </main>
 
+        <!-- 右侧边栏 - 三栏布局时显示 -->
+        <RightSideBar
+          class="hidden xl:flex xl:flex-col xl:gap-4 xl:row-span-2"
+          th:classappend="${theme.config.sidebar.layoutMode == 'two-column' ? 'xl:!hidden' : ''}"
+          showToc={showToc}
+        />
+
+        <!-- 移动端页脚 -->
         <div class="footer onload-animation col-span-2 block lg:hidden">
           <Footer />
         </div>
@@ -125,7 +143,10 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
   <div id="toc-container">
     {
       showToc ? (
-        <div class="absolute z-0 hidden w-full xl:block">
+        <div
+          class="absolute z-0 hidden w-full xl:block"
+          th:classappend="${theme.config.sidebar.layoutMode == 'three-column' ? 'xl:!hidden' : ''}"
+        >
           <div
             class="relative mx-auto max-w-(--page-width)"
             th:with="tocEnabled=${theme.config.post == null or theme.config.post.toc.enable_toc == null or theme.config.post.toc.enable_toc}"

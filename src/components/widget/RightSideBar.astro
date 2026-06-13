@@ -1,0 +1,72 @@
+---
+import Categories from "./Categories.astro";
+import Hitokoto from "./Hitokoto.astro";
+import SiteStats from "./SiteStats.astro";
+import Tags from "./Tags.astro";
+import TOC from "./TOC.astro";
+
+interface Props {
+  class?: string;
+  showToc?: boolean;
+}
+
+const className = Astro.props.class;
+const showToc = Astro.props.showToc || false;
+const thClassappend = Astro.props["th:classappend"] || "";
+---
+
+<aside
+  id="right-sidebar"
+  class:list={[className, "w-full"]}
+  th:classappend={thClassappend}
+>
+  <div
+    id="right-sidebar-sticky"
+    class="sticky top-4 flex w-full flex-col gap-4"
+  >
+    {
+      showToc ? (
+        <div class="card-base pb-4 overflow-visible">
+          <div class="relative mb-2 ml-8 mt-4 text-lg font-bold text-neutral-900 transition before:absolute before:left-[-16px] before:top-[5.5px] before:h-4 before:w-1 before:rounded-md before:bg-(--primary) dark:text-neutral-100">
+            目录
+          </div>
+          <div
+            id="toc-inner-wrapper-right"
+            data-toc-scroll
+            class="hide-scrollbar overflow-x-hidden overflow-y-scroll"
+            style="max-height: calc(100vh - 10rem);"
+          >
+            <div class="toc-right w-full">
+              <TOC />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          class="contents"
+          th:each="widget, widgetStat : ${theme.config.sidebar.rightWidgets}"
+        >
+          <div class="contents" th:switch="${widget.value}">
+            <div class="contents" th:case="'categories'">
+              <Categories />
+            </div>
+            <div class="contents" th:case="'tag'">
+              <Tags />
+            </div>
+            <div class="contents" th:case="'hitokoto'">
+              <Hitokoto />
+            </div>
+            <div class="contents" th:case="'site-stats'">
+              <SiteStats />
+            </div>
+            <div
+              th:case="'html'"
+              class="card-base p-4"
+              th:utext="${widget.html}"
+            />
+          </div>
+        </div>
+      )
+    }
+  </div>
+</aside>

@@ -8,6 +8,15 @@ html.is-animating .transition-swup-fade {
   @apply translate-y-4 opacity-0;
 }
 
+/* 右侧边栏：作为 swup 容器以更新 TOC，但完全禁用过渡动画 */
+html.is-changing #right-sidebar,
+html.is-animating #right-sidebar {
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  translate: none !important;
+}
+
 @keyframes fade-in-up {
   0% {
     transform: translateY(2rem);

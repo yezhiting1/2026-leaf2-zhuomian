@@ -9,6 +9,7 @@ interface Props {
   collapsedHeight?: string;
   class?: string;
   style?: string;
+  noOverflow?: boolean;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   collapseExpression,
   collapsedHeight = "7.5rem",
   style,
+  noOverflow = false,
 } = Astro.props;
 const className = Astro.props.class;
 const hasRuntimeCollapse = Boolean(collapseExpression);
@@ -43,7 +45,7 @@ const titleText = nameExpression
   data-id={id}
   data-is-collapsed={String(isCollapsed && !hasRuntimeCollapse)}
   th:attr={collapseDataAttr}
-  class:list={["card-base pb-4", className]}
+  class:list={["card-base pb-4", { "overflow-visible": noOverflow }, className]}
   style={style}
 >
   <div
@@ -56,7 +58,8 @@ const titleText = nameExpression
     id={id}
     th:classappend={collapseClassAppend}
     class:list={[
-      "collapse-wrapper overflow-hidden px-4",
+      "collapse-wrapper px-4 overflow-hidden",
+      { "!overflow-visible": noOverflow },
       { collapsed: isCollapsed && !hasRuntimeCollapse },
     ]}
   >

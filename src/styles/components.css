@@ -96,6 +96,33 @@
     );
   }
 
+  /* 右侧边栏音乐播放器 - 彻底取消所有 overflow:hidden 层级 */
+  #right-sidebar .firefly-music-player,
+  #right-sidebar widget-layout:has(.firefly-music-player),
+  #right-sidebar widget-layout:has(.firefly-music-player) .collapse-wrapper,
+  #right-sidebar .firefly-music-player .music-cover,
+  #right-sidebar .firefly-music-player .lrc-drawer {
+    overflow: visible !important;
+  }
+
+  #right-sidebar .firefly-music-player .vol-container {
+    @apply w-12;
+  }
+
+  #right-sidebar .firefly-music-player .btn-lrc-toggle {
+    @apply hidden;
+  }
+
+  /* 双栏布局页面宽度：与 72002dd 一致，使用默认 --page-width: 75rem */
+  .layout-two-column {
+    /* 使用默认 --page-width，无需覆盖 */
+  }
+
+  /* 三栏布局页面宽度：参考 Firefly，使用 100rem */
+  .layout-three-column {
+    --page-width: 100rem !important;
+  }
+
   .hide-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -113,8 +140,10 @@
     top: 35vh;
     -webkit-transform: translateY(calc(-100% + 1px));
     transform: translateY(calc(-100% + 1px));
-    -webkit-transition: -webkit-transform 700ms var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
-    transition: transform 700ms var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+    -webkit-transition: -webkit-transform 700ms
+      var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+    transition: transform 700ms
+      var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
     will-change: transform;
   }
 
@@ -203,4 +232,18 @@
     backdrop-filter: blur(16px) !important;
     border-radius: 0 0 var(--radius-large) var(--radius-large);
   }
+}
+
+/* TOC 目录项样式 - 仅三栏布局生效 */
+.layout-three-column [data-toc-entry] {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.layout-three-column [data-toc-entry].visible {
+  background: color-mix(in oklab, var(--primary) 10%, transparent) !important;
+}
+
+.layout-three-column [data-toc-entry].visible .toc-title {
+  color: var(--primary) !important;
 }
