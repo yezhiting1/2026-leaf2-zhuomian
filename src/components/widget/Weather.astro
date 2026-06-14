@@ -238,7 +238,7 @@ const className = Astro.props.class;
         ? '<span class="text-xs mt-1 block text-center">' + msg + "</span>"
         : "";
       container.innerHTML =
-        '<div class="flex flex-col items-center justify-center gap-1 text-neutral-400 text-sm px-2 py-1">' +
+        '<div class="flex flex-col items-center justify-center gap-1 text-neutral-400 text-sm px-3 py-1">' +
         '<div class="flex items-center gap-2">' +
         '<span class="icon-[mdi--cloud-off-outline] text-base"></span>' +
         '<span data-i18n="widget.weather.error">天气加载失败</span>' +
@@ -251,7 +251,7 @@ const className = Astro.props.class;
       var container = document.getElementById("weather-content");
       if (container)
         container.innerHTML =
-          '<div class="flex items-center justify-center gap-2 text-neutral-400 text-sm px-2 py-1">' +
+          '<div class="flex items-center justify-center gap-2 text-neutral-400 text-sm px-3 py-1">' +
           '<span class="icon-[mdi--key-variant] text-base"></span>' +
           '<span data-i18n="widget.weather.noKey">请配置腾讯地图 Key</span>' +
           "</div>";

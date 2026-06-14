@@ -16,6 +16,5 @@ function getThemeConfig(): ThemeConfig | undefined {
 
 // 使用
 themeConfig = getThemeConfig();
-console.log("主题配置：", themeConfig);
 
 export { themeConfig };

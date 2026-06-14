@@ -62,9 +62,19 @@ const MAX_POSTS = 5;
       }
 
       var html = "";
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
       for (var i = 0; i < posts.length; i++) {
         var post = posts[i];
         var title = post.spec.title || "无标题";
+        var safeTitle = escapeHtml(title);
         var visits = (post.stats && post.stats.visit) || 0;
         var permalink = (post.status && post.status.permalink) || "";
         var href =
@@ -75,7 +85,7 @@ const MAX_POSTS = 5;
           '<a href="' +
           href +
           '" class="group block" aria-label="' +
-          title +
+          safeTitle +
           '">' +
           '<div class="flex items-center gap-2.5 rounded-lg px-3 py-2 transition-all group-hover:bg-(--btn-plain-bg-hover) group-hover:pl-4 group-active:bg-(--btn-plain-bg-active)">' +
           '<span class="ml-1 flex h-6 min-w-7 shrink-0 items-center justify-center rounded-lg px-1.5 text-xs font-bold ' +
@@ -87,7 +97,7 @@ const MAX_POSTS = 5;
           "</span>" +
           '<div class="min-w-0 flex-1">' +
           '<span class="block overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-neutral-700 transition group-hover:text-(--primary) dark:text-neutral-300 dark:group-hover:text-(--primary)">' +
-          title +
+          safeTitle +
           "</span>" +
           "</div>" +
           '<span class="shrink-0 text-xs text-neutral-400 dark:text-neutral-500">' +
