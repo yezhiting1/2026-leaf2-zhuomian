@@ -181,7 +181,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 <span
                   class="icon-[material-symbols--thumb-up-outline-rounded] text-xl"
                 ></span>
-                <span class="moment-upvote-count" th:text="${moment.stats.upvote}">0</span>
+                <span
+                  class="moment-upvote-count"
+                  th:text="${moment.stats.upvote}">0</span
+                >
               </span>
               <span
                 th:unless="${moment.stats != null}"
@@ -298,25 +301,30 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
   <!-- 瞬间点赞 -->
   <script is:inline>
-    document.querySelectorAll('.moment-upvote-btn').forEach(function(btn) {
-      var name = btn.getAttribute('data-moment');
-      var key = 'fuwari-upvote-moment-' + name;
-      if (localStorage.getItem(key) === '1') {
-        btn.classList.add('text-(--primary)');
-        btn.style.pointerEvents = 'none';
+    document.querySelectorAll(".moment-upvote-btn").forEach(function (btn) {
+      var name = btn.getAttribute("data-moment");
+      var key = "fuwari-upvote-moment-" + name;
+      if (localStorage.getItem(key) === "1") {
+        btn.classList.add("text-(--primary)");
+        btn.style.pointerEvents = "none";
       }
-      btn.addEventListener('click', function() {
-        if (localStorage.getItem(key) === '1') return;
-        localStorage.setItem(key, '1');
-        btn.classList.add('text-(--primary)');
-        btn.style.pointerEvents = 'none';
-        var countEl = btn.querySelector('.moment-upvote-count');
-        if (countEl) countEl.textContent = parseInt(countEl.textContent || '0', 10) + 1;
-        fetch('/apis/api.halo.run/v1alpha1/trackers/upvote', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ group: 'moment.halo.run', plural: 'moments', name: name })
-        }).catch(function(){});
+      btn.addEventListener("click", function () {
+        if (localStorage.getItem(key) === "1") return;
+        localStorage.setItem(key, "1");
+        btn.classList.add("text-(--primary)");
+        btn.style.pointerEvents = "none";
+        var countEl = btn.querySelector(".moment-upvote-count");
+        if (countEl)
+          countEl.textContent = parseInt(countEl.textContent || "0", 10) + 1;
+        fetch("/apis/api.halo.run/v1alpha1/trackers/upvote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            group: "moment.halo.run",
+            plural: "moments",
+            name: name,
+          }),
+        }).catch(function () {});
       });
     });
   </script>

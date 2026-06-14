@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getDefaultHue, getHue, setHue } from "../../utils/setting-utils";
 
-  let hue = getHue();
+  let hue = $state(getHue());
   const defaultHue = getDefaultHue();
   type I18nWindow = Window & { i18nResources?: Record<string, string> };
 

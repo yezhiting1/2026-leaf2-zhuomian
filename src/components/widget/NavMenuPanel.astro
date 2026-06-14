@@ -27,7 +27,9 @@
           th:onclick="|event.stopPropagation(); toggleSubmenu(this, 'submenu-' + ${itemStat.index});|"
           class="px-2 py-2 submenu-toggle flex-shrink-0"
         >
-          <span class="icon-[material-symbols--chevron-right-rounded] text-[1.3rem] text-black/20 transition-transform duration-200 dark:text-white/20 inline-block"></span>
+          <span
+            class="icon-[material-symbols--chevron-right-rounded] text-[1.3rem] text-black/20 transition-transform duration-200 dark:text-white/20 inline-block"
+          ></span>
         </button>
       </div>
       <!-- 子菜单内容 -->
@@ -57,42 +59,42 @@
 </div>
 
 <script is:inline>
-  (function() {
+  (function () {
     // 切换子菜单显示/隐藏
-    window.toggleSubmenu = function(buttonEl, submenuId) {
+    window.toggleSubmenu = function (buttonEl, submenuId) {
       var submenu = document.getElementById(submenuId);
-      var arrow = buttonEl.querySelector('span');
+      var arrow = buttonEl.querySelector("span");
       if (submenu) {
-        submenu.classList.toggle('hidden');
+        submenu.classList.toggle("hidden");
         if (arrow) {
-          arrow.classList.toggle('rotate-90');
+          arrow.classList.toggle("rotate-90");
         }
       }
     };
 
     // 初始化菜单面板
     function initNavMenuPanel() {
-      var panel = document.getElementById('nav-menu-panel');
+      var panel = document.getElementById("nav-menu-panel");
       if (!panel) return;
 
       // 为所有菜单链接添加点击事件，点击后关闭面板
-      var links = panel.querySelectorAll('a');
-      links.forEach(function(link) {
-        link.addEventListener('click', function() {
-          panel.classList.add('float-panel-closed');
+      var links = panel.querySelectorAll("a");
+      links.forEach(function (link) {
+        link.addEventListener("click", function () {
+          panel.classList.add("float-panel-closed");
         });
       });
     }
 
     // 确保 DOM 加载完成后初始化
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initNavMenuPanel);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initNavMenuPanel);
     } else {
       initNavMenuPanel();
     }
 
     // Swup 页面切换后重新初始化
-    document.addEventListener('swup:contentReplaced', function() {
+    document.addEventListener("swup:contentReplaced", function () {
       setTimeout(initNavMenuPanel, 100);
     });
   })();

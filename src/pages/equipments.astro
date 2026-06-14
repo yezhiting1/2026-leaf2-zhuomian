@@ -13,9 +13,12 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     <div class="mb-6 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-4">
         <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-bold text-90" th:text="${title}">装备管理</h1>
+          <h1 class="text-3xl font-bold text-90" th:text="${title}">
+            装备管理
+          </h1>
           <div class="text-sm text-50">
-            <span class="icon-[material-symbols--settings-suggest-rounded] mr-1"></span>
+            <span class="icon-[material-symbols--settings-suggest-rounded] mr-1"
+            ></span>
             <span>Equipment</span>
           </div>
         </div>
@@ -40,7 +43,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         class="btn-card h-9 rounded-lg px-3 text-sm font-bold text-75"
       >
         <span th:text="${group.spec.displayName}">Group</span>
-        <span class="ml-1 text-30" th:text="${group.status.equipmentCount}">0</span>
+        <span class="ml-1 text-30" th:text="${group.status.equipmentCount}"
+          >0</span
+        >
       </a>
     </div>
 
@@ -62,7 +67,8 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 th:if="${not #strings.isEmpty(group.spec.description)}"
                 class="mt-0.5 text-sm text-50"
                 th:text="${group.spec.description}"
-              ></div>
+              >
+              </div>
             </div>
             <span
               class="rounded-lg bg-(--btn-regular-bg) px-2.5 py-1 text-xs font-bold text-(--btn-content)"
@@ -98,7 +104,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     rel="noopener noreferrer"
                     class="min-w-0 flex-1 text-base font-bold text-90 transition hover:text-(--primary)"
                   >
-                    <span class="line-clamp-2" th:text="${equipment.spec.displayName}">
+                    <span
+                      class="line-clamp-2"
+                      th:text="${equipment.spec.displayName}"
+                    >
                       Equipment
                     </span>
                   </a>
@@ -130,7 +139,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       </div>
 
       <div th:if="${#lists.isEmpty(groups)}" class="py-12 text-center text-50">
-        <span class="icon-[material-symbols--inventory-2-rounded] text-5xl text-30"></span>
+        <span
+          class="icon-[material-symbols--inventory-2-rounded] text-5xl text-30"
+        ></span>
         <p class="mt-4">暂无装备</p>
       </div>
     </div>
@@ -168,7 +179,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 rel="noopener noreferrer"
                 class="min-w-0 flex-1 text-base font-bold text-90 transition hover:text-(--primary)"
               >
-                <span class="line-clamp-2" th:text="${equipment.spec.displayName}">
+                <span
+                  class="line-clamp-2"
+                  th:text="${equipment.spec.displayName}"
+                >
                   Equipment
                 </span>
               </a>
@@ -197,8 +211,13 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         </div>
       </div>
 
-      <div th:if="${#lists.isEmpty(equipments.items)}" class="py-12 text-center text-50">
-        <span class="icon-[material-symbols--inventory-2-rounded] text-5xl text-30"></span>
+      <div
+        th:if="${#lists.isEmpty(equipments.items)}"
+        class="py-12 text-center text-50"
+      >
+        <span
+          class="icon-[material-symbols--inventory-2-rounded] text-5xl text-30"
+        ></span>
         <p class="mt-4">暂无装备</p>
       </div>
     </div>
