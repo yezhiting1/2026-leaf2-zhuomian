@@ -19,7 +19,7 @@ const MAX_POSTS = 5;
     class={className}
     style={style}
   >
-    <div id="popular-posts-list" class="flex flex-col gap-1 px-1">
+    <div id="popular-posts-list" class="flex flex-col gap-1">
       <div
         class="flex items-center justify-center py-4 text-sm text-neutral-400"
       >
@@ -77,8 +77,8 @@ const MAX_POSTS = 5;
           '" class="group block" aria-label="' +
           title +
           '">' +
-          '<div class="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-(--btn-plain-bg-hover)">' +
-          '<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ' +
+          '<div class="flex items-center gap-2.5 rounded-lg px-3 py-2 transition-all group-hover:bg-(--btn-plain-bg-hover) group-hover:pl-4 group-active:bg-(--btn-plain-bg-active)">' +
+          '<span class="ml-1 flex h-6 min-w-7 shrink-0 items-center justify-center rounded-lg px-1.5 text-xs font-bold ' +
           (i < 3
             ? "bg-(--primary) text-white"
             : "bg-(--btn-regular-bg) text-(--btn-content)") +
