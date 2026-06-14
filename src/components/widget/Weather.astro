@@ -191,6 +191,10 @@ const className = Astro.props.class;
         '<span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">' +
         city +
         "</span>" +
+        '<span class="text-[10px] text-neutral-400 dark:text-neutral-500 ml-1">' +
+        formatTime(result._updated || Date.now()) +
+        "更新" +
+        "</span>" +
         "</div>" +
         '<span class="text-xs text-neutral-400">' +
         (info.weather || "") +
@@ -216,10 +220,6 @@ const className = Astro.props.class;
         (info.humidity || "--") +
         "%</span>" +
         "</div>" +
-        "</div>" +
-        '<div class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-1 text-right">' +
-        "更新于 " +
-        formatTime(result._updated || Date.now()) +
         "</div>" +
         "</div>";
     }
