@@ -48,9 +48,9 @@ const className = Astro.props.class;
 <script is:inline>
   (function () {
     var CACHE_KEY = "weather_cache";
-    var CACHE_TTL = 2 * 60 * 60 * 1000; // 天气缓存 2 小时
+    var CACHE_TTL = 1 * 60 * 60 * 1000; // 天气缓存 1 小时
     var IP_CACHE_KEY = "weather_ip_cache";
-    var IP_CACHE_TTL = 12 * 60 * 60 * 1000; // IP 定位缓存 12 小时
+    var IP_CACHE_TTL = 4 * 60 * 60 * 1000; // IP 定位缓存 4 小时
     var REQUEST_GAP = 300; // 请求间隔 300ms（QPS=5 足够）
     var RETRY_DELAY = 1500; // 限流重试间隔 1.5s
     var API_BASE = "https://apis.map.qq.com/ws";
@@ -217,7 +217,18 @@ const className = Astro.props.class;
         "%</span>" +
         "</div>" +
         "</div>" +
+        '<div class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-1 text-right">' +
+        "更新于 " +
+        formatTime(result._updated || Date.now()) +
+        "</div>" +
         "</div>";
+    }
+
+    function formatTime(ts) {
+      var d = new Date(ts);
+      var h = d.getHours();
+      var m = d.getMinutes();
+      return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
     }
 
     function renderError(msg) {
@@ -379,6 +390,7 @@ const className = Astro.props.class;
           });
         })
         .then(function (result) {
+          result._updated = Date.now();
           setCachedWeather(result);
           renderWeather(result);
         })
