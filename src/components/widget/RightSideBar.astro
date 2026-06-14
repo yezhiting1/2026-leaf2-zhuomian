@@ -24,40 +24,40 @@ const thClassappend = Astro.props["th:classappend"] || "";
   {
     showToc ? (
       <Fragment>
-        {/* 文章页：小部件在 sticky 外面，跟随页面滚动 */}
-        <div
-          class="contents"
-          th:each="widget, widgetStat : ${theme.config.sidebar.rightWidgets}"
-          th:if="${widgetStat.index < 2}"
-        >
-          <div class="contents" th:switch="${widget.value}">
-            <div class="contents" th:case="'categories'">
-              <Categories />
-            </div>
-            <div class="contents" th:case="'tag'">
-              <Tags />
-            </div>
-            <div class="contents" th:case="'hitokoto'">
-              <Hitokoto />
-            </div>
-            <div class="contents" th:case="'site-stats'">
-              <SiteStats />
-            </div>
-            <div class="contents" th:case="'weather'">
-              <Weather />
-            </div>
-            <div
-              th:case="'html'"
-              class="card-base p-4"
-              th:utext="${widget.html}"
-            />
-          </div>
-        </div>
-        {/* 目录在 sticky 内部，吸顶 */}
+        {/* 文章页：所有组件吸顶显示 */}
         <div
           id="right-sidebar-sticky"
           class="sticky top-4 flex w-full flex-col gap-4"
         >
+          <div
+            class="contents"
+            th:each="widget, widgetStat : ${theme.config.sidebar.rightWidgets}"
+            th:if="${widgetStat.index < 2}"
+          >
+            <div class="contents" th:switch="${widget.value}">
+              <div class="contents" th:case="'categories'">
+                <Categories />
+              </div>
+              <div class="contents" th:case="'tag'">
+                <Tags />
+              </div>
+              <div class="contents" th:case="'hitokoto'">
+                <Hitokoto />
+              </div>
+              <div class="contents" th:case="'site-stats'">
+                <SiteStats />
+              </div>
+              <div class="contents" th:case="'weather'">
+                <Weather />
+              </div>
+              <div
+                th:case="'html'"
+                class="card-base p-4"
+                th:utext="${widget.html}"
+              />
+            </div>
+          </div>
+          {/* 目录 */}
           <div class="card-base pb-4 overflow-visible">
             <div class="relative mb-2 ml-8 mt-4 text-lg font-bold text-neutral-900 transition before:absolute before:left-[-16px] before:top-[5.5px] before:h-4 before:w-1 before:rounded-md before:bg-(--primary) dark:text-neutral-100">
               目录

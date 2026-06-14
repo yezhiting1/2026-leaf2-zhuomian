@@ -2,6 +2,7 @@
 import Categories from "./Categories.astro";
 import Hitokoto from "./Hitokoto.astro";
 import MusicPlayer from "./MusicPlayer.astro";
+import PopularPosts from "./PopularPosts.astro";
 import Profile from "./Profile.astro";
 import SiteStats from "./SiteStats.astro";
 import Tags from "./Tags.astro";
@@ -52,6 +53,9 @@ const thClassappend = Astro.props["th:classappend"] || "";
             class="onload-animation"
             th:style="|animation-delay: calc(var(--content-delay) + ${widgetStat.index * 50}ms)|"
           />
+        </div>
+        <div class="contents" th:case="'popular-posts'">
+          <PopularPosts class="onload-animation" />
         </div>
         <div
           th:case="'html'"

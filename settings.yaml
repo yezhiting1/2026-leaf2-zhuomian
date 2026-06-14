@@ -144,7 +144,7 @@ spec:
               id: widgets_value
               label: 部件
               options:
-                - label: 热门文章（TODO）
+                - label: 热门文章
                   value: popular-posts
                 - label: 文章分类
                   value: categories
