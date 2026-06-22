@@ -1,20 +1,21 @@
 import type { ThemeConfig } from "./types/config.ts";
 
 let themeConfig: ThemeConfig | undefined = undefined;
+let initialized = false;
 
 function getThemeConfig(): ThemeConfig | undefined {
-  const el = document.querySelector<HTMLScriptElement>("#theme-config");
-  if (!el?.textContent) return undefined;
-
-  try {
-    return JSON.parse(el.textContent) as ThemeConfig;
-  } catch (e) {
-    console.error("解析 theme-config 失败:", e);
-    return undefined;
+  if (!initialized) {
+    initialized = true;
+    const el = document.querySelector<HTMLScriptElement>("#theme-config");
+    if (el?.textContent) {
+      try {
+        themeConfig = JSON.parse(el.textContent) as ThemeConfig;
+      } catch (e) {
+        console.error("解析 theme-config 失败:", e);
+      }
+    }
   }
+  return themeConfig;
 }
 
-// 使用
-themeConfig = getThemeConfig();
-
-export { themeConfig };
+export { themeConfig, getThemeConfig };

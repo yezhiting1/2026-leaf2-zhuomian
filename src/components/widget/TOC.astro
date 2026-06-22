@@ -38,8 +38,6 @@ const className = Astro.props.class;
       } else {
         this.refresh();
       }
-      document.addEventListener("astro:page-load", this.refresh);
-      document.addEventListener("astro:after-swap", this.refresh);
       document.addEventListener("swup:contentReplaced", this.refresh);
     }
 
@@ -49,8 +47,6 @@ const className = Astro.props.class;
       this.removeWindowListeners();
       this.tocEl?.removeEventListener("click", this.handleAnchorClick);
       document.removeEventListener("DOMContentLoaded", this.refresh);
-      document.removeEventListener("astro:page-load", this.refresh);
-      document.removeEventListener("astro:after-swap", this.refresh);
       document.removeEventListener("swup:contentReplaced", this.refresh);
     }
 

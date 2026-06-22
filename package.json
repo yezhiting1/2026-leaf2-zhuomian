@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@astrojs/svelte": "^8.1.0",
-    "@fontsource/roboto": "^5.2.10",
     "@halo-dev/api-client": "^2.24.0",
     "@swup/astro": "^1.8.0",
     "@tailwindcss/vite": "^4.2.4",

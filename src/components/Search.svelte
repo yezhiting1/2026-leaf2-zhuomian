@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Hit, SearchResult } from "../types/searchResult";
+  import { t } from "../utils/i18n";
 
   let keywordDesktop = $state("");
   let keywordMobile = $state("");
@@ -10,15 +11,6 @@
   let desktopTimer: number | undefined;
   let mobileTimer: number | undefined;
   let searchId = 0;
-
-  type I18nWindow = Window & { i18nResources?: Record<string, string> };
-
-  const t = (key: string, fallback: string): string => {
-    const value = typeof window !== "undefined"
-      ? (window as I18nWindow).i18nResources?.[key]
-      : undefined;
-    return value && !value.includes("#{") ? value : fallback;
-  };
 
   const escapeHtml = (value: string) =>
     value

@@ -189,9 +189,37 @@ const style = Astro.props.style;
       return Math.floor(diffDays / 365) + " 年前";
     }
 
-    // 缓存已计算的统计数据（存到 window 上，跨脚本重执行保持）
+    // 缓存已计算的统计数据
     if (!window.__siteStatsCache) {
       window.__siteStatsCache = null;
+    }
+
+    // localStorage 持久化缓存（24小时有效期，避免每次刷新都发 N+1 请求）
+    var STORAGE_KEY = "site_stats_v1";
+    var STATS_CACHE_TTL = 24 * 60 * 60 * 1000;
+
+    function getCachedStats() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var d = JSON.parse(raw);
+        if (Date.now() - d.t > STATS_CACHE_TTL) {
+          localStorage.removeItem(STORAGE_KEY);
+          return null;
+        }
+        return d.stats;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setCachedStats(stats) {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ stats: stats, t: Date.now() }),
+        );
+      } catch (e) {}
     }
 
     function applyStatsToDOM(stats) {
@@ -206,9 +234,16 @@ const style = Astro.props.style;
     }
 
     function updateSiteStats() {
-      // 如果已有缓存，直接使用
       if (window.__siteStatsCache) {
         applyStatsToDOM(window.__siteStatsCache);
+        return;
+      }
+
+      // 优先读取 localStorage 缓存，避免重复抓取
+      var stored = getCachedStats();
+      if (stored) {
+        window.__siteStatsCache = stored;
+        applyStatsToDOM(stored);
         return;
       }
 
@@ -245,87 +280,96 @@ const style = Astro.props.style;
           })
           .catch(function (e) {
             console.warn("[SiteStats] Fetch failed:", e);
+            processPosts(allPosts);
           });
       }
 
       function processPosts(posts) {
         if (posts.length === 0) return;
 
-        // 最后活动时间
         var latestDate = null;
-        for (var i = 0; i < posts.length; i++) {
-          var pub =
-            (posts[i].spec && posts[i].spec.publishTime) ||
-            (posts[i].metadata && posts[i].metadata.creationTimestamp);
-          if (pub && (!latestDate || pub > latestDate)) {
-            latestDate = pub;
-          }
-        }
-        var formattedActivity = latestDate
-          ? formatRelativeDate(latestDate)
-          : "--";
-        var activityEl = document.getElementById("site-stats-last-activity");
-        if (activityEl) activityEl.textContent = formattedActivity;
-
-        // 并发抓取文章页面计算总字数（每批 5 篇）
         var totalWords = 0;
-        var completed = 0;
-        var total = posts.length;
+        var pending = posts.length;
+        var CONCURRENCY = 6;
+        var queue = posts.slice();
+        var running = 0;
 
-        function onDone() {
+        function finish() {
+          var formattedActivity = latestDate
+            ? formatRelativeDate(latestDate)
+            : "--";
+
           window.__siteStatsCache = {
             totalWords: totalWords,
             lastActivity: formattedActivity,
           };
-          var wordsEl = document.getElementById("site-stats-total-words");
-          if (wordsEl) wordsEl.textContent = formatNumber(totalWords);
+          setCachedStats(window.__siteStatsCache);
+          applyStatsToDOM(window.__siteStatsCache);
         }
 
-        function fetchPostWords(post) {
-          var permalink = (post.status && post.status.permalink) || "";
-          var slug = (post.spec && post.spec.slug) || "";
-          var postUrl = permalink || (slug ? "/archives/" + slug : null);
-          if (!postUrl) return Promise.resolve();
-          return fetch(postUrl)
-            .then(function (res) {
-              return res.ok ? res.text() : null;
-            })
-            .then(function (html) {
-              if (!html) return;
-              var parser = new DOMParser();
-              var doc = parser.parseFromString(html, "text/html");
-              var article =
-                doc.querySelector("#post-content") ||
-                doc.querySelector(".markdown-content") ||
-                doc.querySelector("#content");
-              if (article) {
-                totalWords += countWords(article.textContent || "");
-              }
-            })
-            .catch(function () {});
-        }
+        function next() {
+          while (running < CONCURRENCY && queue.length > 0) {
+            running++;
+            var post = queue.shift();
 
-        // 每批并发 5 个
-        var BATCH = 5;
-        var idx = 0;
-
-        function fetchBatch() {
-          if (idx >= posts.length) return;
-          var batchEnd = Math.min(idx + BATCH, posts.length);
-          var batch = posts.slice(idx, batchEnd);
-          idx = batchEnd;
-
-          Promise.all(batch.map(fetchPostWords)).then(function () {
-            completed += batch.length;
-            if (completed >= total) {
-              onDone();
-            } else {
-              fetchBatch();
+            var pub =
+              (post.spec && post.spec.publishTime) ||
+              (post.metadata && post.metadata.creationTimestamp);
+            if (pub && (!latestDate || pub > latestDate)) {
+              latestDate = pub;
             }
-          });
+
+            var permalink = post.status && post.status.permalink;
+            if (!permalink) {
+              running--;
+              pending--;
+              if (pending === 0) finish();
+              else next();
+              continue;
+            }
+
+            (function (url) {
+              fetch(url)
+                .then(function (res) {
+                  if (!res.ok) throw new Error("HTTP " + res.status);
+                  return res.text();
+                })
+                .then(function (html) {
+                  var parser = new DOMParser();
+                  var doc = parser.parseFromString(html, "text/html");
+                  var content =
+                    doc.querySelector(".post-content") ||
+                    doc.querySelector(".markdown-body") ||
+                    doc.querySelector("article") ||
+                    doc.querySelector(".content") ||
+                    doc.querySelector("main");
+                  var text = content
+                    ? content.textContent || ""
+                    : doc.body
+                      ? doc.body.textContent || ""
+                      : "";
+                  totalWords += countWords(text);
+                  running--;
+                  pending--;
+                  if (pending === 0) finish();
+                  else next();
+                })
+                .catch(function (e) {
+                  console.warn(
+                    "[SiteStats] 文章字数获取失败:",
+                    url,
+                    e.message || e,
+                  );
+                  running--;
+                  pending--;
+                  if (pending === 0) finish();
+                  else next();
+                });
+            })(permalink);
+          }
         }
 
-        fetchBatch();
+        next();
       }
 
       fetchPage();

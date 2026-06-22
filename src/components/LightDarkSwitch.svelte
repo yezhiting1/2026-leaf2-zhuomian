@@ -8,17 +8,10 @@
   } from "../utils/setting-utils.ts";
   import { onMount } from "svelte";
   import type { LIGHT_DARK_MODE } from "../types/config.ts";
+  import { t } from "../utils/i18n";
 
   const seq: LIGHT_DARK_MODE[] = [LIGHT_MODE, DARK_MODE, AUTO_MODE];
   let mode: LIGHT_DARK_MODE = $state(AUTO_MODE);
-  type I18nWindow = Window & { i18nResources?: Record<string, string> };
-
-  const t = (key: string, fallback: string): string => {
-    const value = typeof window !== "undefined"
-      ? (window as I18nWindow).i18nResources?.[key]
-      : undefined;
-    return value && !value.includes("#{") ? value : fallback;
-  };
 
   onMount(() => {
     mode = getStoredTheme();

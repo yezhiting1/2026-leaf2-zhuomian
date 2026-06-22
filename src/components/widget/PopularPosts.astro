@@ -110,54 +110,38 @@ const MAX_POSTS = 5;
       container.innerHTML = html;
     }
 
-    // 尝试从 postFinder 获取数据（服务端渲染时可能不可用）
-    // 回退到客户端 API 获取
-    var allPosts = [];
-    var page = 0;
+    // 获取第一页文章（50 篇足够选出 Top 5 热门文章）
     var size = 50;
 
-    function fetchPage() {
-      fetch(
-        "/apis/api.content.halo.run/v1alpha1/posts?page=" +
-          page +
-          "&size=" +
-          size +
-          "&sort=metadata.creationTimestamp,desc",
-      )
-        .then(function (res) {
-          if (!res.ok) {
-            console.warn("[PopularPosts] API error:", res.status);
-            renderList([]);
-            return;
-          }
-          return res.json();
-        })
-        .then(function (data) {
-          if (!data) return;
-          var items = data.items || [];
-          allPosts = allPosts.concat(items);
-          if (!data.last && page < 10) {
-            page++;
-            fetchPage();
-          } else {
-            // 过滤已发布的文章并按浏览量排序
-            var published = allPosts.filter(function (p) {
-              return p.spec && p.spec.publish && p.spec.visible === "PUBLIC";
-            });
-            published.sort(function (a, b) {
-              var va = (a.stats && a.stats.visit) || 0;
-              var vb = (b.stats && b.stats.visit) || 0;
-              return vb - va;
-            });
-            renderList(published.slice(0, MAX_POSTS));
-          }
-        })
-        .catch(function (e) {
-          console.warn("[PopularPosts] Fetch failed:", e);
+    fetch(
+      "/apis/api.content.halo.run/v1alpha1/posts?page=0&size=" +
+        size +
+        "&sort=metadata.creationTimestamp,desc",
+    )
+      .then(function (res) {
+        if (!res.ok) {
+          console.warn("[PopularPosts] API error:", res.status);
           renderList([]);
+          return;
+        }
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data) return;
+        var items = data.items || [];
+        var published = items.filter(function (p) {
+          return p.spec && p.spec.publish && p.spec.visible === "PUBLIC";
         });
-    }
-
-    fetchPage();
+        published.sort(function (a, b) {
+          var va = (a.stats && a.stats.visit) || 0;
+          var vb = (b.stats && b.stats.visit) || 0;
+          return vb - va;
+        });
+        renderList(published.slice(0, MAX_POSTS));
+      })
+      .catch(function (e) {
+        console.warn("[PopularPosts] Fetch failed:", e);
+        renderList([]);
+      });
   })();
 </script>

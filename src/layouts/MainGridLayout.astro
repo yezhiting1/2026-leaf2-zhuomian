@@ -311,13 +311,7 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
                   }, 2000);
                 })
                 .catch(function () {
-                  var textarea = document.createElement("textarea");
-                  textarea.value = text;
-                  textarea.style.cssText = "position:fixed;opacity:0";
-                  document.body.appendChild(textarea);
-                  textarea.select();
-                  document.execCommand("copy");
-                  document.body.removeChild(textarea);
+                  console.warn("[Copy] Clipboard write failed");
                   setTimeout(function () {
                     if (textSpan) textSpan.textContent = originalText;
                     if (iconSpan) iconSpan.className = originalClasses;

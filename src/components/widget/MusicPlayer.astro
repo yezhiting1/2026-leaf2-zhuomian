@@ -838,10 +838,18 @@ const layoutId = `${widgetId}-layout`;
       ui.currentTime.textContent = formatTime(audio.currentTime);
       ui.totalTime.textContent = formatTime(audio.duration);
       if (state.lyrics.length) {
-        let index = -1;
-        for (let i = 0; i < state.lyrics.length; i += 1) {
-          if (audio.currentTime >= state.lyrics[i].time) index = i;
-          else break;
+        // 二分查找当前歌词位置（歌词已按时间排序）
+        let lo = 0,
+          hi = state.lyrics.length - 1,
+          index = -1;
+        while (lo <= hi) {
+          const mid = (lo + hi) >> 1;
+          if (state.lyrics[mid].time <= audio.currentTime) {
+            index = mid;
+            lo = mid + 1;
+          } else {
+            hi = mid - 1;
+          }
         }
         updateLrcHighlight(index);
       }
@@ -874,5 +882,18 @@ const layoutId = `${widgetId}-layout`;
         ui.title.textContent = cfg.i18n.error;
       })
       .finally(() => setLoading(false));
+
+    // Swup 页面切换时清理音频资源
+    document.addEventListener(
+      "swup:contentReplaced",
+      function cleanup() {
+        try {
+          audio.pause();
+          audio.src = "";
+          audio.load();
+        } catch (e) {}
+      },
+      { once: true },
+    );
   })();
 </script>
