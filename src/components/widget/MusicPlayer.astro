@@ -166,7 +166,8 @@ const layoutId = `${widgetId}-layout`;
           aria-valuenow="0"
         >
           <div
-            class="progress-bar absolute left-0 top-0 h-full w-0 rounded-full bg-(--primary) transition-[width] duration-100"
+            class="progress-bar absolute left-0 top-0 h-full w-full origin-left rounded-full bg-(--primary) transition-transform duration-100"
+            style="transform: scaleX(0)"
           >
           </div>
           <div
@@ -538,7 +539,7 @@ const layoutId = `${widgetId}-layout`;
       void ui.cover.offsetWidth;
       ui.cover.classList.add("animate-spin-slow");
       ui.cover.style.animationPlayState = "paused";
-      ui.progressBar.style.width = "0%";
+      ui.progressBar.style.transform = "scaleX(0)";
       ui.progressThumb.style.left = "0%";
       ui.progressContainer.setAttribute("aria-valuenow", "0");
       ui.currentTime.textContent = "0:00";
@@ -832,7 +833,7 @@ const layoutId = `${widgetId}-layout`;
     audio.addEventListener("timeupdate", () => {
       if (Number.isNaN(audio.duration)) return;
       const progress = (audio.currentTime / audio.duration) * 100;
-      ui.progressBar.style.width = `${progress}%`;
+      ui.progressBar.style.transform = `scaleX(${progress / 100})`;
       ui.progressThumb.style.left = `${progress}%`;
       ui.progressContainer.setAttribute("aria-valuenow", Math.round(progress));
       ui.currentTime.textContent = formatTime(audio.currentTime);

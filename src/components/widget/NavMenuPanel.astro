@@ -25,6 +25,8 @@
           th:if="${menuItem.children != null && !menuItem.children.isEmpty()}"
           type="button"
           th:onclick="|event.stopPropagation(); toggleSubmenu(this, 'submenu-' + ${itemStat.index});|"
+          th:aria-label="${menuItem.status.displayName}"
+          aria-expanded="false"
           class="px-2 py-2 submenu-toggle flex-shrink-0"
         >
           <span
@@ -65,10 +67,12 @@
       var submenu = document.getElementById(submenuId);
       var arrow = buttonEl.querySelector("span");
       if (submenu) {
+        var isExpanded = !submenu.classList.contains("hidden");
         submenu.classList.toggle("hidden");
         if (arrow) {
           arrow.classList.toggle("rotate-90");
         }
+        buttonEl.setAttribute("aria-expanded", String(!isExpanded));
       }
     };
 

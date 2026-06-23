@@ -5,6 +5,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
 <MainGridLayout
   title="${post.spec.title + ' - ' + site.title}"
+  description="${post.status.excerpt}"
   setOGTypeArticle={true}
   showToc={true}
 >

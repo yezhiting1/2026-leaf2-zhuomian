@@ -63,7 +63,7 @@ const className = Astro.props.class;
           <!-- PC 端子菜单下拉 -->
           <div
             th:if="${hasChildren}"
-            class="submenu-panel absolute left-0 top-full mt-1 min-w-48 max-w-72 rounded-lg bg-(--card-bg) p-2 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+            class="submenu-panel absolute left-0 top-full mt-1 min-w-48 max-w-72 rounded-(--radius-large) bg-(--card-bg) p-2 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
             th:id="'pc-submenu-' + ${itemStat.index}"
           >
             <!-- 父页面概览链接（仅触控设备显示） -->
