@@ -78,13 +78,13 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
       {/* 文章摘要 */}
       <div
-        th:if="${theme.config.post.summary.enable_summary and post.status.excerpt != null and !#strings.isEmpty(post.status.excerpt)}"
+        th:if="${theme.config.post.summary != null and theme.config.post.summary.enable_summary and post.status.excerpt != null and !#strings.isEmpty(post.status.excerpt)}"
         class="onload-animation"
       >
         <div class="summary-box">
           <div
             class="summary-header"
-            th:if="${theme.config.post.summary.summary_title != null and !#strings.isEmpty(theme.config.post.summary.summary_title)}"
+            th:if="${theme.config.post.summary != null and theme.config.post.summary.summary_title != null and !#strings.isEmpty(theme.config.post.summary.summary_title)}"
           >
             <span class="icon-[mdi--text-box-outline] summary-icon"></span>
             <span th:text="${theme.config.post.summary.summary_title}"
