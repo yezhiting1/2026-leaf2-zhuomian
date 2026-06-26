@@ -76,6 +76,28 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         </div>
       </div>
 
+      {/* 文章摘要 */}
+      <div
+        th:if="${theme.config.post.summary.enable_summary and post.status.excerpt != null and !#strings.isEmpty(post.status.excerpt)}"
+        class="onload-animation"
+      >
+        <div class="summary-box">
+          <div
+            class="summary-header"
+            th:if="${theme.config.post.summary.summary_title != null and !#strings.isEmpty(theme.config.post.summary.summary_title)}"
+          >
+            <span class="icon-[mdi--text-box-outline] summary-icon"></span>
+            <span th:text="${theme.config.post.summary.summary_title}"
+              >文章摘要</span
+            >
+          </div>
+          <div class="summary-content">
+            <span id="summary-text" th:data-text="${post.status.excerpt}"
+            ></span><span id="summary-caret" class="summary-caret">|</span>
+          </div>
+        </div>
+      </div>
+
       <div
         id="content"
         class="custom-md markdown-content onload-animation prose prose-base mb-6 max-w-none! dark:prose-invert!"
@@ -301,6 +323,28 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
           }),
         }).catch(function () {});
       });
+    })();
+  </script>
+
+  {/* 摘要打字机效果 */}
+  <script is:inline>
+    (function () {
+      var el = document.getElementById("summary-text");
+      var caret = document.getElementById("summary-caret");
+      if (!el) return;
+      var text = el.getAttribute("data-text") || "";
+      var i = 0;
+      var speed = 40;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else {
+          if (caret) caret.style.display = "none";
+        }
+      }
+      setTimeout(type, 600);
     })();
   </script>
 </MainGridLayout>

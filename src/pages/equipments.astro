@@ -76,7 +76,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
             >
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div
+            class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(min(220px,100%),1fr))]"
+          >
             <div
               th:each="equipment, equipStat : ${group.equipments}"
               th:style="|animation-delay: calc(var(--content-delay) + ${(groupStat.index * 4 + equipStat.index) * 35}ms)|"
@@ -150,7 +152,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     <div th:if="${not #lists.isEmpty(param.group)}">
       <div
         th:if="${not #lists.isEmpty(equipments.items)}"
-        class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(min(220px,100%),1fr))]"
       >
         <div
           th:each="equipment, equipStat : ${equipments.items}"

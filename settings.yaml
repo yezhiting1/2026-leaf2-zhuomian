@@ -421,6 +421,23 @@ spec:
           label: 启用文章点赞
           value: true
           help: "在文章版权声明下方显示点赞互动按钮"
+        - $formkit: group
+          name: summary
+          label: 文章摘要
+          value:
+            enable_summary: true
+            summary_title: "文章摘要"
+          children:
+            - $formkit: switch
+              name: enable_summary
+              label: 启用文章摘要
+              value: true
+              help: "在文章页面封面图下方显示自定义摘要"
+            - $formkit: text
+              name: summary_title
+              label: 摘要标题
+              value: "文章摘要"
+              help: "摘要框显示的标题文字，留空则不显示标题"
     - group: footer
       label: 页脚设置
       formSchema:
