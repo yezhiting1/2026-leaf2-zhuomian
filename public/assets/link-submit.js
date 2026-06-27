@@ -1,4 +1,11 @@
 (function () {
+  // ====== API 基础路径 ======
+  var API_BASE = "/apis/anonymous.link.submit.kunkunyu.com/v1alpha1";
+
+  // ====== 提交频率限制 ======
+  var lastSubmitTime = 0;
+  var SUBMIT_COOLDOWN = 30000; // 30 秒内禁止重复提交
+
   // ====== 验证码 ======
   var captchaCode = "";
   function drawCaptcha() {
@@ -37,9 +44,7 @@
   // 获取分组列表
   async function fetchGroups() {
     try {
-      var response = await fetch(
-        "/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linkgroups",
-      );
+      var response = await fetch(API_BASE + "/linkgroups");
       if (response.ok) {
         var data = await response.json();
         var select = document.getElementById("groupName");
@@ -113,13 +118,44 @@
 
     updateTypeStyles();
 
+    // 内联错误提示（替代 alert）
+    var errorEl = document.getElementById("link-submit-error");
+    function showError(msg) {
+      if (!errorEl) {
+        errorEl = document.createElement("div");
+        errorEl.id = "link-submit-error";
+        errorEl.className = "text-sm text-red-500 text-center mt-2 font-medium";
+        var submitBtn = document.getElementById("submit-link-btn");
+        if (submitBtn && submitBtn.parentNode) {
+          submitBtn.parentNode.appendChild(errorEl);
+        }
+      }
+      errorEl.textContent = msg;
+      errorEl.style.display = "block";
+    }
+    function clearError() {
+      if (errorEl) errorEl.style.display = "none";
+    }
+
     if (form) {
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        // 频率限制检查
+        var now = Date.now();
+        if (now - lastSubmitTime < SUBMIT_COOLDOWN) {
+          var remaining = Math.ceil(
+            (SUBMIT_COOLDOWN - (now - lastSubmitTime)) / 1000,
+          );
+          showError("请等待 " + remaining + " 秒后再提交");
+          return;
+        }
+
+        clearError();
+
         var captchaInput = document.getElementById("link-captcha-input");
         if (captchaInput && captchaInput.value.toUpperCase() !== captchaCode) {
-          alert("验证码错误，请重新输入");
+          showError("验证码错误，请重新输入");
           captchaInput.value = "";
           drawCaptcha();
           return;
@@ -152,18 +188,16 @@
           data.updateDescription = formData.get("updateDescription");
 
         try {
-          var response = await fetch(
-            "/apis/anonymous.link.submit.kunkunyu.com/v1alpha1/linksubmits/-/submit",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
+          var response = await fetch(API_BASE + "/linksubmits/-/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          );
+            body: JSON.stringify(data),
+          });
 
           if (response.ok) {
+            lastSubmitTime = Date.now();
             form.classList.add("hidden");
             if (successDiv) {
               successDiv.classList.remove("hidden");
@@ -172,12 +206,12 @@
             var errorData = await response.json().catch(function () {
               return {};
             });
-            alert(
+            showError(
               "提交失败：" + (errorData.message || "请检查输入信息是否正确"),
             );
           }
         } catch (err) {
-          alert("提交失败：网络错误，请稍后重试");
+          showError("提交失败：网络错误，请稍后重试");
         } finally {
           submitBtn.disabled = false;
           btnText.classList.remove("hidden");
@@ -203,15 +237,4 @@
     drawCaptcha();
     captchaCanvas.addEventListener("click", drawCaptcha);
   }
-
-  // Swup 页面切换后重新初始化（links 页面 Swup 被 ignoreVisit 禁用了，但保留以防配置变更）
-  document.addEventListener("swup:contentReplaced", function () {
-    setTimeout(function () {
-      initLinkSubmit();
-      fetchGroups();
-      drawCaptcha();
-      var c = document.getElementById("link-captcha-canvas");
-      if (c) c.addEventListener("click", drawCaptcha);
-    }, 100);
-  });
 })();

@@ -589,7 +589,16 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
     );
   }
 
-  window.addEventListener("scroll", scrollFunction);
+  var scrollTicking = false;
+  window.addEventListener("scroll", function () {
+    if (!scrollTicking) {
+      requestAnimationFrame(function () {
+        scrollFunction();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  });
   window.addEventListener("resize", () => {
     let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
     offset = offset - (offset % 4);

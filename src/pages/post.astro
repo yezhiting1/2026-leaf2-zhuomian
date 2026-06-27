@@ -1,6 +1,8 @@
 ---
 import PostMeta from "../components/PostMeta.astro";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+const basePath = import.meta.env.BASE_URL.replace(/\/+$/, "");
 ---
 
 <MainGridLayout
@@ -263,88 +265,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     />
   </div>
 
-  <script is:inline>
-    window.__fuwariSyncCurrentPostUrl = function () {
-      let currentUrl = window.location.href;
-      try {
-        currentUrl = decodeURIComponent(currentUrl);
-      } catch {}
-      document.querySelectorAll("[data-current-post-url]").forEach((link) => {
-        link.setAttribute("href", currentUrl);
-        link.textContent = currentUrl;
-      });
-    };
-
-    window.__fuwariSyncCurrentPostUrl();
-    if (!window.__fuwariSyncCurrentPostUrlBound) {
-      window.__fuwariSyncCurrentPostUrlBound = true;
-      document.addEventListener("astro:page-load", () =>
-        window.__fuwariSyncCurrentPostUrl?.(),
-      );
-      document.addEventListener("swup:contentReplaced", () =>
-        window.__fuwariSyncCurrentPostUrl?.(),
-      );
-    }
-  </script>
-
-  <!-- 点赞按钮（Halo API 服务端存储） -->
-  <script is:inline>
-    (function () {
-      var btn = document.getElementById("post-like-btn");
-      if (!btn) return;
-      var postName = btn.getAttribute("data-post");
-      var svCount = parseInt(btn.getAttribute("data-count") || "0", 10);
-      var key = "fuwari-like-" + postName;
-      var liked = localStorage.getItem(key) === "1";
-      var countEl = document.getElementById("post-like-count");
-      var count = Math.max(
-        svCount,
-        parseInt(localStorage.getItem(key + "-count") || "0", 10) || 0,
-      );
-
-      if (liked) btn.classList.add("liked");
-      if (countEl) countEl.textContent = count > 0 ? count : "";
-
-      btn.addEventListener("click", function () {
-        if (btn.classList.contains("liked")) return;
-        btn.classList.add("liked");
-        localStorage.setItem(key, "1");
-        count++;
-        localStorage.setItem(key + "-count", count);
-        if (countEl) countEl.textContent = count;
-        // 调用 Halo upvote API
-        fetch("/apis/api.halo.run/v1alpha1/trackers/upvote", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            group: "content.halo.run",
-            plural: "posts",
-            name: postName,
-          }),
-        }).catch(function () {});
-      });
-    })();
-  </script>
-
-  {/* 摘要打字机效果 */}
-  <script is:inline>
-    (function () {
-      var el = document.getElementById("summary-text");
-      var caret = document.getElementById("summary-caret");
-      if (!el) return;
-      var text = el.getAttribute("data-text") || "";
-      var i = 0;
-      var speed = 40;
-      function type() {
-        if (i < text.length) {
-          el.textContent += text.charAt(i);
-          i++;
-          setTimeout(type, speed);
-        } else {
-          if (caret) caret.style.display = "none";
-        }
-      }
-      setTimeout(type, 600);
-    })();
-  </script>
+  <script src={`${basePath}/assets/post-license.js`} defer></script>
+  <script src={`${basePath}/assets/post-like.js`} defer></script>
+  <script src={`${basePath}/assets/post-summary.js`} defer></script>
 </MainGridLayout>

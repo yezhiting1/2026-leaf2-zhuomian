@@ -1,5 +1,6 @@
 ---
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+import CopyButton from "../components/CopyButton.astro";
 ---
 
 <MainGridLayout title="${linksTitle + ' - ' + site.title}">
@@ -230,16 +231,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     >博客名称</span
                   >
                 </div>
-                <button
-                  type="button"
-                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_name}"
-                  title="复制"
-                >
-                  <span
-                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
-                  ></span>&#10; <span>复制</span>
-                </button>
+                <CopyButton
+                  copyText="${theme.config.links.ownerInfo.owner_name}"
+                />
               </div>
               <!-- 描述 -->
               <div
@@ -253,16 +247,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     >博客描述</span
                   >
                 </div>
-                <button
-                  type="button"
-                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_description}"
-                  title="复制"
-                >
-                  <span
-                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
-                  ></span>&#10; <span>复制</span>
-                </button>
+                <CopyButton
+                  copyText="${theme.config.links.ownerInfo.owner_description}"
+                />
               </div>
               <!-- 网址 -->
               <div
@@ -277,16 +264,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     >https://example.com</a
                   >
                 </div>
-                <button
-                  type="button"
-                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_url}"
-                  title="复制"
-                >
-                  <span
-                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
-                  ></span>&#10; <span>复制</span>
-                </button>
+                <CopyButton
+                  copyText="${theme.config.links.ownerInfo.owner_url}"
+                />
               </div>
               <!-- 头像链接 -->
               <div
@@ -301,16 +281,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     >https://example.com/avatar.jpg</a
                   >
                 </div>
-                <button
-                  type="button"
-                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_avatar}"
-                  title="复制"
-                >
-                  <span
-                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
-                  ></span>&#10; <span>复制</span>
-                </button>
+                <CopyButton
+                  copyText="${theme.config.links.ownerInfo.owner_avatar}"
+                />
               </div>
               <!-- RSS -->
               <div
@@ -325,16 +298,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                     >/rss.xml</a
                   >
                 </div>
-                <button
-                  type="button"
-                  class="copy-btn inline-flex items-center gap-1.5 rounded-lg bg-(--primary)/8 px-2 py-1 text-xs text-(--btn-content) transition hover:bg-(--primary)/15 hover:text-(--primary) active:scale-95"
-                  th:attr="data-copy-text=${theme.config.links.ownerInfo.owner_rss}"
-                  title="复制"
-                >
-                  <span
-                    class="icon-[material-symbols--content-copy-outline-rounded] text-sm"
-                  ></span>&#10; <span>复制</span>
-                </button>
+                <CopyButton
+                  copyText="${theme.config.links.ownerInfo.owner_rss}"
+                />
               </div>
             </div>
           </div>
@@ -675,8 +641,9 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         </div>
       </div>
     </div>
-    <script src="/themes/theme-fuwari-NanNan/assets/link-submit.js" defer
-    ></script>
+    <script
+      src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/link-submit.js`}
+      defer></script>
   </section>
 
   <!-- 评论区 -->
