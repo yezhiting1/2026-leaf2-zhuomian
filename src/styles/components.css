@@ -37,6 +37,15 @@
     @apply pointer-events-none text-black/10 dark:text-white/10;
   }
 
+  .btn-card-outline {
+    border: 1px solid color-mix(in oklab, var(--primary) 15%, transparent);
+  }
+
+  /* 卡片 3D 倾斜 - transition 由 .btn-card 的 Tailwind transition 处理 */
+  .card-tilt {
+    transform-style: preserve-3d;
+  }
+
   .btn-plain {
     @apply relative flex items-center justify-center bg-transparent text-black/75 transition hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
   }
@@ -144,7 +153,6 @@
       var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
     transition: transform 700ms
       var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
-    will-change: transform;
   }
 
   .enable-banner #banner-wrapper {
@@ -283,3 +291,13 @@
 }
 
 /* 三栏布局下友情链接一行2个 - 通过 th:classappend 在 friends.astro 中控制 */
+
+/* 瞬间动态内容样式 */
+.moment-feed-content :where(p) {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.moment-feed-content :where(a) {
+  font-weight: 600;
+}

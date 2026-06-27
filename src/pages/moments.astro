@@ -48,30 +48,22 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       <article
         th:each="moment, momentStat : ${moments.items}"
         th:with="content=${moment.spec.content}"
-        class="relative py-5 transition"
+        class="card-base btn-card-outline mb-4 rounded-xl p-5"
         th:style="|animation-delay: calc(var(--content-delay) + ${momentStat.index * 50}ms)|"
       >
         <div class="flex items-start gap-4">
-          <div class="relative shrink-0">
+          <div class="shrink-0">
             <img
               alt=""
               th:if="${moment.owner != null and not #strings.isEmpty(moment.owner.avatar)}"
               th:src="${moment.owner.avatar}"
               th:alt="${moment.owner.displayName}"
-              class="h-13 w-13 rounded-full object-cover ring-2 ring-(--btn-card-bg-hover)"
+              class="h-13 w-13 rounded-xl object-cover bg-(--btn-regular-bg)"
             />
-            <span
-              th:if="${moment.owner != null and not #strings.isEmpty(moment.owner.avatar)}"
-              class="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-(--primary) text-white ring-2 ring-(--card-bg)"
-            >
-              <span
-                class="icon-[material-symbols--check-small-rounded] text-base"
-              ></span>
-            </span>
           </div>
           <div
             th:unless="${moment.owner != null and not #strings.isEmpty(moment.owner.avatar)}"
-            class="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-(--btn-regular-bg) text-(--primary) ring-2 ring-(--btn-card-bg-hover)"
+            class="flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-(--btn-regular-bg) text-(--primary)"
           >
             <span class="icon-[material-symbols--account-circle] text-3xl"
             ></span>
@@ -92,14 +84,6 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                   >04-25</time
                 >
               </div>
-              <a
-                th:href="@{/moments/{name}(name=${moment.metadata.name})}"
-                class="btn-plain h-11 w-11 shrink-0 rounded-lg text-50 active:scale-95"
-                aria-label="View moment"
-              >
-                <span class="icon-[material-symbols--more-horiz] text-2xl"
-                ></span>
-              </a>
             </div>
 
             <div
@@ -201,32 +185,26 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 <span class="moment-upvote-count">0</span>
               </span>
               <a
-                th:href="@{/moments/{name}(name=${moment.metadata.name})}"
+                th:href="'/moments/' + ${moment.metadata.name} + '#comment'"
                 class="link flex h-10 items-center gap-1.5 text-50"
               >
                 <span
-                  class="icon-[material-symbols--open-in-new-rounded] text-xl"
+                  class="icon-[material-symbols--chat-bubble-outline-rounded] text-xl"
+                ></span>
+                <span
+                  th:if="${moment.stats != null}"
+                  th:text="${moment.stats.approvedComment}">0</span
+                >
+                <span th:unless="${moment.stats != null}">0</span>
+              </a>
+              <a
+                th:href="@{/moments/{name}(name=${moment.metadata.name})}"
+                class="link flex h-10 items-center gap-1.5 text-50"
+              >
+                <span class="icon-[material-symbols--chevron-right] text-xl"
                 ></span>
                 <span th:text="#{common.more}">More</span>
               </a>
-              <span
-                th:if="${moment.stats != null}"
-                class="flex h-10 items-center gap-1.5"
-              >
-                <span
-                  class="icon-[material-symbols--chat-bubble-outline-rounded] text-xl"
-                ></span>
-                <span th:text="${moment.stats.approvedComment}">0</span>
-              </span>
-              <span
-                th:unless="${moment.stats != null}"
-                class="flex h-10 items-center gap-1.5"
-              >
-                <span
-                  class="icon-[material-symbols--chat-bubble-outline-rounded] text-xl"
-                ></span>
-                <span>0</span>
-              </span>
             </div>
           </div>
         </div>
@@ -242,19 +220,6 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
   </section>
 
   <style>
-    .moment-list > article + article {
-      border-top: 1px dashed var(--line-color);
-    }
-
-    .moment-feed-content :where(p) {
-      margin-top: 0.35rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .moment-feed-content :where(a) {
-      font-weight: 600;
-    }
-
     .moment-media {
       grid-template-columns: repeat(6, minmax(0, 1fr));
       max-width: min(100%, 36rem);
@@ -265,12 +230,14 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
       overflow: hidden;
       border-radius: 0.75rem;
       background: var(--btn-regular-bg);
+      aspect-ratio: 3 / 4;
+      max-height: 18rem;
     }
 
     .moment-media-item img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       background: var(--btn-regular-bg);
     }
 
@@ -280,10 +247,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 
     .moment-media-count-1 .moment-media-item {
       grid-column: 1 / -1;
-    }
-
-    .moment-media-count-1 .moment-media-item img {
-      max-height: 75vh;
+      max-height: 24rem;
     }
 
     .moment-media-count-2 .moment-media-item,
@@ -301,34 +265,4 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
   </style>
 
   <Pagination context="moments" class="mb-4 onload-animation" />
-
-  <!-- 瞬间点赞 -->
-  <script is:inline>
-    document.querySelectorAll(".moment-upvote-btn").forEach(function (btn) {
-      var name = btn.getAttribute("data-moment");
-      var key = "fuwari-upvote-moment-" + name;
-      if (localStorage.getItem(key) === "1") {
-        btn.classList.add("text-(--primary)");
-        btn.style.pointerEvents = "none";
-      }
-      btn.addEventListener("click", function () {
-        if (localStorage.getItem(key) === "1") return;
-        localStorage.setItem(key, "1");
-        btn.classList.add("text-(--primary)");
-        btn.style.pointerEvents = "none";
-        var countEl = btn.querySelector(".moment-upvote-count");
-        if (countEl)
-          countEl.textContent = parseInt(countEl.textContent || "0", 10) + 1;
-        fetch("/apis/api.halo.run/v1alpha1/trackers/upvote", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            group: "moment.halo.run",
-            plural: "moments",
-            name: name,
-          }),
-        }).catch(function () {});
-      });
-    });
-  </script>
 </MainGridLayout>

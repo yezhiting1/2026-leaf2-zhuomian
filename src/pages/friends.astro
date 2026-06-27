@@ -28,7 +28,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     >
       <article
         th:each="friend : ${friends.items}"
-        class="btn-card items-start! justify-start! min-h-24 rounded-xl p-4"
+        class="btn-card btn-card-outline card-tilt group items-start! justify-start! min-h-24 rounded-xl p-4"
       >
         <div class="flex items-start gap-3">
           <!-- 头像 -->
@@ -37,11 +37,11 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               th:if="${not #strings.isEmpty(friend.spec.logo)}"
               th:src="${friend.spec.logo}"
               th:alt="${friend.spec.author}"
-              class="h-10 w-10 rounded-full object-cover ring-2 ring-(--btn-card-bg-hover)"
+              class="h-10 w-10 rounded-xl bg-(--btn-regular-bg) object-cover transition group-hover:scale-105"
             />
             <div
               th:unless="${not #strings.isEmpty(friend.spec.logo)}"
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--card-bg) text-(--primary) ring-2 ring-(--btn-card-bg-hover)"
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--btn-regular-bg) text-(--primary)"
             >
               <span class="icon-[material-symbols--account-circle] text-2xl"
               ></span>
@@ -112,21 +112,4 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     <!-- 分页 -->
     <Pagination context="friends" class="mb-4 onload-animation" />
   </section>
-
-  <!-- 从文章链接提取博客主页，给博客名添加跳转 -->
-  <script is:inline>
-    document.querySelectorAll(".friend-author").forEach(function (a) {
-      var postLink = a.getAttribute("data-site");
-      if (!postLink) return;
-      try {
-        var u = new URL(postLink);
-        a.href = u.origin + "/";
-      } catch (e) {
-        // 如果 postLink 格式错误，使用原文链接
-        a.href = postLink;
-      }
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-    });
-  </script>
 </MainGridLayout>

@@ -82,7 +82,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
             <div
               th:each="equipment, equipStat : ${group.equipments}"
               th:style="|animation-delay: calc(var(--content-delay) + ${(groupStat.index * 4 + equipStat.index) * 35}ms)|"
-              class="btn-card group min-h-28 items-start! justify-start! gap-4 rounded-xl p-4 text-left active:scale-95"
+              class="btn-card btn-card-outline card-tilt group min-h-28 items-start! justify-start! gap-4 rounded-xl p-4 text-left active:scale-95"
             >
               <!-- 封面 -->
               <div
@@ -157,7 +157,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
         <div
           th:each="equipment, equipStat : ${equipments.items}"
           th:style="|animation-delay: calc(var(--content-delay) + ${equipStat.index * 50}ms)|"
-          class="btn-card group min-h-28 items-start! justify-start! gap-4 rounded-xl p-4 text-left active:scale-95"
+          class="btn-card btn-card-outline card-tilt group min-h-28 items-start! justify-start! gap-4 rounded-xl p-4 text-left active:scale-95"
         >
           <!-- 封面 -->
           <div
