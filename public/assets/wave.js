@@ -1,6 +1,5 @@
 // 波浪 viewBox 动画
 (function () {
-  // 页面上没有波浪 SVG 则跳过
   if (!document.getElementById("wave-svg-1")) return;
 
   var speeds = [18, 12, 8];
@@ -29,6 +28,7 @@
     requestAnimationFrame(step);
   }
 
+  // 页面不可见时暂停
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
       running = false;
@@ -36,6 +36,24 @@
       resume();
     }
   });
+
+  // 波浪不在视口内时暂停
+  if ("IntersectionObserver" in window) {
+    var waveContainer = document.getElementById("wave-svg-1").closest("div");
+    if (waveContainer) {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].isIntersecting) {
+            resume();
+          } else {
+            running = false;
+          }
+        },
+        { rootMargin: "100px" },
+      );
+      observer.observe(waveContainer);
+    }
+  }
 
   requestAnimationFrame(step);
   document.addEventListener("swup:contentReplaced", setWaveViewBox);

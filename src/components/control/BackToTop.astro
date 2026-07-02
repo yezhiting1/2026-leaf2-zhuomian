@@ -13,6 +13,7 @@ import { Icon } from "astro-icon/components";
       th:aria-label="#{fragment.layout.toTop}"
       aria-label="Back to Top"
       class="btn-card h-[3.75rem] w-[3.75rem]"
+      th:classappend="${theme.config.style.navbar_blur} ? '!bg-(--card-bg)/70 backdrop-blur-lg' : ''"
     >
       <Icon name="material-symbols:keyboard-arrow-up-rounded" class="mx-auto" />
     </button>
@@ -34,19 +35,26 @@ import { Icon } from "astro-icon/components";
     font-weight: bold
     border: none
     position: fixed
-    bottom: 10rem
+    top: 4.5rem
+    right: 0.75rem
     opacity: 1
     cursor: pointer
-    transform: translateX(5rem)
+    transform: translateX(0)
     pointer-events: auto
+    transition: transform 0.3s ease, opacity 0.3s ease
     i
       font-size: 1.75rem
     &.hide
-      transform: translateX(5rem) scale(0.9)
+      transform: translateX(5rem)
       opacity: 0
       pointer-events: none
     &:active
-      transform: translateX(5rem) scale(0.9)
+      transform: scale(0.9)
+
+  /* 三栏布局：按钮紧贴右侧边栏左边缘，不遮挡小组件 */
+  @media (min-width: 1280px)
+    .back-to-top-btn
+      right: calc((100vw - 75rem) / 2 + 17.5rem + 1rem)
 
 </style>
 

@@ -6,15 +6,19 @@
     document.querySelectorAll(".card-tilt").forEach(function (card) {
       if (card.dataset.tiltBound) return;
       card.dataset.tiltBound = "true";
-      card.addEventListener("mousemove", function (e) {
-        var rect = card.getBoundingClientRect();
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        var rx = (y / rect.height - 0.5) * -MAX_TILT;
-        var ry = (x / rect.width - 0.5) * MAX_TILT;
-        card.style.transform =
-          "perspective(800px) rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
-      });
+      card.addEventListener(
+        "mousemove",
+        function (e) {
+          var rect = card.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var rx = (y / rect.height - 0.5) * -MAX_TILT;
+          var ry = (x / rect.width - 0.5) * MAX_TILT;
+          card.style.transform =
+            "perspective(800px) rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
+        },
+        { passive: true },
+      );
       card.addEventListener("mouseleave", function () {
         card.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
       });
