@@ -1,7 +1,7 @@
 <div
   id="nav-menu-panel"
   th:with="menu = ${not #strings.isEmpty(theme.config.base.menu) ? menuFinder.getByName(theme.config.base.menu) : menuFinder.getPrimary()}"
-  class="float-panel float-panel-closed fixed right-4 px-2 py-2 transition-all"
+  class="float-panel float-panel-closed fixed right-4 px-2 py-2"
 >
   <div class="contents" th:if="${menu != null}">
     <div th:each="menuItem, itemStat : ${menu.menuItems}">

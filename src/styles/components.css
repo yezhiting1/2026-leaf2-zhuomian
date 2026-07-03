@@ -18,7 +18,41 @@
   }
 
   .float-panel {
-    @apply top-21 overflow-hidden rounded-(--radius-large) bg-(--float-panel-bg) shadow-xl transition dark:shadow-none;
+    top: 4.875rem;
+    border-radius: var(--radius-large);
+    box-shadow:
+      0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 8px 10px -6px rgb(0 0 0 / 0.1);
+    /* 保留 transform/opacity/box-shadow 过渡动画，移除 background-color 消除模糊延迟 */
+    transition:
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color: var(--card-bg) !important;
+  }
+
+  :root.dark .float-panel {
+    box-shadow: 0 0 #0000;
+    background-color: var(--card-bg) !important;
+  }
+
+  /* navbar_blur 开启：保留 transform/opacity 动画，移除 background-color 过渡消除模糊延迟 */
+  body.navbar-blur-enabled .float-panel {
+    transition:
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color: rgb(255 255 255 / 0.62) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+  }
+
+  :root.dark body.navbar-blur-enabled .float-panel {
+    transition:
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color: rgb(0 0 0 / 0.65) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
   }
 
   .float-panel-closed {
@@ -168,7 +202,7 @@
   }
 
   .navbar-hidden {
-    @apply -translate-y-16 opacity-0;
+    @apply -translate-y-[4.5rem] pointer-events-none;
   }
 
   /* 触控设备子菜单展开 */
@@ -204,19 +238,44 @@
 
   .navbar-blur {
     transition: none !important;
-    background-color: rgb(255 255 255 / 0.45) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    backdrop-filter: blur(16px) !important;
-    box-shadow: 0 4px 24px 0 rgb(0 0 0 / 0.06);
-    border-bottom: 1px solid rgb(255 255 255 / 0.4);
+    background-color: rgb(255 255 255 / 0.62) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+    box-shadow: 0 4px 24px 0 rgb(0 0 0 / 0.04);
+    border-bottom: 1px solid rgb(0 0 0 / 0.06);
   }
 
   :root.dark .navbar-blur {
-    background-color: rgb(0 0 0 / 0.4) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    backdrop-filter: blur(16px) !important;
+    background-color: rgb(0 0 0 / 0.65) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
     box-shadow: 0 4px 24px 0 rgb(0 0 0 / 0.2);
     border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .submenu-panel {
+    /* navbar_blur 关闭：纯色背景，无模糊 */
+    background-color: var(--card-bg) !important;
+    transition:
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  :root.dark .submenu-panel {
+    background-color: var(--card-bg) !important;
+  }
+
+  /* navbar_blur 开启：半透明背景 + 磨砂模糊 */
+  body.navbar-blur-enabled .submenu-panel {
+    background-color: rgb(255 255 255 / 0.62) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+  }
+
+  :root.dark body.navbar-blur-enabled .submenu-panel {
+    background-color: rgb(0 0 0 / 0.65) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
   }
 
   #navbar-wrapper.backdrop-blur-lg {

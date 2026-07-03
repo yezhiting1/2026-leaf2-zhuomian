@@ -43,14 +43,6 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
               >04-25</time
             >
           </div>
-          <a
-            th:href="@{/moments}"
-            class="btn-plain h-11 w-11 shrink-0 rounded-lg text-50 active:scale-95"
-            aria-label="Back to moments"
-          >
-            <span class="icon-[material-symbols--arrow-back-rounded] text-2xl"
-            ></span>
-          </a>
         </div>
 
         <div
@@ -142,24 +134,33 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
             ></span>
             <span class="moment-upvote-count">0</span>
           </span>
-          <span
+          <a
             th:if="${moment.stats != null}"
-            class="flex h-10 items-center gap-1.5"
+            href="#comment"
+            class="link flex h-10 items-center gap-1.5 text-50"
           >
             <span
               class="icon-[material-symbols--chat-bubble-outline-rounded] text-xl"
             ></span>
             <span th:text="${moment.stats.approvedComment}">0</span>
-          </span>
-          <span
+          </a>
+          <a
             th:unless="${moment.stats != null}"
-            class="flex h-10 items-center gap-1.5"
+            href="#comment"
+            class="link flex h-10 items-center gap-1.5 text-50"
           >
             <span
               class="icon-[material-symbols--chat-bubble-outline-rounded] text-xl"
             ></span>
             <span>0</span>
-          </span>
+          </a>
+          <a
+            th:href="@{/moments}"
+            class="link flex h-10 items-center gap-1.5 text-50"
+          >
+            <span class="icon-[material-symbols--chevron-left] text-xl"></span>
+            <span th:text="#{common.back}">返回</span>
+          </a>
         </div>
       </div>
     </div>
@@ -181,3 +182,43 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
     />
   </div>
 </MainGridLayout>
+
+<script>
+  // 统一处理 #comment 锚点定位（兼容 Halo 评论组件异步渲染）
+  (function () {
+    const NAV_OFFSET = 6 * 16; // 6rem
+
+    const scrollToComment = () => {
+      const el = document.getElementById("comment");
+      if (!el) return;
+      const top =
+        el.getBoundingClientRect().top + window.pageYOffset - NAV_OFFSET;
+      window.scrollTo({ top, behavior: "smooth" });
+    };
+
+    // 从列表页跳转：等 Halo 评论组件渲染完成后重新定位
+    if (window.location.hash === "#comment") {
+      const el = document.getElementById("comment");
+      if (el) {
+        const observer = new MutationObserver(() => {
+          observer.disconnect();
+          scrollToComment();
+        });
+        observer.observe(el, { childList: true, subtree: true });
+        // 兜底：1.5s 后无论如何滚动一次
+        setTimeout(() => {
+          observer.disconnect();
+          scrollToComment();
+        }, 1500);
+      }
+    }
+
+    // 详细页内点击 #comment：阻止默认行为，统一用 scrollToComment
+    document.querySelectorAll('a[href="#comment"]').forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        scrollToComment();
+      });
+    });
+  })();
+</script>

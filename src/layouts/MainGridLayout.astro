@@ -46,8 +46,7 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
   >
     <div
       id="navbar-wrapper"
-      class="pointer-events-auto sticky top-0 transition duration-700"
-      th:classappend="${theme.config.style.navbar_blur} ? 'backdrop-blur-lg' : ''"
+      class="pointer-events-auto sticky top-0 transition-transform duration-700"
     >
       <Navbar />
     </div>

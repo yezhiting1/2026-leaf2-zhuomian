@@ -9,12 +9,15 @@ const className = Astro.props.class;
 <table-of-contents
   class:list={[className, "group relative block"]}
   th:attr="data-max-depth=${theme.config.post != null and theme.config.post.toc.toc_depth != null ? theme.config.post.toc.toc_depth : 2}"
+  th:data-empty-text="#{common.notoc}"
 >
   <div
     id="active-indicator"
     class="-z-10 absolute left-0 right-0 rounded-xl border-2 border-dashed border-(--toc-btn-hover) bg-(--toc-btn-hover) transition-all group-hover:border-(--toc-btn-active) group-hover:bg-transparent"
     style="opacity: 0"
   >
+  </div>
+  <div id="toc-empty" class="hidden px-2 py-4 text-center text-sm text-50">
   </div>
 </table-of-contents>
 
@@ -75,6 +78,7 @@ const className = Astro.props.class;
       this.anchorNavTarget = null;
       this.activeIndicator = this.querySelector("#active-indicator");
       this.activeIndicator?.setAttribute("style", "opacity: 0");
+      this.querySelector("#toc-empty")?.classList.add("hidden");
     }
 
     removeWindowListeners() {
@@ -127,8 +131,14 @@ const className = Astro.props.class;
       this.active = this.headings.map(() => false);
 
       if (!this.headings.length) {
+        const emptyEl = this.querySelector<HTMLElement>("#toc-empty");
+        if (emptyEl) {
+          emptyEl.textContent = this.dataset.emptyText || "此文章无目录";
+          emptyEl.classList.remove("hidden");
+        }
         return true;
       }
+      this.querySelector("#toc-empty")?.classList.add("hidden");
 
       this.tocEl.addEventListener("click", this.handleAnchorClick, {
         capture: true,

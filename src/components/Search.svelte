@@ -170,27 +170,29 @@
     />
   </div>
 
-  {#if isSearching}
-    <div class="px-3 py-3 text-sm text-30">{t("search.loading", "搜索中...")}</div>
-  {:else if (keywordDesktop || keywordMobile) && result.length === 0}
-    <div class="px-3 py-3 text-sm text-30">{t("search.noResults", "没有搜索结果")}</div>
-  {/if}
+  <div class="overflow-y-auto" style="max-height: calc(100vh - 132px)">
+    {#if isSearching}
+      <div class="px-3 py-3 text-sm text-30">{t("search.loading", "搜索中...")}</div>
+    {:else if (keywordDesktop || keywordMobile) && result.length === 0}
+      <div class="px-3 py-3 text-sm text-30">{t("search.noResults", "没有搜索结果")}</div>
+    {/if}
 
-  <!-- search results -->
-  {#each result as item}
-    <a
-      href={item.permalink}
-      class="group block rounded-xl px-3 py-2 text-lg transition first-of-type:mt-2 hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) lg:first-of-type:mt-0"
-    >
-      <div class="inline-flex font-bold text-90 transition group-hover:text-(--primary)">
-        {@html renderHighlighted(item.title)}
-        <span class="icon-[fa6-solid--chevron-right] my-auto translate-x-1 text-[0.75rem] text-(--primary) transition"></span>
-      </div>
-      <div class="text-sm text-50 transition">
-        {@html excerptOf(item)}
-      </div>
-    </a>
-  {/each}
+    <!-- search results -->
+    {#each result as item}
+      <a
+        href={item.permalink}
+        class="group block rounded-xl px-3 py-2 text-lg transition first-of-type:mt-2 hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) lg:first-of-type:mt-0"
+      >
+        <div class="inline-flex font-bold text-90 transition group-hover:text-(--primary)">
+          {@html renderHighlighted(item.title)}
+          <span class="icon-[fa6-solid--chevron-right] my-auto translate-x-1 text-[0.75rem] text-(--primary) transition"></span>
+        </div>
+        <div class="text-sm text-50 transition">
+          {@html excerptOf(item)}
+        </div>
+      </a>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -198,8 +200,5 @@
     outline: 0;
   }
 
-  .search-panel {
-    max-height: calc(100vh - 100px);
-    overflow-y: auto;
-  }
+
 </style>

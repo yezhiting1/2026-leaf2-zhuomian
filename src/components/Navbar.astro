@@ -7,18 +7,29 @@ import NavMenuPanel from "./widget/NavMenuPanel.astro";
 const className = Astro.props.class;
 ---
 
-<div id="navbar" class="z-50 onload-animation">
+<div id="navbar" class="z-50">
+  <!-- 顶部延伸层（始终 blur） -->
   <div
     class="absolute left-0 right-0 -top-8 h-8 bg-(--card-bg) transition"
-    th:classappend="${theme.config.style.navbar_blur} ? 'navbar-blur backdrop-blur-lg' : ''"
+    th:classappend="${theme.config.style.navbar_blur} ? 'navbar-blur' : ''"
   >
   </div>
+
+  <!-- 分离的模糊背景层：承载 backdrop-filter，避免 Backdrop Root 阻断子元素 -->
+  <div
+    class="absolute left-0 right-0 top-0 h-[4.5rem] transition"
+    th:classappend="${theme.config.style.navbar_blur} ? 'navbar-blur rounded-(--radius-large) !rounded-t-none' : 'bg-(--card-bg) rounded-(--radius-large) !rounded-t-none'"
+    style="max-width: var(--page-width); margin: 0 auto;"
+  >
+  </div>
+
+  <!-- 内容层：无 backdrop-filter，z-index 高于模糊层 -->
   <div
     class:list={[
       className,
-      "card-base !overflow-visible mx-auto flex h-[4.5rem] max-w-(--page-width) items-center justify-between !rounded-t-none px-4",
+      "relative z-10 mx-auto flex h-[4.5rem] max-w-(--page-width) items-center justify-between px-4 rounded-(--radius-large) !rounded-t-none",
     ]}
-    th:classappend="${theme.config.style.navbar_blur} ? 'navbar-blur backdrop-blur-lg' : ''"
+    th:classappend="${theme.config.style.navbar_blur} ? '!bg-transparent' : 'bg-(--card-bg)'"
   >
     <a
       th:href="@{/}"
@@ -26,7 +37,9 @@ const className = Astro.props.class;
       th:aria-label="#{nav.home}"
       aria-label="Home"
     >
-      <div class="flex flex-row items-center text-md text-(--primary)">
+      <div
+        class="site-title flex flex-row items-center text-md text-(--primary)"
+      >
         <span class="icon-[tabler--smart-home] mb-1 mr-2 text-[1.75rem]"></span>
         <span th:text="${site.title}">Fuwari</span>
       </div>
@@ -63,7 +76,7 @@ const className = Astro.props.class;
           <!-- PC 端子菜单下拉 -->
           <div
             th:if="${hasChildren}"
-            class="submenu-panel absolute left-0 top-full mt-1 min-w-48 max-w-72 rounded-(--radius-large) bg-(--card-bg) p-2 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+            class="submenu-panel absolute left-0 top-full mt-5 min-w-48 max-w-72 rounded-(--radius-large) p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible z-50"
             th:id="'pc-submenu-' + ${itemStat.index}"
           >
             <!-- 父页面概览链接（仅触控设备显示） -->

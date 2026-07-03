@@ -167,7 +167,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
       "relative min-h-screen transition",
       { "lg:is-home": isHomePage },
     ]}
-    th:classappend="${theme.config.base.banner.enable ? ' enable-banner' : ''}"
+    th:classappend="${(theme.config.base.banner.enable ? ' enable-banner' : '') + (theme.config.style.navbar_blur ? ' navbar-blur-enabled' : '')}"
     th:style="|--bannerOffset: ${theme.config.base.banner.position == 'top' ? '30vh' : (theme.config.base.banner.position == 'bottom' ? '0' : '15vh')};|"
     data-overlayscrollbars-initialize
   >
