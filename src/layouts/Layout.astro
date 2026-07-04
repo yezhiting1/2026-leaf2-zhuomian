@@ -10,6 +10,7 @@ import "../styles/transition.css";
 import "../styles/scrollbar.css";
 import ConfigCarrier from "../components/ConfigCarrier.astro";
 import WaveEffect from "../components/WaveEffect.astro";
+import "../styles/external-link-modal.css";
 import {
   AUTO_MODE,
   BANNER_HEIGHT_EXTEND,
@@ -139,6 +140,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
           `${PAGE_WIDTH}rem`,
         );
 
+        // 与 constants.ts calcBannerHeightExtend 保持一致
         let offset = Math.floor(
           window.innerHeight * (BANNER_HEIGHT_EXTEND / 100),
         );
@@ -266,7 +268,8 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
     try {
       return new URL(url, window.location.origin).pathname;
     } catch {
-      return url.split("?")[0]?.split("#")[0] || "/";
+      // split 永远返回数组，[0] 总存在（至少是 ""），"" 是 falsy 需要 || "/" 兜底
+      return url.split("?")[0].split("#")[0] || "/";
     }
   }
 

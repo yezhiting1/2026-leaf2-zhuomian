@@ -31,6 +31,14 @@ const {
 const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`;
 ---
 
+<style is:global>
+  :root {
+    --banner-vh: ${BANNER_HEIGHT}vh;
+    --panel-overlap: ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem;
+    --panel-top: calc(var(--banner-vh) - var(--panel-overlap));
+  }
+</style>
+
 <Layout
   title={title}
   description={description}
@@ -180,27 +188,18 @@ const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEI
   </div>
 
   <script
-    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/requirements.js`}
-    defer></script>
-  <script
-    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/friend-authors.js`}
-    defer></script>
-  <script
     src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/collapse.js`}
     defer></script>
   <script
     src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/copy.js`}
     defer></script>
   <script
-    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/random-visit.js`}
-    defer></script>
-  <script
-    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/card-tilt.js`}
+    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/wave.js`}
     defer></script>
   <script
     src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/upvote.js`}
     defer></script>
   <script
-    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/wave.js`}
+    src={`${import.meta.env.BASE_URL.replace(/\/+$/, "")}/assets/friend-authors.js`}
     defer></script>
 </Layout>

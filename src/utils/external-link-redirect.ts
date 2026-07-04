@@ -1,5 +1,6 @@
 // 外链跳转提示（模态框方案）
 let extLinkInited = false;
+let cachedConfig: ExtLinkConfig | null | undefined;
 
 interface ExtLinkConfig {
   redirectConfig?: {
@@ -12,12 +13,14 @@ interface ExtLinkConfig {
 }
 
 function getConfig(): ExtLinkConfig | null {
+  if (cachedConfig !== undefined) return cachedConfig;
   try {
     const el = document.getElementById("theme-config");
-    if (!el?.textContent) return null;
-    return JSON.parse(el.textContent).external_link || null;
+    if (!el?.textContent) return (cachedConfig = null);
+    cachedConfig = JSON.parse(el.textContent).external_link || null;
+    return cachedConfig;
   } catch {
-    return null;
+    return (cachedConfig = null);
   }
 }
 
@@ -45,34 +48,6 @@ function createModal(targetUrl: string) {
   const avatarUrl = config?.redirectConfig?.avatar || "";
   const displayUrl =
     targetUrl.length > 70 ? targetUrl.slice(0, 70) + "..." : targetUrl;
-
-  const style = document.createElement("style");
-  style.textContent = `
-    #ext-link-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
-    #ext-link-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:ext-fade-in .25s ease}
-    #ext-link-card{position:relative;background:var(--card-bg,#fff);border-radius:1rem;padding:2rem 1.5rem 1.5rem;max-width:26rem;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);color:var(--deep-text,#333);animation:ext-slide-up .3s ease}
-    #ext-link-card .ext-avatar{width:56px;height:56px;margin:0 auto .75rem;border-radius:50%;overflow:hidden;background:var(--btn-regular-bg,#eceafb);display:flex;align-items:center;justify-content:center}
-    #ext-link-card .ext-avatar img{width:100%;height:100%;object-fit:cover}
-    #ext-link-card .ext-avatar svg{width:28px;height:28px;color:var(--btn-content,#6d5ae6)}
-    #ext-link-card .ext-title{font-size:1.125rem;font-weight:700;margin-bottom:.3rem}
-    #ext-link-card .ext-desc{font-size:.8125rem;margin-bottom:.875rem;opacity:.75}
-    #ext-link-card .ext-url-box{display:flex;align-items:center;gap:.5rem;background:var(--btn-regular-bg,#eceafb);border-radius:.75rem;padding:.625rem .75rem;margin-bottom:1.25rem;word-break:break-all}
-    #ext-link-card .ext-url-text{flex:1;min-width:0;font-size:.75rem;line-height:1.4;opacity:.9;text-align:left}
-    #ext-link-card .ext-copy{flex-shrink:0;display:inline-flex;align-items:center;gap:.375rem;border:none;cursor:pointer;border-radius:.5rem;padding:.25rem .5rem;font-size:.65rem;color:var(--btn-content);background:color-mix(in oklab,var(--primary) 10%,transparent);transition:all .2s;white-space:nowrap;line-height:1.4}
-    #ext-link-card .ext-copy:hover{color:var(--primary);background:color-mix(in oklab,var(--primary) 18%,transparent)}
-    #ext-link-card .ext-copy:active{transform:scale(.95)}
-    #ext-link-card .ext-progress-bar{width:100%;height:3px;background:var(--btn-regular-bg);border-radius:1.5px;margin-bottom:1rem;overflow:hidden}
-    #ext-link-card .ext-progress-fill{height:100%;background:var(--primary);border-radius:1.5px;transition:width 1s linear;width:100%}
-    #ext-link-card .ext-btns{display:flex;gap:.625rem}
-    #ext-link-card .ext-btn-back{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:.7rem 1rem;border-radius:.75rem;border:none;font-size:.8125rem;font-weight:500;cursor:pointer;background:var(--btn-regular-bg,#eceafb);color:var(--btn-content,#6d5ae6);transition:background .2s;line-height:1}
-    #ext-link-card .ext-btn-back:hover{background:var(--btn-regular-bg-hover,#ddd8fa)}
-    #ext-link-card .ext-btn-go{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:.7rem 1rem;border-radius:.75rem;border:none;font-size:.8125rem;font-weight:500;cursor:pointer;background:var(--primary,#8b5cf6);color:#fff;transition:filter .2s;line-height:1}
-    #ext-link-card .ext-btn-go:hover{filter:brightness(1.1)}
-    #ext-link-card .ext-countdown{font-size:.7rem;margin-top:.75rem;opacity:.5}
-    @keyframes ext-fade-in{from{opacity:0}to{opacity:1}}
-    @keyframes ext-slide-up{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-  `;
-  document.head.appendChild(style);
 
   const avatarHTML = avatarUrl
     ? `<img src="${avatarUrl}" alt="" />`
@@ -122,7 +97,6 @@ function createModal(targetUrl: string) {
       window.location.href = targetUrl;
     }
     modal.remove();
-    style.remove();
     document.body.style.overflow = "";
   }
 
@@ -144,7 +118,6 @@ function createModal(targetUrl: string) {
     }
     setTimeout(() => {
       modal.remove();
-      style.remove();
     }, 150);
   }
 

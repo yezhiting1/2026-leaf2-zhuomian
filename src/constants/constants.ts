@@ -15,3 +15,9 @@ export const MAIN_PANEL_OVERLAPS_BANNER_HEIGHT = 3.5;
 
 // Page width: rem
 export const PAGE_WIDTH = 75;
+
+/** 计算 banner 延伸高度（像素），用于 CSS 变量 --banner-height-extend */
+export function calcBannerHeightExtend(innerHeight: number): number {
+  let offset = Math.floor(innerHeight * (BANNER_HEIGHT_EXTEND / 100));
+  return offset - (offset % 4);
+}

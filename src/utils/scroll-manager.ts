@@ -1,9 +1,9 @@
 // 滚动 & 窗口调整处理（back-to-top、TOC、导航栏）
 import {
   BANNER_HEIGHT,
-  BANNER_HEIGHT_EXTEND,
   BANNER_HEIGHT_HOME,
   MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
+  calcBannerHeightExtend,
 } from "../constants/constants";
 
 const bannerEnabled = Boolean(document.getElementById("banner-wrapper"));
@@ -84,8 +84,7 @@ window.addEventListener("scroll", function () {
 });
 
 window.addEventListener("resize", () => {
-  let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-  offset = offset - (offset % 4);
+  const offset = calcBannerHeightExtend(window.innerHeight);
   document.documentElement.style.setProperty(
     "--banner-height-extend",
     `${offset}px`,

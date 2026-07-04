@@ -34,7 +34,7 @@
 
 ## ✨ 二改新增功能
 
-基于原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 进行二次开发，新增以下功能：
+基于原版 [halo-theme-fuwari](https://github.com/jiewenhuang/halo-theme-fuwari) 进行二次开发，由于更改项目较多，下方举例介绍。
 
 ### 1. 增加三栏布局样式
 
