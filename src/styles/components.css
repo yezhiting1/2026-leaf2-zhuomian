@@ -261,6 +261,17 @@
       visibility 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
+  /* 伪元素桥接 mt-5 间隙，防止鼠标穿过间隙时 group-hover 丢失 */
+  .submenu-panel::before {
+    content: "";
+    position: absolute;
+    top: -1.25rem;
+    left: 0;
+    right: 0;
+    height: 1.25rem;
+    background: transparent;
+  }
+
   :root.dark .submenu-panel {
     background-color: var(--card-bg) !important;
   }

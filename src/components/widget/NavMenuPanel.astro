@@ -1,7 +1,7 @@
 <div
   id="nav-menu-panel"
   th:with="menu = ${not #strings.isEmpty(theme.config.base.menu) ? menuFinder.getByName(theme.config.base.menu) : menuFinder.getPrimary()}"
-  class="float-panel float-panel-closed fixed right-4 px-2 py-2"
+  class="float-panel float-panel-closed fixed right-4 px-2 py-2 w-48"
 >
   <div class="contents" th:if="${menu != null}">
     <div th:each="menuItem, itemStat : ${menu.menuItems}">
@@ -62,18 +62,41 @@
 
 <script is:inline>
   (function () {
-    // 切换子菜单显示/隐藏
+    // 切换子菜单显示/隐藏（手风琴：同时只展开一个）
     window.toggleSubmenu = function (buttonEl, submenuId) {
       var submenu = document.getElementById(submenuId);
+      if (!submenu) return;
       var arrow = buttonEl.querySelector("span");
-      if (submenu) {
-        var isExpanded = !submenu.classList.contains("hidden");
-        submenu.classList.toggle("hidden");
-        if (arrow) {
-          arrow.classList.toggle("rotate-90");
-        }
-        buttonEl.setAttribute("aria-expanded", String(!isExpanded));
+      var isExpanded = !submenu.classList.contains("hidden");
+
+      // 收起其他已展开的子菜单
+      var panel = document.getElementById("nav-menu-panel");
+      if (panel) {
+        var openSubmenus = panel.querySelectorAll(
+          '[id^="submenu-"]:not(.hidden)',
+        );
+        openSubmenus.forEach(function (openSm) {
+          if (openSm.id !== submenuId) {
+            openSm.classList.add("hidden");
+            var flexDiv = openSm.previousElementSibling;
+            if (flexDiv) {
+              var toggleBtn = flexDiv.querySelector(".submenu-toggle");
+              if (toggleBtn) {
+                var btnArrow = toggleBtn.querySelector("span");
+                if (btnArrow) btnArrow.classList.remove("rotate-90");
+                toggleBtn.setAttribute("aria-expanded", "false");
+              }
+            }
+          }
+        });
       }
+
+      // 切换当前子菜单
+      submenu.classList.toggle("hidden");
+      if (arrow) {
+        arrow.classList.toggle("rotate-90");
+      }
+      buttonEl.setAttribute("aria-expanded", String(!isExpanded));
     };
 
     // 初始化菜单面板
