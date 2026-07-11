@@ -222,14 +222,13 @@ export function initExternalLinkRedirect() {
       const config = getConfig();
       if (!config?.redirectConfig?.enable_redirect) return;
 
-      let t = e.target as Element | null;
-      while (t && t.nodeType === 1) {
-        if ((t as Element).tagName === "A") break;
-        t = (t as Element).parentElement;
-      }
-      if (!t || (t as Element).tagName !== "A") return;
+      const path = e.composedPath();
+      const anchor = path.find(
+        (el) => el instanceof HTMLElement && el.tagName === "A",
+      ) as HTMLAnchorElement | undefined;
+      if (!anchor) return;
 
-      const href = (t as HTMLAnchorElement).getAttribute("href");
+      const href = anchor.getAttribute("href");
       if (!href) return;
       const s = href.substring(0, 11).toLowerCase();
       if (

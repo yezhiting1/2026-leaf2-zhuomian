@@ -1,5 +1,14 @@
 // 卡片3D倾斜效果
 (function () {
+  // 触控设备屏蔽，因为 mousemove 无法达到 PC 端的流畅倾斜体验
+  if (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    window.matchMedia("(pointer: coarse)").matches
+  ) {
+    return;
+  }
+
   var MAX_TILT = 12;
 
   function init() {

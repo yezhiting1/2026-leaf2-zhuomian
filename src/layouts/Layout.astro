@@ -81,6 +81,17 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
 >
   <head>
     <meta charset="UTF-8" />
+    <!-- Guard against duplicate Custom Element registration during Swup page transitions -->
+    <script>
+      (function () {
+        var _define = customElements.define.bind(customElements);
+        customElements.define = function (name, constructor, options) {
+          if (customElements.get(name)) return;
+          return _define(name, constructor, options);
+        };
+      })();
+    </script>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width" />
     <meta name="author" th:content="${theme.config.profile.name}" />
