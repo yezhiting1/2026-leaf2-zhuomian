@@ -2,17 +2,17 @@
 import { Icon } from "astro-icon/components";
 ---
 
-<div class="floating-controls hidden lg:block">
+<div class="floating-controls block">
   <!-- 回顶按钮 - 排在前面，方便 sibling selector 联动 -->
   <div
     id="back-to-top-btn"
-    class="floating-btn to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    class="floating-btn to-top-btn hide flex items-center rounded-2xl overflow-hidden pointer-events-none"
     onclick="backToTop()"
   >
     <button
       th:aria-label="#{fragment.layout.toTop}"
       aria-label="Back to Top"
-      class="btn-card h-[3.5rem] w-[3.5rem]"
+      class="btn-card h-[3.5rem] w-[3.5rem] rounded-2xl"
     >
       <Icon name="material-symbols:keyboard-arrow-up-rounded" class="mx-auto" />
     </button>
@@ -21,10 +21,13 @@ import { Icon } from "astro-icon/components";
   <!-- 首页按钮 -->
   <div
     id="back-to-home-btn"
-    class="floating-btn home-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    class="floating-btn home-btn hide flex items-center rounded-2xl overflow-hidden pointer-events-none"
     onclick="backToHome()"
   >
-    <button aria-label="Back to Home" class="btn-card h-[3.5rem] w-[3.5rem]">
+    <button
+      aria-label="Back to Home"
+      class="btn-card h-[3.5rem] w-[3.5rem] rounded-2xl"
+    >
       <Icon name="material-symbols:home-outline-rounded" class="mx-auto" />
     </button>
   </div>
@@ -32,12 +35,12 @@ import { Icon } from "astro-icon/components";
   <!-- 评论区按钮 - 仅文章页面显示 -->
   <div
     id="back-to-comment-btn"
-    class="floating-btn comment-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    class="floating-btn comment-btn hide flex items-center rounded-2xl overflow-hidden pointer-events-none"
     onclick="backToComment()"
   >
     <button
       aria-label="Jump to Comments"
-      class="btn-card h-[3.5rem] w-[3.5rem]"
+      class="btn-card h-[3.5rem] w-[3.5rem] rounded-2xl"
     >
       <Icon
         name="material-symbols:chat-bubble-outline-rounded"
@@ -47,74 +50,101 @@ import { Icon } from "astro-icon/components";
   </div>
 </div>
 
-<style lang="stylus">
-  .floating-controls
-    position: fixed
-    bottom: 2rem
-    right: 0.75rem
-    z-index: 999
-    pointer-events: none
+<style is:global>
+  .floating-controls {
+    position: fixed;
+    bottom: 2rem;
+    right: 0.75rem;
+    z-index: 999;
+    pointer-events: none;
+  }
 
-  .floating-btn
-    position: absolute
-    right: 0
-    color: var(--primary)
-    font-size: 2rem
-    font-weight: bold
-    border: none
-    cursor: pointer
-    pointer-events: auto
-    i
-      font-size: 1.75rem
-    &:active
-      transform: scale(0.9)
+  .floating-btn {
+    position: absolute;
+    right: 0;
+    color: var(--primary);
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .floating-btn:active {
+    transform: scale(0.9);
+  }
+
+  .floating-btn i {
+    font-size: 1.75rem;
+  }
 
   /* 回顶按钮：默认隐藏在下方 */
-  .to-top-btn
-    bottom: calc(-3.5rem - 0.75rem)
-    opacity: 0
-    pointer-events: none
-    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)
+  .to-top-btn {
+    bottom: calc(-3.5rem - 0.75rem);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-    &:not(.hide)
-      bottom: 0
-      opacity: 1
-      pointer-events: auto
+  .to-top-btn:not(.hide) {
+    bottom: 0;
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   /* 首页按钮：默认占据底部 */
-  .home-btn
-    bottom: 0
-    opacity: 1
-    pointer-events: auto
-    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.3s ease
+  .home-btn {
+    bottom: 0;
+    opacity: 1;
+    pointer-events: auto;
+    transition:
+      bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s ease;
+  }
 
-    &.hide
-      opacity: 0
-      pointer-events: none
+  .home-btn.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   /* 评论区按钮：默认在首页按钮上方 */
-  .comment-btn
-    bottom: calc(3.5rem + 0.75rem)
-    font-size: 1.8rem
-    opacity: 1
-    pointer-events: auto
-    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.3s ease
+  .comment-btn {
+    bottom: calc(3.5rem + 0.75rem);
+    font-size: 1.8rem;
+    opacity: 1;
+    pointer-events: auto;
+    transition:
+      bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s ease;
+  }
 
-    &.hide
-      opacity: 0
-      pointer-events: none
+  .comment-btn.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   /* 回顶按钮出现 → 首页按钮上移一层 */
-  .to-top-btn:not(.hide) ~ .home-btn
-    bottom: calc(3.5rem + 0.75rem)
+  .to-top-btn:not(.hide) ~ .home-btn {
+    bottom: calc(3.5rem + 0.75rem);
+  }
 
   /* 回顶按钮出现 → 评论区按钮上移两层 */
-  .to-top-btn:not(.hide) ~ .comment-btn
-    bottom: calc(7rem + 1.5rem)
+  .to-top-btn:not(.hide) ~ .comment-btn {
+    bottom: calc(7rem + 1.5rem);
+  }
 
+  /* 全局模糊开关：按钮薄雾效果，与导航栏同款模糊值 */
+  body.navbar-blur-enabled .floating-btn .btn-card {
+    background-color: rgb(255 255 255 / 0.62) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  :root.dark body.navbar-blur-enabled .floating-btn .btn-card {
+    background-color: rgb(0 0 0 / 0.65) !important;
+  }
 </style>
 
 <script is:raw is:inline>

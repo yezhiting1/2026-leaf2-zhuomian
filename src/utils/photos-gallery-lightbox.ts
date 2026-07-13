@@ -27,7 +27,11 @@ function lockPageScroll() {
   document.body.style.top = `-${scrollY}px`;
   document.body.style.width = "100%";
 
-  return () => {
+  let unlocked = false;
+
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
     document.documentElement.style.overflow = htmlOverflow;
     document.body.style.overflow = bodyStyles.overflow;
     document.body.style.position = bodyStyles.position;
@@ -35,6 +39,8 @@ function lockPageScroll() {
     document.body.style.width = bodyStyles.width;
     window.scrollTo(0, scrollY);
   };
+
+  return unlock;
 }
 
 export function initPhotosGalleryLightbox() {
@@ -75,8 +81,11 @@ export function initPhotosGalleryLightbox() {
   });
 
   lightbox.on("destroy", () => {
-    unlockPageScroll?.();
-    unlockPageScroll = undefined;
+    try {
+      unlockPageScroll?.();
+    } finally {
+      unlockPageScroll = undefined;
+    }
   });
 
   lightbox.addFilter("domItemData", (itemData, element) => {

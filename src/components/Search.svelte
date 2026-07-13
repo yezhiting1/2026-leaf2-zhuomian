@@ -11,6 +11,7 @@
   let desktopTimer: number | undefined;
   let mobileTimer: number | undefined;
   let searchId = 0;
+  let abortController: AbortController | null = null;
 
   const escapeHtml = (value: string) =>
     value
@@ -47,6 +48,12 @@
     const normalizedKeyword = keyword.trim();
     const currentSearchId = ++searchId;
 
+    // 取消上一次未完成的请求
+    if (abortController) {
+      abortController.abort();
+    }
+    abortController = new AbortController();
+
     if (!normalizedKeyword) {
       result = [];
       setPanelVisibility(false, isDesktop);
@@ -67,6 +74,7 @@
           highlightPostTag: "</mark>",
           limit: 20,
         }),
+        signal: abortController.signal,
       });
 
       if (!response.ok) {
@@ -78,6 +86,10 @@
       result = data.hits || [];
       setPanelVisibility(result.length > 0, isDesktop);
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        // 请求被主动取消，无需处理
+        return;
+      }
       console.error("Search error:", error);
       if (currentSearchId !== searchId) return;
       result = [];

@@ -28,13 +28,14 @@ const {
   isHomePage = false,
   showToc = false,
 } = Astro.props;
+
 const mainPanelTop = `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`;
 ---
 
 <style is:global>
   :root {
-    --banner-vh: ${BANNER_HEIGHT}vh;
-    --panel-overlap: ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem;
+    --banner-vh: 35vh;
+    --panel-overlap: 3.5rem;
     --panel-top: calc(var(--banner-vh) - var(--panel-overlap));
   }
 </style>

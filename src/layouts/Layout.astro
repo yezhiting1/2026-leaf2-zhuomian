@@ -167,7 +167,7 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
         };
 
         console.log(
-          "%c🌙 Fuwari NanNan %cv1.1.1",
+          "%c🌙 Fuwari NanNan %cv1.1.2",
           "color:#8b5cf6;font-weight:bold;",
           "color:#888;",
         );
@@ -382,11 +382,8 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
         import("../styles/music-player.css");
       }
     });
-    window.swup.hooks.on("visit:start", (visit: { to?: { url?: string } }) => {
+    window.swup.hooks.on("visit:start", () => {
       restoreOriginalHistoryStateHandlers();
-      if (visit.to?.url) {
-        syncHomeClass(getPathname(visit.to.url));
-      }
       document.getElementById("page-height-extend")?.classList.remove("hidden");
       document.getElementById("toc-wrapper")?.classList.add("toc-not-ready");
     });

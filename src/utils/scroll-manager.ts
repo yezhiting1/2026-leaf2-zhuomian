@@ -6,6 +6,12 @@ import {
   calcBannerHeightExtend,
 } from "../constants/constants";
 
+// 语义化常量，替代硬编码魔法数字
+const NAVBAR_HEIGHT_PX = 72; // 导航栏高度（约 4.5rem）
+const BASE_SPACING_PX = 16; // 基础间距（1rem = 16px）
+const MOBILE_BREAKPOINT = 768;
+const LG_BREAKPOINT = 1024;
+
 const bannerEnabled = Boolean(document.getElementById("banner-wrapper"));
 
 const basePath = import.meta.env.BASE_URL.replace(/\/+$/, "");
@@ -34,12 +40,34 @@ function syncHomeClass(pathname = window.location.pathname) {
   }
 }
 
+// 缓存 DOM 引用，避免每次 scroll 帧重复 getElementById
+// 使用 isConnected 自动检测 Swup 页面切换后的失效引用
+let _backToTopBtn: HTMLElement | null = null;
+let _toc: HTMLElement | null = null;
+let _navbar: HTMLElement | null = null;
+
+function getBackToTopBtn() {
+  if (!_backToTopBtn?.isConnected)
+    _backToTopBtn = document.getElementById("back-to-top-btn");
+  return _backToTopBtn;
+}
+function getToc() {
+  if (!_toc?.isConnected) _toc = document.getElementById("toc-wrapper");
+  return _toc;
+}
+function getNavbar() {
+  if (!_navbar?.isConnected)
+    _navbar = document.getElementById("navbar-wrapper");
+  return _navbar;
+}
+
 function scrollFunction() {
-  const backToTopBtn = document.getElementById("back-to-top-btn");
-  const toc = document.getElementById("toc-wrapper");
-  const navbar = document.getElementById("navbar-wrapper");
+  const backToTopBtn = getBackToTopBtn();
+  const toc = getToc();
+  const navbar = getNavbar();
   const currentBannerHeight =
-    document.body.classList.contains("lg:is-home") && window.innerWidth >= 1024
+    document.body.classList.contains("lg:is-home") &&
+    window.innerWidth >= LG_BREAKPOINT
       ? BANNER_HEIGHT_HOME
       : BANNER_HEIGHT;
   const bannerHeightPx = window.innerHeight * (currentBannerHeight / 100);
@@ -61,10 +89,14 @@ function scrollFunction() {
     );
   }
 
-  if (window.innerWidth < 768) return;
+  if (window.innerWidth < MOBILE_BREAKPOINT) return;
   if (!bannerEnabled || !navbar) return;
+  // threshold = bannerHeightPx - navbarHeight - panelOverlap(rem→px) - baseSpacing
   const threshold =
-    bannerHeightPx - 72 - MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16 - 16;
+    bannerHeightPx -
+    NAVBAR_HEIGHT_PX -
+    MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * BASE_SPACING_PX -
+    BASE_SPACING_PX;
   navbar.classList.toggle(
     "navbar-hidden",
     document.body.scrollTop >= threshold ||

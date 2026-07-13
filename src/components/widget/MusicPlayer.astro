@@ -884,17 +884,13 @@ const layoutId = `${widgetId}-layout`;
       })
       .finally(() => setLoading(false));
 
-    // Swup 页面切换时清理音频资源
-    document.addEventListener(
-      "swup:contentReplaced",
-      function cleanup() {
-        try {
-          audio.pause();
-          audio.src = "";
-          audio.load();
-        } catch (e) {}
-      },
-      { once: true },
-    );
+    // Swup 页面切换时清理音频资源（每次 contentReplaced 都执行，不用 once）
+    document.addEventListener("swup:contentReplaced", function cleanup() {
+      try {
+        audio.pause();
+        audio.src = "";
+        audio.load();
+      } catch (e) {}
+    });
   })();
 </script>

@@ -119,6 +119,36 @@ halo-theme-fuwari-NanNan/
 
 ---
 
+## 📁 项目结构
+
+```
+halo-theme-fuwari-NanNan/
+├── i18n/                        # 国际化翻译文件
+│   ├── default.properties       # 默认语言
+│   ├── zh_CN.properties         # 简体中文
+│   └── zh_TW.properties         # 繁体中文
+├── public/
+│   └── assets/                  # 静态资源（JS 脚本、图片等）
+├── src/
+│   ├── components/              # Astro / Svelte 组件
+│   │   ├── *.astro              # 静态组件（Header、Footer、PostCard 等）
+│   │   └── *.svelte             # 交互组件（Search、LightDarkSwitch 等）
+│   ├── constants/               # 常量定义（主题参数、图标等）
+│   ├── layouts/                 # 页面布局
+│   │   ├── Layout.astro         # 根布局
+│   │   └── MainGridLayout.astro # 主网格布局
+│   ├── pages/                   # 页面模板（首页、文章、归档等）
+│   ├── styles/                  # 全局样式
+│   ├── types/                   # TypeScript 类型定义
+│   └── utils/                   # 工具函数
+├── astro.config.mjs             # Astro 构建配置
+├── settings.yaml                # Halo 主题设置定义
+├── theme.yaml                   # Halo 主题元信息
+└── package.json                 # 项目依赖与脚本
+```
+
+---
+
 ## 🛠️ 开发
 
 > 需要 Node.js >= 22.12.0 和 pnpm
