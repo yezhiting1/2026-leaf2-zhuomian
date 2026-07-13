@@ -161,9 +161,10 @@
     /* 使用默认 --page-width，无需覆盖 */
   }
 
-  /* 三栏布局页面宽度：参考 Firefly，使用 100rem */
+  /* 三栏布局页面宽度：中间内容宽度 = 双栏右页面宽度 (75 - 17.5 - 1 = 56.5) */
+  /* 总宽 = 17.5 + 1 + 56.5 + 1 + 17.5 = 93.5 */
   .layout-three-column {
-    --page-width: 100rem !important;
+    --page-width: 93.5rem !important;
   }
 
   .hide-scrollbar {

@@ -12,6 +12,11 @@ spec:
   homepage: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan#readme
   repo: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan
   issues: https://github.com/AloneNanNan/halo-theme-fuwari-NanNan/issues
+  customTemplates:
+    page:
+      - name: "朋友圈"
+        description: "朋友圈动态页面"
+        file: "friends.html"
   settingName: "theme-fuwari-NanNan-setting"
   configMapName: "theme-fuwari-NanNan-configMap"
   version: "1.1.1"

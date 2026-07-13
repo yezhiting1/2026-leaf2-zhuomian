@@ -12,6 +12,7 @@ html.is-animating .transition-swup-fade {
 html.is-changing #right-sidebar,
 html.is-animating #right-sidebar {
   transition: none !important;
+  animation: none !important;
   opacity: 1 !important;
   transform: none !important;
   translate: none !important;
@@ -39,7 +40,8 @@ html.is-animating #right-sidebar {
   animation-delay: 0ms;
 }
 
-#sidebar {
+#sidebar,
+#right-sidebar {
   animation-delay: 100ms;
 }
 

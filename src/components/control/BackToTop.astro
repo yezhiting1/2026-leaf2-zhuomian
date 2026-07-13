@@ -2,64 +2,175 @@
 import { Icon } from "astro-icon/components";
 ---
 
-<!-- There can't be a filter on parent element, or it will break `fixed` -->
-<div class="back-to-top-wrapper hidden lg:block">
+<div class="floating-controls hidden lg:block">
+  <!-- 回顶按钮 - 排在前面，方便 sibling selector 联动 -->
   <div
     id="back-to-top-btn"
-    class="back-to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    class="floating-btn to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
     onclick="backToTop()"
   >
     <button
       th:aria-label="#{fragment.layout.toTop}"
       aria-label="Back to Top"
-      class="btn-card h-[3.75rem] w-[3.75rem]"
-      th:classappend="${theme.config.style.navbar_blur} ? '!bg-(--card-bg)/70 backdrop-blur-lg' : ''"
+      class="btn-card h-[3.5rem] w-[3.5rem]"
     >
       <Icon name="material-symbols:keyboard-arrow-up-rounded" class="mx-auto" />
+    </button>
+  </div>
+
+  <!-- 首页按钮 -->
+  <div
+    id="back-to-home-btn"
+    class="floating-btn home-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    onclick="backToHome()"
+  >
+    <button aria-label="Back to Home" class="btn-card h-[3.5rem] w-[3.5rem]">
+      <Icon name="material-symbols:home-outline-rounded" class="mx-auto" />
+    </button>
+  </div>
+
+  <!-- 评论区按钮 - 仅文章页面显示 -->
+  <div
+    id="back-to-comment-btn"
+    class="floating-btn comment-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    onclick="backToComment()"
+  >
+    <button
+      aria-label="Jump to Comments"
+      class="btn-card h-[3.5rem] w-[3.5rem]"
+    >
+      <Icon
+        name="material-symbols:chat-bubble-outline-rounded"
+        class="mx-auto"
+      />
     </button>
   </div>
 </div>
 
 <style lang="stylus">
-  .back-to-top-wrapper
-    width: 3.75rem
-    height: 3.75rem
-    position: absolute
-    right: 0
-    top: 0
+  .floating-controls
+    position: fixed
+    bottom: 2rem
+    right: 0.75rem
+    z-index: 999
     pointer-events: none
 
-  .back-to-top-btn
+  .floating-btn
+    position: absolute
+    right: 0
     color: var(--primary)
-    font-size: 2.25rem
+    font-size: 2rem
     font-weight: bold
     border: none
-    position: fixed
-    top: 4.5rem
-    right: 0.75rem
-    opacity: 1
     cursor: pointer
-    transform: translateX(0)
     pointer-events: auto
-    transition: transform 0.3s ease, opacity 0.3s ease
     i
       font-size: 1.75rem
-    &.hide
-      transform: translateX(5rem)
-      opacity: 0
-      pointer-events: none
     &:active
       transform: scale(0.9)
 
-  /* 三栏布局：按钮紧贴右侧边栏左边缘，不遮挡小组件 */
-  @media (min-width: 1280px)
-    .back-to-top-btn
-      right: calc((100vw - 75rem) / 2 + 17.5rem + 1rem)
+  /* 回顶按钮：默认隐藏在下方 */
+  .to-top-btn
+    bottom: calc(-3.5rem - 0.75rem)
+    opacity: 0
+    pointer-events: none
+    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)
+
+    &:not(.hide)
+      bottom: 0
+      opacity: 1
+      pointer-events: auto
+
+  /* 首页按钮：默认占据底部 */
+  .home-btn
+    bottom: 0
+    opacity: 1
+    pointer-events: auto
+    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease
+
+    &.hide
+      opacity: 0
+      pointer-events: none
+
+  /* 评论区按钮：默认在首页按钮上方 */
+  .comment-btn
+    bottom: calc(3.5rem + 0.75rem)
+    font-size: 1.8rem
+    opacity: 1
+    pointer-events: auto
+    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease
+
+    &.hide
+      opacity: 0
+      pointer-events: none
+
+  /* 回顶按钮出现 → 首页按钮上移一层 */
+  .to-top-btn:not(.hide) ~ .home-btn
+    bottom: calc(3.5rem + 0.75rem)
+
+  /* 回顶按钮出现 → 评论区按钮上移两层 */
+  .to-top-btn:not(.hide) ~ .comment-btn
+    bottom: calc(7rem + 1.5rem)
 
 </style>
 
 <script is:raw is:inline>
+  function __moveFloatingControls() {
+    var ctrl = document.querySelector(".floating-controls");
+    if (ctrl && ctrl.parentElement !== document.body) {
+      document.body.appendChild(ctrl);
+    }
+  }
+  __moveFloatingControls();
+  document.addEventListener("swup:contentReplaced", __moveFloatingControls);
+
   function backToTop() {
     window.scroll({ top: 0, behavior: "smooth" });
   }
+
+  function backToHome() {
+    if (window.swup) {
+      window.swup.navigate("/");
+    } else {
+      window.location.href = "/";
+    }
+  }
+
+  function backToComment() {
+    var el = document.getElementById("comment");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  // 非首页时显示首页按钮
+  (function () {
+    function updateHomeBtn() {
+      var btn = document.getElementById("back-to-home-btn");
+      if (!btn) return;
+      var path = window.location.pathname;
+      var normalized =
+        path
+          .replace(/\/+$/, "")
+          .replace(/\/index\.html$/, "")
+          .replace(/\/index$/, "") || "/";
+      btn.classList.toggle("hide", normalized === "/");
+    }
+    updateHomeBtn();
+    document.addEventListener("swup:contentReplaced", updateHomeBtn);
+  })();
+
+  // 有评论区时显示评论按钮
+  (function () {
+    function updateCommentBtn() {
+      var btn = document.getElementById("back-to-comment-btn");
+      if (!btn) return;
+      btn.classList.toggle("hide", !document.getElementById("comment"));
+    }
+    updateCommentBtn();
+    document.addEventListener("swup:contentReplaced", updateCommentBtn);
+  })();
 </script>

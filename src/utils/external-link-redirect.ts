@@ -48,10 +48,17 @@ function createModal(targetUrl: string) {
   const avatarUrl = config?.redirectConfig?.avatar || "";
   const displayUrl =
     targetUrl.length > 70 ? targetUrl.slice(0, 70) + "..." : targetUrl;
+  // 提取目标网站域名
+  let siteName = "";
+  try {
+    siteName = new URL(targetUrl).hostname;
+  } catch {
+    siteName = targetUrl;
+  }
 
   const avatarHTML = avatarUrl
     ? `<img src="${avatarUrl}" alt="" />`
-    : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+    : `<span class="icon-[material-symbols--open-in-new-rounded]" style="font-size:28px"></span>`;
 
   const modal = document.createElement("div");
   modal.id = "ext-link-modal";
@@ -61,6 +68,7 @@ function createModal(targetUrl: string) {
       <div class="ext-avatar">${avatarHTML}</div>
       <div class="ext-title">即将离开本站</div>
       <div class="ext-desc">您即将访问外部链接，请注意保护个人隐私和信息安全。</div>
+      <div class="ext-site">${siteName}</div>
       <div class="ext-url-box">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         <span class="ext-url-text">${displayUrl}</span>
@@ -197,18 +205,25 @@ function createModal(targetUrl: string) {
     if (countdownEl) countdownEl.style.display = "block";
     if (progressBar) progressBar.style.display = "block";
     if (countdownEl) countdownEl.textContent = remaining + " 秒后自动跳转";
-    if (progressFill) progressFill.style.width = "100%";
-    timer = setInterval(() => {
+    // 进度条立即启动：从 100% → 0%，过渡时长 = 总倒计时
+    if (progressFill) {
+      progressFill.style.transition = "none";
+      progressFill.style.width = "100%";
+      requestAnimationFrame(() => {
+        progressFill.style.transition = `width ${totalDelay}s linear`;
+        progressFill.style.width = "0%";
+      });
+    }
+    // 倒计时：先立即执行一次，避免首次等 1 秒
+    function tick() {
       remaining--;
       if (remaining <= 0) {
         goToTarget();
       } else {
         if (countdownEl) countdownEl.textContent = remaining + " 秒后自动跳转";
-        if (progressFill) {
-          progressFill.style.width = (remaining / totalDelay) * 100 + "%";
-        }
       }
-    }, 1000);
+    }
+    timer = setInterval(tick, 1000);
   }
 }
 

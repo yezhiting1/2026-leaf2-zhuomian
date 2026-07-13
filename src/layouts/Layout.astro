@@ -209,6 +209,21 @@ const themeSettingScript = `<script type="application/json" id="theme-config" th
         }
       }
     </style>
+    <script>
+      // 右侧边栏入场动画，仅首次加载执行一次
+      if (!window.__rsAnimated) {
+        window.__rsAnimated = true;
+        var rs = document.getElementById("right-sidebar");
+        if (rs) rs.classList.add("onload-animation");
+      }
+      // Swup 切换后清除动画类
+      document.addEventListener("swup:contentReplaced", function () {
+        var rs = document.getElementById("right-sidebar");
+        if (rs && rs.classList.contains("onload-animation")) {
+          rs.classList.remove("onload-animation");
+        }
+      });
+    </script>
   </body>
 </html>
 

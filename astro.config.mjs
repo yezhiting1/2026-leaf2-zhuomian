@@ -117,6 +117,7 @@ export default defineConfig({
           "visibility-outline-rounded",
           "warning-outline-rounded",
           "wb-sunny-outline-rounded",
+          "home-outline-rounded",
           "keyboard-arrow-up-rounded",
           "music-note-rounded",
           "subtitles-off-outline-rounded",
