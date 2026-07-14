@@ -5,6 +5,7 @@ export interface ThemeConfig {
   base: Base;
   style: Style;
   sidebar: Sidebar;
+  friends: Friends;
   profile: Profile;
   post: Post;
   footer: Footer;
@@ -44,6 +45,13 @@ export interface Style {
   color_scheme: string;
   enable_change_color_scheme: boolean;
   navbar_blur?: boolean;
+}
+
+// ========== 朋友圈设置 ==========
+export interface Friends {
+  pageSize: number;
+  fetchLimit: number;
+  enable_random_fish?: boolean;
 }
 
 // ========== 侧边栏 ==========

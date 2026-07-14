@@ -438,6 +438,30 @@ spec:
               label: 摘要标题
               value: "文章摘要"
               help: "摘要框显示的标题文字，留空则不显示标题"
+    - group: friends
+      label: 朋友圈设置
+      formSchema:
+        - $formkit: number
+          name: pageSize
+          label: 每页显示数量
+          value: 30
+          min: 6
+          max: 100
+          step: 6
+          help: "朋友圈页面每页显示的动态数量"
+        - $formkit: number
+          name: fetchLimit
+          label: 拉取总条数
+          value: 30
+          min: 10
+          max: 100
+          step: 10
+          help: "从插件拉取的动态总条数，最大100条。条数越多，支持的分页页数越多"
+        - $formkit: switch
+          name: enable_random_fish
+          label: 显示随机钓鱼按钮
+          value: true
+          help: "在朋友圈页面标题右侧显示随机钓鱼按钮，点击随机跳转到一个朋友圈文章"
     - group: footer
       label: 页脚设置
       formSchema:
