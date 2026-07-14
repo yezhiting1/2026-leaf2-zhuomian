@@ -49,16 +49,15 @@
 
 ## 🔌 插件支持
 
-| 插件         | 链接                                                     | 说明             |
-| ------------ | -------------------------------------------------------- | ---------------- |
-| 搜索插件     | [应用市场](https://www.halo.run/store/apps/app-DlacW)    | 文章搜索功能     |
-| 评论插件     | [应用市场](https://www.halo.run/store/apps/app-YXyaD)    | 文章评论系统     |
-| 瞬间插件     | [应用市场](https://www.halo.run/store/apps/app-SnwWD)    | 瞬间/说说功能    |
-| 图库插件     | [应用市场](https://www.halo.run/store/apps/app-BmQJW)    | 图库展示         |
-| 链接管理插件 | [应用市场](https://www.halo.run/store/apps/app-hfbQg)    | 友情链接管理     |
-| 自助提交友链 | [应用市场](https://www.halo.run/store/apps/app-glejqzwk) | 访客自助提交友链 |
-| 朋友圈       | [应用市场](https://www.halo.run/store/apps/app-yISsV)    | 友链博客文章聚合 |
-| 装备管理     | [应用市场](https://www.halo.run/store/apps/app-ytygyqml) | 装备展示         |
+| 插件         | 链接                                                     | 说明                |
+| ------------ | -------------------------------------------------------- | ------------------- |
+| 搜索插件     | [应用市场](https://www.halo.run/store/apps/app-DlacW)    | 文章搜索功能        |
+| 评论插件     | [应用市场](https://www.halo.run/store/apps/app-YXyaD)    | 文章评论系统        |
+| 瞬间插件     | [应用市场](https://www.halo.run/store/apps/app-SnwWD)    | 瞬间/说说功能       |
+| 图库插件     | [应用市场](https://www.halo.run/store/apps/app-BmQJW)    | 图库展示            |
+| 链接管理插件 | [应用市场](https://www.halo.run/store/apps/app-hfbQg)    | 友情链接管理&朋友圈 |
+| 自助提交友链 | [应用市场](https://www.halo.run/store/apps/app-glejqzwk) | 访客自助提交友链    |
+| 装备管理     | [应用市场](https://www.halo.run/store/apps/app-ytygyqml) | 装备展示            |
 
 ---
 
@@ -91,35 +90,8 @@
 
 ## 📁 项目结构
 
-```
-halo-theme-fuwari-NanNan/
-├── i18n/                        # 国际化翻译文件
-│   ├── default.properties       # 默认语言
-│   ├── zh_CN.properties         # 简体中文
-│   └── zh_TW.properties         # 繁体中文
-├── public/
-│   └── assets/                  # 静态资源（JS 脚本、图片等）
-├── src/
-│   ├── components/              # Astro / Svelte 组件
-│   │   ├── *.astro              # 静态组件（Header、Footer、PostCard 等）
-│   │   └── *.svelte             # 交互组件（Search、LightDarkSwitch 等）
-│   ├── constants/               # 常量定义（主题参数、图标等）
-│   ├── layouts/                 # 页面布局
-│   │   ├── Layout.astro         # 根布局
-│   │   └── MainGridLayout.astro # 主网格布局
-│   ├── pages/                   # 页面模板（首页、文章、归档等）
-│   ├── styles/                  # 全局样式
-│   ├── types/                   # TypeScript 类型定义
-│   └── utils/                   # 工具函数
-├── astro.config.mjs             # Astro 构建配置
-├── settings.yaml                # Halo 主题设置定义
-├── theme.yaml                   # Halo 主题元信息
-└── package.json                 # 项目依赖与脚本
-```
-
----
-
-## 📁 项目结构
+<details>
+<summary>展开查看完整目录结构</summary>
 
 ```
 halo-theme-fuwari-NanNan/
@@ -127,25 +99,57 @@ halo-theme-fuwari-NanNan/
 │   ├── default.properties       # 默认语言
 │   ├── zh_CN.properties         # 简体中文
 │   └── zh_TW.properties         # 繁体中文
-├── public/
-│   └── assets/                  # 静态资源（JS 脚本、图片等）
+├── public/                      # 静态资源
+│   ├── assets/                  # JS 脚本、图片等
+│   ├── fragments/               # Halo 页面片段
+│   └── gateway_fragments/       # 网关认证片段
+├── screenshot/                  # 主题截图
 ├── src/
-│   ├── components/              # Astro / Svelte 组件
-│   │   ├── *.astro              # 静态组件（Header、Footer、PostCard 等）
-│   │   └── *.svelte             # 交互组件（Search、LightDarkSwitch 等）
-│   ├── constants/               # 常量定义（主题参数、图标等）
+│   ├── components/              # 组件
+│   │   ├── *.astro              # 静态组件（Footer、Navbar、PostCard 等）
+│   │   ├── *.svelte             # Svelte 交互组件（Search、LightDarkSwitch 等）
+│   │   ├── *.vue                # Vue 交互组件（ThemeSwitcher、UserButton）
+│   │   ├── control/             # 控件组件（分页、返回顶部、按钮等）
+│   │   ├── misc/                # 杂项组件（图片包装等）
+│   │   ├── photos/              # 照片相关组件
+│   │   └── widget/              # 侧边栏小部件（天气、音乐、目录、统计等）
+│   ├── config.ts                # 主题配置
+│   ├── constants/               # 常量定义
+│   ├── env.d.ts                 # 环境类型声明
+│   ├── global.d.ts              # 全局类型声明
 │   ├── layouts/                 # 页面布局
 │   │   ├── Layout.astro         # 根布局
 │   │   └── MainGridLayout.astro # 主网格布局
-│   ├── pages/                   # 页面模板（首页、文章、归档等）
+│   ├── pages/                   # 页面模板
+│   │   ├── index.astro          # 首页
+│   │   ├── post.astro           # 文章页
+│   │   ├── archives.astro       # 归档页
+│   │   ├── tags.astro           # 标签列表
+│   │   ├── tag.astro            # 标签详情
+│   │   ├── categories.astro     # 分类列表
+│   │   ├── category.astro       # 分类详情
+│   │   ├── photos.astro         # 图库列表
+│   │   ├── photo.astro          # 图库详情
+│   │   ├── moment.astro         # 瞬间详情
+│   │   ├── moments.astro        # 瞬间列表
+│   │   ├── links.astro          # 友情链接
+│   │   ├── friends.astro        # 朋友圈
+│   │   ├── equipments.astro     # 装备展示
+│   │   └── page.astro           # 自定义页面
 │   ├── styles/                  # 全局样式
 │   ├── types/                   # TypeScript 类型定义
 │   └── utils/                   # 工具函数
 ├── astro.config.mjs             # Astro 构建配置
+├── nodemon.json                 # 开发热更新配置
 ├── settings.yaml                # Halo 主题设置定义
+├── svelte.config.js             # Svelte 配置
 ├── theme.yaml                   # Halo 主题元信息
+├── tsconfig.json                # TypeScript 配置
+├── pnpm-workspace.yaml          # pnpm 工作区配置
 └── package.json                 # 项目依赖与脚本
 ```
+
+</details>
 
 ---
 
