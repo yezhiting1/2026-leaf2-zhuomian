@@ -15,7 +15,6 @@ export default defineConfig({
     assets: "assets",
     format: "file",
   },
-  outDir: "./templates",
   adapter: edgeoneAdapter(),
   integrations: [
     swup({
