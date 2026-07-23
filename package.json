@@ -4,6 +4,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "install": "pnpm install --no-frozen-lockfile",
     "dev": "nodemon --config nodemon.json --exec 'astro build'",
     "build": "astro build",
     "build:pkg": "pnpm build",
