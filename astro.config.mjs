@@ -9,12 +9,13 @@ import svelte from "@astrojs/svelte";
 import icon from "astro-icon";
 
 export default defineConfig({
-  base: "/themes/theme-fuwari-NanNan",
+  // 已删除 base 路径，解决静态资源404、页面乱码
   output: "server",
   build: {
     assets: "assets",
     format: "file",
   },
+  // 已删除 outDir: "./templates"，正常生成静态资源与Edge函数
   adapter: edgeoneAdapter(),
   integrations: [
     swup({
