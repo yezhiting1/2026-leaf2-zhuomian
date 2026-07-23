@@ -5,7 +5,7 @@
   },
   "scripts": {
     "dev": "nodemon --config nodemon.json --exec 'astro build'",
-    "build": "astro build && pnpm package",
+    "build": "astro build",
     "build:pkg": "pnpm build",
     "build:only": "astro build",
     "package": "theme-package",
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@halo-dev/theme-package-cli": "^1.0.4",
+    "@edgeone/astro": "latest",
     "@iconify-json/fa6-brands": "^1.2.6",
     "@iconify-json/fa6-regular": "^1.2.4",
     "@iconify-json/fa6-solid": "^1.2.4",
