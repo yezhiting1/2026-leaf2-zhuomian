@@ -1,148 +1,66 @@
-// @ts-check
-import { defineConfig } from "astro/config";
-import tailwindcss from "@tailwindcss/vite";
-import swup from "@swup/astro";
-import edgeoneAdapter from "@edgeone/astro";
-
-import Icons from "unplugin-icons/vite";
-import svelte from "@astrojs/svelte";
-import icon from "astro-icon";
-
-export default defineConfig({
-  output: "server",
-  build: {
-    assets: "assets",
-    format: "file",
+{
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
   },
-  adapter: edgeoneAdapter(),
-  integrations: [
-    swup({
-      theme: false,
-      animationClass: "transition-swup-",
-      containers: ["#swup-container", "#toc-container", "#right-sidebar"],
-      smoothScrolling: true,
-      cache: false,
-      preload: true,
-      accessibility: true,
-      updateHead: true,
-      updateBodyClass: false,
-      globalInstance: true,
-      ignoreVisit: function (url) {
-        return url.pathname === "/links" || url.pathname === "/links.html";
-      },
-    }),
-    icon({
-      include: {
-        "fa6-brands": ["creative-commons"],
-        "fa6-regular": ["address-card"],
-        "fa6-solid": [
-          "arrow-up-right-from-square",
-          "arrow-rotate-left",
-          "chevron-right",
-        ],
-        mdi: [
-          "text-box-outline",
-          "loading",
-          "weather-sunny",
-          "weather-cloudy",
-          "weather-cloudy-alert",
-          "weather-rainy",
-          "weather-pouring",
-          "weather-lightning-rainy",
-          "weather-snowy",
-          "weather-snowy-heavy",
-          "weather-snowy-rainy",
-          "weather-fog",
-          "weather-dust",
-          "weather-night",
-          "weather-night-partly-cloudy",
-          "map-marker",
-          "cloud-off-outline",
-          "key-variant",
-          "playlist-music",
-        ],
-        "material-symbols": [
-          "account-circle",
-          "add-circle-outline-rounded",
-          "arrow-back-rounded",
-          "article-outline",
-          "article-outline-rounded",
-          "book-2-outline-rounded",
-          "calendar-clock-outline",
-          "calendar-today-outline-rounded",
-          "chat-bubble-outline-rounded",
-          "check-circle-rounded",
-          "check-rounded",
-          "checklist-rounded",
-          "chevron-left-rounded",
-          "chevron-right",
-          "chevron-right-rounded",
-          "close-rounded",
-          "content-copy-outline-rounded",
-          "copyright-outline-rounded",
-          "dark-mode-outline-rounded",
-          "edit-calendar-outline-rounded",
-          "edit-rounded",
-          "expand-more-rounded",
-          "favorite-outline-rounded",
-          "favorite-rounded",
-          "folder-outline",
-          "folder-outline-rounded",
-          "history-rounded",
-          "hourglass-top",
-          "inbox-rounded",
-          "info-outline-rounded",
-          "inventory-2-rounded",
-          "label-outline",
-          "link-rounded",
-          "menu-rounded",
-          "more-horiz",
-          "open-in-new-rounded",
-          "palette-outline",
-          "person-outline-rounded",
-          "photo-library-outline-rounded",
-          "photo-library-rounded",
-          "radio-button-partial-outline",
-          "refresh-rounded",
-          "search",
-          "settings-suggest-rounded",
-          "shuffle-outline-rounded",
-          "tag-rounded",
-          "text-ad-outline-rounded",
-          "thumb-up-outline-rounded",
-          "verified-outline-rounded",
-          "visibility-outline",
-          "visibility-outline-rounded",
-          "warning-outline-rounded",
-          "wb-sunny-outline-rounded",
-          "home-outline-rounded",
-          "keyboard-arrow-up-rounded",
-          "music-note-rounded",
-          "subtitles-off-outline-rounded",
-          "subtitles-outline-rounded",
-          "volume-up-rounded",
-          "volume-off-rounded",
-          "repeat-rounded",
-          "repeat-one-rounded",
-          "shuffle-rounded",
-          "skip-previous-rounded",
-          "play-arrow-rounded",
-          "pause-rounded",
-          "skip-next-rounded",
-          "sync-rounded",
-          "graphic-eq-rounded",
-        ],
-        tabler: ["smart-home", "external-link"],
-      },
-    }),
-    svelte(),
-  ],
-  vite: {
-    plugins: [
-      tailwindcss({
-        safelist: ["navbar-blur"],
-      }),
-      Icons(),
+  "scripts": {
+    "install": "pnpm install --no-frozen-lockfile",
+    "dev": "nodemon --config nodemon.json --exec 'astro build'",
+    "build": "astro build",
+    "build:pkg": "pnpm build",
+    "build:only": "astro build",
+    "package": "theme-package",
+    "astro": "astro",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-astro"
     ],
+    "overrides": [
+      {
+        "files": "*.astro",
+        "options": {
+          "parser": "astro"
+        }
+      }
+    ]
   },
-});
+  "dependencies": {
+    "@astrojs/svelte": "^8.1.0",
+    "@halo-dev/api-client": "^2.24.0",
+    "@swup/astro": "^1.8.0",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.2.1",
+    "astro-icon": "^1.1.5",
+    "overlayscrollbars": "^2.15.1",
+    "photoswipe": "^5.4.4",
+    "sharp": "^0.34.5",
+    "stylus": "^0.64.0",
+    "svelte": "^5.55.5",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@halo-dev/theme-package-cli": "^1.0.4",
+    "@edgeone/astro": "latest",
+    "@iconify-json/fa6-brands": "^1.2.6",
+    "@iconify-json/fa6-regular": "^1.2.4",
+    "@iconify-json/fa6-solid": "^1.2.4",
+    "@iconify-json/material-symbols": "^1.2.69",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/tabler": "^1.2.33",
+    "@iconify/tailwind4": "^1.2.3",
+    "@tailwindcss/typography": "^0.5.19",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "nodemon": "^3.1.14",
+    "prettier": "3.8.1",
+    "prettier-plugin-astro": "0.14.1",
+    "unplugin-icons": "^23.0.1"
+  },
+  "lint-staged": {
+    "*.{astro,css,js,mjs,cjs,ts,svelte,json,yaml,yml,md}": "prettier --write --ignore-unknown"
+  }
+}
